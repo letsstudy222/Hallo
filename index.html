@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Học từ vựng tiếng Đức A1-C2 với flashcard SRS, quiz, ngữ pháp và luyện tập">
+<title>Deutsch Lernen - Học tiếng Đức</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --white: #f5f0e8;
+    --gold: #d4a843;
+    --gold-light: #e8c878;
+    --red: #c0392b;
+    --dark: #1a1a2e;
+    --panel: #111118;
+    --border: rgba(212,168,67,0.25);
+    --text-muted: rgba(245,240,232,0.5);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--dark);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Background ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(212,168,67,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 90% 100%, rgba(192,57,43,0.07) 0%, transparent 60%),
+      linear-gradient(160deg, #0d0d1a 0%, #1a1a2e 50%, #0d1020 100%);
+    pointer-events: none;
+  }
+
+  /* ── Layout ── */
+  #app { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* ── LOADER ── */
+  #loader {
+    position: fixed; inset: 0; z-index: 999;
+    background: var(--dark);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 16px; transition: opacity 0.6s, visibility 0.6s;
+  }
+  #loader .logo-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem; font-weight: 900;
+    color: var(--gold);
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  #loader p { color: var(--text-muted); letter-spacing: 3px; font-size: .8rem; text-transform: uppercase; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(0.95)} }
+  #loader.hidden { opacity: 0; visibility: hidden; }
+
+  /* ── HEADER ── */
+  header {
+    padding: 20px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(13,13,26,0.85);
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-flag { font-size: 2rem; }
+  .logo-text { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--gold); line-height: 1; }
+  .logo-sub { font-size: .65rem; letter-spacing: 3px; color: var(--text-muted); text-transform: uppercase; }
+
+  /* ── NAV ── */
+  nav { display: flex; gap: 6px; flex-wrap: wrap; }
+  nav button {
+    background: none; border: 1px solid transparent;
+    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    font-size: .82rem; letter-spacing: 1px; text-transform: uppercase;
+    padding: 7px 16px; border-radius: 6px; cursor: pointer;
+    transition: all .2s;
+  }
+  nav button:hover { color: var(--white); border-color: var(--border); }
+  nav button.active { color: var(--gold); border-color: var(--gold); background: rgba(212,168,67,0.08); }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex; gap: 0; border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+    overflow-x: auto;
+  }
+  .stat-item {
+    flex: 1; min-width: 100px;
+    display: flex; flex-direction: column; align-items: center;
+    padding: 12px 20px; border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-val { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); font-weight: 700; }
+  .stat-lbl { font-size: .65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; }
+
+  /* ── MAIN ── */
+  main { flex: 1; padding: 32px; max-width: 1100px; margin: 0 auto; width: 100%; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 900;
+    color: var(--white); margin-bottom: 8px;
+  }
+  .section-title span { color: var(--gold); }
+  .section-sub { color: var(--text-muted); font-size: .9rem; margin-bottom: 28px; }
+
+  /* ── LEVEL TABS ── */
+  .level-tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .level-tab {
+    padding: 8px 20px; border-radius: 100px;
+    border: 1px solid var(--border); background: none;
+    color: var(--text-muted); font-family: 'DM Sans', sans-serif;
+    font-size: .82rem; cursor: pointer; transition: all .2s;
+  }
+  .level-tab:hover { border-color: var(--gold); color: var(--white); }
+  .level-tab.active {
+    background: var(--gold); color: var(--black); border-color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* ── VOCAB GRID ── */
+  .vocab-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+  .vocab-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 18px 20px;
+    cursor: pointer; transition: all .25s;
+    position: relative; overflow: hidden;
+  }
+  .vocab-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; background: var(--gold); border-radius: 3px 0 0 3px;
+  }
+  .vocab-card:hover { background: rgba(212,168,67,0.06); border-color: rgba(212,168,67,0.5); transform: translateY(-2px); }
+  .vocab-card.learned { border-color: rgba(39,174,96,0.4); }
+  .vocab-card.learned::before { background: #27ae60; }
+  .vc-article { font-size: .7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; font-weight: 600; }
+  .vc-word { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--white); margin: 4px 0 2px; }
+  .vc-vi { font-size: .88rem; color: var(--text-muted); }
+  .vc-ex { font-size: .78rem; color: rgba(245,240,232,0.35); margin-top: 8px; font-style: italic; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px; }
+  .vc-badge {
+    position: absolute; top: 12px; right: 14px;
+    font-size: .65rem; background: rgba(212,168,67,0.15);
+    color: var(--gold); border-radius: 100px; padding: 2px 8px;
+  }
+
+  /* ── FLASHCARD ── */
+  .flashcard-wrap { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .progress-bar-wrap {
+    width: 100%; max-width: 600px;
+    height: 4px; background: rgba(255,255,255,0.08);
+    border-radius: 4px; overflow: hidden;
+  }
+  .progress-bar-inner { height: 100%; background: linear-gradient(90deg, var(--gold), #e8c878); border-radius: 4px; transition: width .4s; }
+  .progress-text { font-size: .8rem; color: var(--text-muted); }
+
+  .fc-scene { width: 100%; max-width: 600px; height: 320px; perspective: 1200px; cursor: pointer; }
+  .fc-card {
+    width: 100%; height: 100%;
+    position: relative; transform-style: preserve-3d;
+    transition: transform .55s cubic-bezier(.4,0,.2,1);
+    border-radius: 20px;
+  }
+  .fc-card.flipped { transform: rotateY(180deg); }
+  .fc-front, .fc-back {
+    position: absolute; inset: 0;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 32px; text-align: center;
+    border: 1px solid var(--border);
+  }
+  .fc-front {
+    background: linear-gradient(135deg, rgba(212,168,67,0.12), rgba(26,26,46,0.9));
+  }
+  .fc-back {
+    background: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(192,57,43,0.08));
+    transform: rotateY(180deg);
+  }
+  .fc-hint { font-size: .7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 16px; }
+  .fc-main { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; color: var(--white); }
+  .fc-article-label { font-size: .9rem; color: var(--gold); margin-bottom: 6px; font-weight: 500; }
+  .fc-sub { font-size: 1rem; color: var(--text-muted); margin-top: 10px; }
+  .fc-example { font-size: .82rem; font-style: italic; color: rgba(245,240,232,0.4); margin-top: 16px; max-width: 400px; line-height: 1.6; }
+
+  .fc-controls { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .fc-btn {
+    padding: 12px 28px; border-radius: 100px; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 600;
+    border: none; transition: all .2s; letter-spacing: .5px;
+  }
+  .fc-btn.again { background: rgba(192,57,43,0.2); color: #e74c3c; border: 1px solid rgba(192,57,43,0.4); }
+  .fc-btn.hard  { background: rgba(230,126,34,0.15); color: #e67e22; border: 1px solid rgba(230,126,34,0.3); }
+  .fc-btn.good  { background: rgba(212,168,67,0.15); color: var(--gold); border: 1px solid rgba(212,168,67,0.4); }
+  .fc-btn.easy  { background: rgba(39,174,96,0.15); color: #2ecc71; border: 1px solid rgba(39,174,96,0.4); }
+  .fc-btn:hover { transform: scale(1.05); filter: brightness(1.15); }
+  .fc-btn.nav { background: rgba(255,255,255,0.06); color: var(--text-muted); border: 1px solid var(--border); }
+
+  .fc-level-sel { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+
+  /* ── QUIZ ── */
+  .quiz-wrap { max-width: 680px; margin: 0 auto; }
+  .quiz-question-box {
+    background: rgba(212,168,67,0.05);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px; margin-bottom: 24px; text-align: center;
+  }
+  .quiz-q-lbl { font-size: .7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 12px; }
+  .quiz-q-word { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 900; color: var(--white); }
+  .quiz-q-type { font-size: .8rem; color: var(--text-muted); margin-top: 8px; }
+
+  .quiz-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .quiz-opt {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px;
+    color: var(--white); font-family: 'DM Sans', sans-serif;
+    font-size: .92rem; cursor: pointer; transition: all .2s; text-align: left;
+  }
+  .quiz-opt:hover:not(.disabled) { border-color: var(--gold); background: rgba(212,168,67,0.08); }
+  .quiz-opt.correct { border-color: #2ecc71; background: rgba(39,174,96,0.12); color: #2ecc71; }
+  .quiz-opt.wrong   { border-color: #e74c3c; background: rgba(192,57,43,0.1); color: #e74c3c; }
+  .quiz-opt.disabled { cursor: default; }
+  .quiz-opt .opt-letter { font-weight: 700; color: var(--gold); margin-right: 8px; }
+
+  .quiz-feedback { margin-top: 20px; padding: 16px 20px; border-radius: 12px; text-align: center; font-size: .92rem; }
+  .quiz-feedback.correct-fb { background: rgba(39,174,96,0.1); border: 1px solid rgba(39,174,96,0.3); color: #2ecc71; }
+  .quiz-feedback.wrong-fb   { background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.3); color: #e74c3c; }
+
+  .quiz-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .quiz-score-box { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--gold); }
+  .quiz-next-btn {
+    margin-top: 18px; width: 100%; padding: 14px;
+    background: linear-gradient(135deg, var(--gold), #b8902a);
+    color: var(--black); border: none; border-radius: 12px;
+    font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 1rem;
+    cursor: pointer; transition: all .2s; letter-spacing: .5px;
+  }
+  .quiz-next-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+  /* ── GRAMMAR ── */
+  .grammar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .grammar-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px;
+    transition: all .2s; cursor: pointer;
+  }
+  .grammar-card:hover { border-color: rgba(212,168,67,0.5); background: rgba(212,168,67,0.04); }
+  .grammar-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--gold); margin-bottom: 8px; }
+  .grammar-card p { font-size: .85rem; color: var(--text-muted); line-height: 1.6; }
+  .grammar-tag { font-size: .65rem; text-transform: uppercase; letter-spacing: 2px; color: var(--black); background: var(--gold); padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 10px; }
+  .grammar-examples { margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; display: none; }
+  .grammar-examples.open { display: block; }
+  .grammar-ex-item { font-size: .82rem; color: var(--white); margin-bottom: 6px; }
+  .grammar-ex-item span { color: var(--text-muted); display: block; }
+
+  /* ── TABLE ── */
+  .grammar-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: .82rem; }
+  .grammar-table th { background: rgba(212,168,67,0.12); color: var(--gold); padding: 8px 12px; text-align: left; border: 1px solid var(--border); }
+  .grammar-table td { padding: 8px 12px; border: 1px solid rgba(255,255,255,0.06); color: var(--white); }
+  .grammar-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+  /* ── HOME ── */
+  .home-hero { text-align: center; padding: 48px 0 32px; }
+  .home-hero h1 { font-family: 'Playfair Display', serif; font-size: 3.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 16px; }
+  .home-hero h1 em { color: var(--gold); font-style: normal; }
+  .home-hero p { color: var(--text-muted); max-width: 520px; margin: 0 auto 36px; line-height: 1.7; }
+  .home-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    padding: 14px 32px; border-radius: 100px;
+    background: linear-gradient(135deg, var(--gold), #b8902a);
+    color: var(--black); border: none; font-weight: 700;
+    font-family: 'DM Sans', sans-serif; font-size: .95rem;
+    cursor: pointer; transition: all .2s; letter-spacing: .5px;
+  }
+  .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 8px 24px rgba(212,168,67,0.3); }
+  .btn-outline {
+    padding: 14px 32px; border-radius: 100px;
+    background: none; border: 1px solid var(--border);
+    color: var(--white); font-family: 'DM Sans', sans-serif;
+    font-size: .95rem; cursor: pointer; transition: all .2s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 40px; }
+  .feature-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border); border-radius: 14px; padding: 24px;
+    text-align: center; transition: all .2s;
+  }
+  .feature-card:hover { border-color: rgba(212,168,67,0.4); background: rgba(212,168,67,0.04); transform: translateY(-3px); }
+  .feature-icon { font-size: 2.2rem; margin-bottom: 14px; }
+  .feature-card h3 { font-family: 'Playfair Display', serif; font-size: 1rem; color: var(--gold); margin-bottom: 8px; }
+  .feature-card p { font-size: .82rem; color: var(--text-muted); line-height: 1.6; }
+
+  /* ── SEARCH ── */
+  .search-bar {
+    width: 100%; padding: 14px 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border); border-radius: 12px;
+    color: var(--white); font-family: 'DM Sans', sans-serif;
+    font-size: .92rem; outline: none; transition: border-color .2s;
+    margin-bottom: 20px;
+  }
+  .search-bar:focus { border-color: var(--gold); }
+  .search-bar::placeholder { color: var(--text-muted); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    header { padding: 16px 18px; }
+    nav button { padding: 6px 10px; font-size: .72rem; }
+    main { padding: 20px 16px; }
+    .home-hero h1 { font-size: 2.2rem; }
+    .quiz-options { grid-template-columns: 1fr; }
+    .fc-main { font-size: 2rem; }
+    .stats-bar { justify-content: flex-start; }
+  }
+
+  /* ── HIDDEN ── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: rgba(26,26,46,0.95); border: 1px solid var(--gold);
+    color: var(--gold); padding: 12px 24px; border-radius: 100px;
+    font-size: .85rem; font-weight: 600; transition: transform .3s;
+    z-index: 200; pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* Animations */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .page.active > * { animation: fadeUp .4s ease both; }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="logo-big">A</div>
+  <p>Đang tải dữ liệu…</p>
+</div>
+
+<div id="app">
+  <header>
+    <div class="logo">
+      <div class="logo-flag">🇩🇪</div>
+      <div>
+        <div class="logo-text">Deutsch Lernen</div>
+        <div class="logo-sub">Học tiếng Đức</div>
+      </div>
+    </div>
+    <nav id="mainNav">
+      <button class="active" data-page="home">🏠 Trang chủ</button>
+      <button data-page="vocab">📚 Từ vựng</button>
+      <button data-page="flashcard">🃏 Flashcard</button>
+      <button data-page="quiz">🎯 Quiz</button>
+      <button data-page="grammar">📖 Ngữ pháp</button>
+    </nav>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-val" id="statLearned">0</div><div class="stat-lbl">Đã học</div></div>
+    <div class="stat-item"><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">Tổng từ</div></div>
+    <div class="stat-item"><div class="stat-val" id="statStreak">0</div><div class="stat-lbl">Ngày liên tiếp</div></div>
+    <div class="stat-item"><div class="stat-val" id="statQuizAcc">0%</div><div class="stat-lbl">Độ chính xác quiz</div></div>
+    <div class="stat-item"><div class="stat-val" id="statLevel">A1</div><div class="stat-lbl">Cấp độ</div></div>
+  </div>
+
+  <main>
+    <!-- ── HOME ── -->
+    <div id="page-home" class="page active">
+      <div class="home-hero">
+        <h1>Học <em>tiếng Đức</em><br>từ A1 đến C2</h1>
+        <p>Lộ trình bài bản với flashcard SRS, quiz thông minh, ngữ pháp chi tiết và hàng ngàn từ vựng theo cấp độ Goethe / TestDaF.</p>
+        <div class="home-cta">
+          <button class="btn-primary" onclick="goPage('flashcard')">🃏 Bắt đầu Flashcard</button>
+          <button class="btn-outline" onclick="goPage('vocab')">📚 Xem từ vựng</button>
+        </div>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card"><div class="feature-icon">🃏</div><h3>Flashcard SRS</h3><p>Hệ thống nhắc lại cách quãng thông minh giúp ghi nhớ lâu dài</p></div>
+        <div class="feature-card"><div class="feature-icon">🎯</div><h3>Quiz 4 dạng</h3><p>Trắc nghiệm, điền chỗ trống, ghép cặp và nhận biết từ loại</p></div>
+        <div class="feature-card"><div class="feature-icon">📖</div><h3>Ngữ pháp</h3><p>Bảng chia động từ, mạo từ, cách (Kasus) và các cấu trúc quan trọng</p></div>
+        <div class="feature-card"><div class="feature-icon">🔊</div><h3>Phát âm IPA</h3><p>Phiên âm quốc tế và ví dụ câu tự nhiên theo ngữ cảnh</p></div>
+        <div class="feature-card"><div class="feature-icon">📊</div><h3>Theo dõi tiến trình</h3><p>Thống kê chi tiết, streak hàng ngày và tỉ lệ thành thạo</p></div>
+        <div class="feature-card"><div class="feature-icon">🏆</div><h3>A1 → C2</h3><p>Từ vựng chuẩn Goethe-Zertifikat và TestDaF cho mọi cấp độ</p></div>
+      </div>
+    </div>
+
+    <!-- ── VOCAB ── -->
+    <div id="page-vocab" class="page">
+      <div class="section-title">📚 Từ vựng <span>tiếng Đức</span></div>
+      <div class="section-sub">Nhấn vào thẻ để đánh dấu đã học · Tìm kiếm theo tiếng Việt hoặc tiếng Đức</div>
+      <input class="search-bar" id="vocabSearch" placeholder="🔍 Tìm từ vựng..." oninput="filterVocab()">
+      <div class="level-tabs" id="vocabLevelTabs"></div>
+      <div class="vocab-grid" id="vocabGrid"></div>
+    </div>
+
+    <!-- ── FLASHCARD ── -->
+    <div id="page-flashcard" class="page">
+      <div class="section-title">🃏 <span>Flashcard</span> SRS</div>
+      <div class="section-sub">Nhấn vào thẻ để lật · Chọn mức độ ghi nhớ sau khi xem đáp án</div>
+      <div class="flashcard-wrap">
+        <div class="fc-level-sel" id="fcLevelSel"></div>
+        <div class="progress-bar-wrap"><div class="progress-bar-inner" id="fcProgress" style="width:0%"></div></div>
+        <div class="progress-text" id="fcProgressText">0 / 0</div>
+
+        <div class="fc-scene" onclick="flipCard()">
+          <div class="fc-card" id="fcCard">
+            <div class="fc-front">
+              <div class="fc-hint">TIẾNG ĐỨC</div>
+              <div class="fc-article-label" id="fcArticle"></div>
+              <div class="fc-main" id="fcWord">—</div>
+              <div class="fc-sub" id="fcPronounce"></div>
+            </div>
+            <div class="fc-back">
+              <div class="fc-hint">NGHĨA TIẾNG VIỆT</div>
+              <div class="fc-main" style="font-size:2rem" id="fcVietnamese">—</div>
+              <div class="fc-sub" id="fcWordClass"></div>
+              <div class="fc-example" id="fcExample"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fc-controls" id="fcRatingBtns" style="display:none">
+          <button class="fc-btn again" onclick="rateCard('again')">🔄 Lại</button>
+          <button class="fc-btn hard" onclick="rateCard('hard')">😓 Khó</button>
+          <button class="fc-btn good" onclick="rateCard('good')">👍 Được</button>
+          <button class="fc-btn easy" onclick="rateCard('easy')">⭐ Dễ</button>
+        </div>
+        <div class="fc-controls" id="fcNavBtns">
+          <button class="fc-btn nav" onclick="prevCard()">← Trước</button>
+          <button class="fc-btn nav" onclick="flipCard()">↩ Lật thẻ</button>
+          <button class="fc-btn nav" onclick="nextCard()">Tiếp →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── QUIZ ── -->
+    <div id="page-quiz" class="page">
+      <div class="section-title">🎯 <span>Quiz</span></div>
+      <div class="section-sub">Kiểm tra vốn từ của bạn · 4 lựa chọn cho mỗi câu hỏi</div>
+      <div class="level-tabs" id="quizLevelTabs"></div>
+      <div class="quiz-wrap">
+        <div class="quiz-meta">
+          <div>
+            <div style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px">Điểm số</div>
+            <div class="quiz-score-box" id="quizScore">0 / 0</div>
+          </div>
+          <div>
+            <div style="font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:2px">Câu</div>
+            <div class="quiz-score-box" id="quizQ">1</div>
+          </div>
+        </div>
+        <div class="quiz-question-box">
+          <div class="quiz-q-lbl" id="quizQLabel">DỊCH SANG TIẾNG VIỆT</div>
+          <div class="quiz-q-word" id="quizQuestion">—</div>
+          <div class="quiz-q-type" id="quizQSub"></div>
+        </div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-feedback" id="quizFeedback" style="display:none"></div>
+        <button class="quiz-next-btn" id="quizNextBtn" onclick="nextQuiz()" style="display:none">Câu tiếp theo →</button>
+      </div>
+    </div>
+
+    <!-- ── GRAMMAR ── -->
+    <div id="page-grammar" class="page">
+      <div class="section-title">📖 Ngữ pháp <span>tiếng Đức</span></div>
+      <div class="section-sub">Các quy tắc ngữ pháp quan trọng từ cơ bản đến nâng cao</div>
+      <div class="grammar-grid" id="grammarGrid"></div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════
+const VOCAB = [
+  // A1
+  {id:1,level:'A1',article:'der',word:'Vater',vi:'cha, bố',cls:'Nomen',ex:'Mein Vater ist Arzt.',pronounce:'[ˈfaːtɐ]'},
+  {id:2,level:'A1',article:'die',word:'Mutter',vi:'mẹ',cls:'Nomen',ex:'Meine Mutter kocht gern.',pronounce:'[ˈmʊtɐ]'},
+  {id:3,level:'A1',article:'das',word:'Kind',vi:'đứa trẻ, con',cls:'Nomen',ex:'Das Kind spielt im Garten.',pronounce:'[kɪnt]'},
+  {id:4,level:'A1',article:'',word:'hallo',vi:'xin chào',cls:'Interjektion',ex:'Hallo, wie geht es dir?',pronounce:'[haˈloː]'},
+  {id:5,level:'A1',article:'',word:'danke',vi:'cảm ơn',cls:'Interjektion',ex:'Danke schön!',pronounce:'[ˈdaŋkə]'},
+  {id:6,level:'A1',article:'',word:'bitte',vi:'làm ơn / không có gì',cls:'Interjektion',ex:'Bitte helfen Sie mir.',pronounce:'[ˈbɪtə]'},
+  {id:7,level:'A1',article:'das',word:'Haus',vi:'ngôi nhà',cls:'Nomen',ex:'Das Haus ist groß.',pronounce:'[haʊ̯s]'},
+  {id:8,level:'A1',article:'die',word:'Schule',vi:'trường học',cls:'Nomen',ex:'Ich gehe in die Schule.',pronounce:'[ˈʃuːlə]'},
+  {id:9,level:'A1',article:'',word:'essen',vi:'ăn',cls:'Verb',ex:'Ich esse Brot.',pronounce:'[ˈɛsn̩]'},
+  {id:10,level:'A1',article:'',word:'trinken',vi:'uống',cls:'Verb',ex:'Sie trinkt Kaffee.',pronounce:'[ˈtʁɪŋkn̩]'},
+  {id:11,level:'A1',article:'',word:'gehen',vi:'đi',cls:'Verb',ex:'Wir gehen nach Hause.',pronounce:'[ˈɡeːən]'},
+  {id:12,level:'A1',article:'',word:'kommen',vi:'đến, tới',cls:'Verb',ex:'Er kommt aus Vietnam.',pronounce:'[ˈkɔmən]'},
+  {id:13,level:'A1',article:'das',word:'Wasser',vi:'nước',cls:'Nomen',ex:'Ich trinke Wasser.',pronounce:'[ˈvasɐ]'},
+  {id:14,level:'A1',article:'der',word:'Mann',vi:'người đàn ông, chồng',cls:'Nomen',ex:'Der Mann liest Zeitung.',pronounce:'[man]'},
+  {id:15,level:'A1',article:'die',word:'Frau',vi:'người phụ nữ, vợ',cls:'Nomen',ex:'Die Frau ist Lehrerin.',pronounce:'[fʁaʊ̯]'},
+  {id:16,level:'A1',article:'',word:'sprechen',vi:'nói, nói chuyện',cls:'Verb',ex:'Ich spreche Deutsch.',pronounce:'[ˈʃpʁɛçn̩]'},
+  {id:17,level:'A1',article:'',word:'lernen',vi:'học',cls:'Verb',ex:'Sie lernt Deutsch.',pronounce:'[ˈlɛʁnən]'},
+  {id:18,level:'A1',article:'',word:'groß',vi:'lớn, to',cls:'Adjektiv',ex:'Berlin ist groß.',pronounce:'[ɡʁoːs]'},
+  {id:19,level:'A1',article:'',word:'klein',vi:'nhỏ, bé',cls:'Adjektiv',ex:'Das Baby ist klein.',pronounce:'[klaɪ̯n]'},
+  {id:20,level:'A1',article:'',word:'gut',vi:'tốt, ngon',cls:'Adjektiv',ex:'Das Essen ist gut.',pronounce:'[ɡuːt]'},
+
+  // A2
+  {id:21,level:'A2',article:'der',word:'Beruf',vi:'nghề nghiệp',cls:'Nomen',ex:'Was ist dein Beruf?',pronounce:'[bəˈʁuːf]'},
+  {id:22,level:'A2',article:'die',word:'Arbeit',vi:'công việc, lao động',cls:'Nomen',ex:'Die Arbeit macht Spaß.',pronounce:'[ˈaʁbaɪ̯t]'},
+  {id:23,level:'A2',article:'das',word:'Geld',vi:'tiền',cls:'Nomen',ex:'Ich habe kein Geld.',pronounce:'[ɡɛlt]'},
+  {id:24,level:'A2',article:'',word:'kaufen',vi:'mua',cls:'Verb',ex:'Ich kaufe ein Buch.',pronounce:'[ˈkaʊ̯fn̩]'},
+  {id:25,level:'A2',article:'',word:'verkaufen',vi:'bán',cls:'Verb',ex:'Er verkauft Autos.',pronounce:'[fɛʁˈkaʊ̯fn̩]'},
+  {id:26,level:'A2',article:'die',word:'Stadt',vi:'thành phố',cls:'Nomen',ex:'Die Stadt ist schön.',pronounce:'[ʃtat]'},
+  {id:27,level:'A2',article:'das',word:'Wetter',vi:'thời tiết',cls:'Nomen',ex:'Das Wetter ist heute kalt.',pronounce:'[ˈvɛtɐ]'},
+  {id:28,level:'A2',article:'',word:'fahren',vi:'lái, đi (xe)',cls:'Verb',ex:'Ich fahre mit dem Bus.',pronounce:'[ˈfaːʁən]'},
+  {id:29,level:'A2',article:'die',word:'Gesundheit',vi:'sức khỏe',cls:'Nomen',ex:'Die Gesundheit ist wichtig.',pronounce:'[ɡəˈzʊnthaɪ̯t]'},
+  {id:30,level:'A2',article:'',word:'brauchen',vi:'cần',cls:'Verb',ex:'Ich brauche Hilfe.',pronounce:'[ˈbʁaʊ̯xn̩]'},
+  {id:31,level:'A2',article:'die',word:'Zeit',vi:'thời gian',cls:'Nomen',ex:'Ich habe keine Zeit.',pronounce:'[tsaɪ̯t]'},
+  {id:32,level:'A2',article:'',word:'früh',vi:'sớm',cls:'Adjektiv',ex:'Ich stehe früh auf.',pronounce:'[fʁyː]'},
+  {id:33,level:'A2',article:'',word:'spät',vi:'muộn, trễ',cls:'Adjektiv',ex:'Es ist schon spät.',pronounce:'[ʃpɛːt]'},
+  {id:34,level:'A2',article:'',word:'immer',vi:'luôn luôn',cls:'Adverb',ex:'Er ist immer pünktlich.',pronounce:'[ˈɪmɐ]'},
+  {id:35,level:'A2',article:'',word:'vielleicht',vi:'có lẽ',cls:'Adverb',ex:'Vielleicht komme ich morgen.',pronounce:'[fiˈlaɪ̯çt]'},
+
+  // B1
+  {id:36,level:'B1',article:'die',word:'Erfahrung',vi:'kinh nghiệm',cls:'Nomen',ex:'Ich habe viel Erfahrung.',pronounce:'[ɛʁˈfaːʁʊŋ]'},
+  {id:37,level:'B1',article:'',word:'entscheiden',vi:'quyết định',cls:'Verb',ex:'Ich muss mich entscheiden.',pronounce:'[ɛntˈʃaɪ̯dn̩]'},
+  {id:38,level:'B1',article:'die',word:'Möglichkeit',vi:'khả năng, cơ hội',cls:'Nomen',ex:'Es gibt viele Möglichkeiten.',pronounce:'[ˈmøːklɪçkaɪ̯t]'},
+  {id:39,level:'B1',article:'',word:'bemerken',vi:'nhận ra, chú ý',cls:'Verb',ex:'Ich habe es nicht bemerkt.',pronounce:'[bəˈmɛʁkn̩]'},
+  {id:40,level:'B1',article:'',word:'erklären',vi:'giải thích',cls:'Verb',ex:'Kannst du das erklären?',pronounce:'[ɛʁˈklɛːʁən]'},
+  {id:41,level:'B1',article:'die',word:'Gesellschaft',vi:'xã hội, công ty',cls:'Nomen',ex:'Die Gesellschaft verändert sich.',pronounce:'[ɡəˈzɛlʃaft]'},
+  {id:42,level:'B1',article:'',word:'vergleichen',vi:'so sánh',cls:'Verb',ex:'Man sollte nicht vergleichen.',pronounce:'[fɛʁˈɡlaɪ̯çn̩]'},
+  {id:43,level:'B1',article:'',word:'überzeugen',vi:'thuyết phục',cls:'Verb',ex:'Er hat mich überzeugt.',pronounce:'[yːbɐˈtsɔɪ̯ɡn̩]'},
+  {id:44,level:'B1',article:'',word:'wahrscheinlich',vi:'có vẻ như, chắc là',cls:'Adverb',ex:'Das ist wahrscheinlich richtig.',pronounce:'[vaːʁˈʃaɪ̯nlɪç]'},
+  {id:45,level:'B1',article:'die',word:'Umgebung',vi:'môi trường xung quanh',cls:'Nomen',ex:'Die Umgebung ist ruhig.',pronounce:'[ˈʊmɡeːbʊŋ]'},
+
+  // B2
+  {id:46,level:'B2',article:'die',word:'Herausforderung',vi:'thách thức',cls:'Nomen',ex:'Das ist eine große Herausforderung.',pronounce:'[hɛˈʁaʊ̯sfɔʁdəʁʊŋ]'},
+  {id:47,level:'B2',article:'',word:'widersprechen',vi:'phản đối, mâu thuẫn',cls:'Verb',ex:'Ich möchte dir widersprechen.',pronounce:'[ˈviːdɐʃpʁɛçn̩]'},
+  {id:48,level:'B2',article:'',word:'berücksichtigen',vi:'xem xét, tính đến',cls:'Verb',ex:'Wir müssen alle Faktoren berücksichtigen.',pronounce:'[bəˈʁʏksɪçtɪɡn̩]'},
+  {id:49,level:'B2',article:'die',word:'Auswirkung',vi:'hệ quả, tác động',cls:'Nomen',ex:'Die Auswirkungen sind gravierend.',pronounce:'[ˈaʊ̯svɪʁkʊŋ]'},
+  {id:50,level:'B2',article:'',word:'voraussetzen',vi:'giả định, yêu cầu',cls:'Verb',ex:'Das setzt Kenntnisse voraus.',pronounce:'[foːˈʁaʊ̯szɛtsn̩]'},
+
+  // C1
+  {id:51,level:'C1',article:'die',word:'Beeinträchtigung',vi:'sự suy giảm, thiệt hại',cls:'Nomen',ex:'Eine Beeinträchtigung der Lebensqualität.',pronounce:'[bəˈʔaɪ̯ntʁɛçtɪɡʊŋ]'},
+  {id:52,level:'C1',article:'',word:'veranschaulichen',vi:'minh họa, làm rõ',cls:'Verb',ex:'Lassen Sie mich das veranschaulichen.',pronounce:'[fɛʁˈanʃaʊ̯lɪçn̩]'},
+  {id:53,level:'C1',article:'die',word:'Schlussfolgerung',vi:'kết luận',cls:'Nomen',ex:'Die Schlussfolgerung ist logisch.',pronounce:'[ˈʃlʊsfɔlɡəʁʊŋ]'},
+  {id:54,level:'C1',article:'',word:'abwägen',vi:'cân nhắc',cls:'Verb',ex:'Man muss die Vor- und Nachteile abwägen.',pronounce:'[ˈapvɛːɡn̩]'},
+  {id:55,level:'C1',article:'die',word:'Eigenverantwortung',vi:'tự chịu trách nhiệm',cls:'Nomen',ex:'Eigenverantwortung ist wichtig.',pronounce:'[ˈaɪ̯ɡn̩fɛʁˌantvɔʁtʊŋ]'},
+
+  // C2
+  {id:56,level:'C2',article:'',word:'unumgänglich',vi:'không thể tránh khỏi',cls:'Adjektiv',ex:'Eine Entscheidung ist unumgänglich.',pronounce:'[ˌʊnʔʊmˈɡɛŋlɪç]'},
+  {id:57,level:'C2',article:'die',word:'Ambivalenz',vi:'sự lưỡng lự, mâu thuẫn nội tâm',cls:'Nomen',ex:'Er empfindet Ambivalenz gegenüber dieser Entscheidung.',pronounce:'[ambivaˈlɛnts]'},
+  {id:58,level:'C2',article:'',word:'kontextualisieren',vi:'đặt vào ngữ cảnh',cls:'Verb',ex:'Man muss diesen Begriff kontextualisieren.',pronounce:'[kɔntɛkstʊaliˈziːʁən]'},
+  {id:59,level:'C2',article:'die',word:'Reziprozität',vi:'sự có đi có lại',cls:'Nomen',ex:'Reziprozität ist Grundlage sozialer Beziehungen.',pronounce:'[ʁetsiˌpʁoːtsiˈtɛːt]'},
+  {id:60,level:'C2',article:'',word:'vielschichtig',vi:'đa tầng lớp, phức tạp',cls:'Adjektiv',ex:'Das Thema ist vielschichtig.',pronounce:'[ˈfiːlʃɪçtɪç]'},
+];
+
+const GRAMMAR = [
+  {
+    tag:'Artikel', title:'Mạo từ xác định (Bestimmter Artikel)',
+    desc:'Der, die, das — mỗi danh từ tiếng Đức có một mạo từ riêng phải được học thuộc.',
+    table:{
+      headers:['Kasus','Maskulin','Feminin','Neutrum','Plural'],
+      rows:[
+        ['Nominativ','der','die','das','die'],
+        ['Akkusativ','den','die','das','die'],
+        ['Dativ','dem','der','dem','den'],
+        ['Genitiv','des','der','des','der'],
+      ]
+    },
+    examples:[
+      {de:'Der Mann liest ein Buch.',vi:'Người đàn ông đang đọc sách.'},
+      {de:'Ich sehe den Mann.',vi:'Tôi nhìn thấy người đàn ông.'},
+    ]
+  },
+  {
+    tag:'Artikel', title:'Mạo từ không xác định (Unbestimmter Artikel)',
+    desc:'Ein, eine — tương đương "một" trong tiếng Việt.',
+    table:{
+      headers:['Kasus','Maskulin','Feminin','Neutrum'],
+      rows:[
+        ['Nominativ','ein','eine','ein'],
+        ['Akkusativ','einen','eine','ein'],
+        ['Dativ','einem','einer','einem'],
+        ['Genitiv','eines','einer','eines'],
+      ]
+    },
+    examples:[
+      {de:'Ein Kind spielt.',vi:'Một đứa trẻ đang chơi.'},
+      {de:'Ich kaufe eine Zeitung.',vi:'Tôi mua một tờ báo.'},
+    ]
+  },
+  {
+    tag:'Verb', title:'Chia động từ ở hiện tại (Präsens)',
+    desc:'Động từ tiếng Đức chia theo ngôi của chủ ngữ. Đây là dạng cơ bản nhất.',
+    table:{
+      headers:['Pronomen','machen','sein','haben'],
+      rows:[
+        ['ich','mache','bin','habe'],
+        ['du','machst','bist','hast'],
+        ['er/sie/es','macht','ist','hat'],
+        ['wir','machen','sind','haben'],
+        ['ihr','macht','seid','habt'],
+        ['sie/Sie','machen','sind','haben'],
+      ]
+    },
+    examples:[
+      {de:'Ich mache Hausaufgaben.',vi:'Tôi làm bài tập về nhà.'},
+      {de:'Er ist müde.',vi:'Anh ấy mệt.'},
+    ]
+  },
+  {
+    tag:'Verb', title:'Quá khứ hoàn thành (Perfekt)',
+    desc:'Dùng "haben" hoặc "sein" + Partizip II. Phổ biến trong văn nói.',
+    table:null,
+    examples:[
+      {de:'Ich habe das Buch gelesen.',vi:'Tôi đã đọc cuốn sách đó.'},
+      {de:'Sie ist nach Hause gegangen.',vi:'Cô ấy đã về nhà.'},
+      {de:'Wir haben Fußball gespielt.',vi:'Chúng tôi đã chơi bóng đá.'},
+    ]
+  },
+  {
+    tag:'Satzbau', title:'Cấu trúc câu cơ bản (Wortstellung)',
+    desc:'Trong câu khẳng định, động từ luôn đứng ở vị trí thứ 2. Sau liên từ phụ (weil, dass...), động từ ra cuối câu.',
+    table:null,
+    examples:[
+      {de:'Heute gehe ich ins Kino.',vi:'Hôm nay tôi đi xem phim.'},
+      {de:'Ich gehe nicht, weil ich müde bin.',vi:'Tôi không đi vì tôi mệt.'},
+      {de:'Er sagt, dass er kommt.',vi:'Anh ấy nói rằng anh ấy sẽ đến.'},
+    ]
+  },
+  {
+    tag:'Kasus', title:'4 Cách (Kasus)',
+    desc:'Tiếng Đức có 4 cách: Nominativ (chủ), Akkusativ (tân), Dativ (gián tiếp), Genitiv (sở hữu).',
+    table:{
+      headers:['Kasus','Chức năng','Ví dụ'],
+      rows:[
+        ['Nominativ','Chủ ngữ','Der Hund bellt.'],
+        ['Akkusativ','Tân ngữ trực tiếp','Ich sehe den Hund.'],
+        ['Dativ','Tân ngữ gián tiếp','Ich gebe dem Hund Futter.'],
+        ['Genitiv','Sở hữu','Das Haus des Mannes.'],
+      ]
+    },
+    examples:[
+      {de:'Der Mann gibt der Frau das Buch.',vi:'Người đàn ông đưa cuốn sách cho người phụ nữ.'},
+    ]
+  },
+  {
+    tag:'Modalverb', title:'Động từ khuyết thiếu (Modalverben)',
+    desc:'können, müssen, wollen, dürfen, sollen, mögen — đứng ở vị trí 2, động từ chính ra cuối câu dạng nguyên mẫu.',
+    table:{
+      headers:['Verb','Nghĩa','ich / er'],
+      rows:[
+        ['können','có thể','kann'],
+        ['müssen','phải','muss'],
+        ['wollen','muốn','will'],
+        ['dürfen','được phép','darf'],
+        ['sollen','nên (ai đó yêu cầu)','soll'],
+        ['mögen','thích','mag'],
+      ]
+    },
+    examples:[
+      {de:'Ich kann Deutsch sprechen.',vi:'Tôi có thể nói tiếng Đức.'},
+      {de:'Du musst jetzt schlafen.',vi:'Bây giờ bạn phải ngủ.'},
+    ]
+  },
+  {
+    tag:'Präposition', title:'Giới từ thông dụng',
+    desc:'Giới từ tiếng Đức quy định cách của danh từ theo sau chúng.',
+    table:{
+      headers:['Giới từ','Cách','Nghĩa'],
+      rows:[
+        ['in, an, auf, bei, mit, nach, seit, von, zu, aus','Dativ','vị trí / hướng'],
+        ['durch, für, gegen, ohne, um','Akkusativ','—'],
+        ['wegen, trotz','Genitiv','—'],
+      ]
+    },
+    examples:[
+      {de:'Ich bin in der Schule.',vi:'Tôi đang ở trường.'},
+      {de:'Er geht in die Schule.',vi:'Anh ấy đi đến trường.'},
+    ]
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+const LEVELS = ['Tất cả','A1','A2','B1','B2','C1','C2'];
+let state = {
+  currentPage: 'home',
+  vocabLevel: 'Tất cả',
+  learned: new Set(),
+  fcLevel: 'A1',
+  fcIndex: 0,
+  fcFlipped: false,
+  fcQueue: [],
+  quizLevel: 'A1',
+  quizIndex: 0,
+  quizCorrect: 0,
+  quizTotal: 0,
+  quizAnswered: false,
+  quizQueue: [],
+  streak: 1,
+  quizHistory: [],
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('de_learn');
+    if (s) {
+      const d = JSON.parse(s);
+      state.learned = new Set(d.learned || []);
+      state.streak = d.streak || 1;
+      state.quizHistory = d.quizHistory || [];
+    }
+  } catch(e){}
+}
+function saveState() {
+  try {
+    localStorage.setItem('de_learn', JSON.stringify({
+      learned: [...state.learned],
+      streak: state.streak,
+      quizHistory: state.quizHistory,
+    }));
+  } catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function getVocabByLevel(level) {
+  return level === 'Tất cả' ? VOCAB : VOCAB.filter(v => v.level === level);
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function goPage(page) {
+  state.currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('#mainNav button').forEach(b => {
+    b.classList.toggle('active', b.dataset.page === page);
+  });
+  if (page === 'vocab') renderVocab();
+  if (page === 'flashcard') initFlashcard();
+  if (page === 'quiz') initQuiz();
+  if (page === 'grammar') renderGrammar();
+  updateStats();
+}
+
+document.querySelectorAll('#mainNav button').forEach(btn => {
+  btn.addEventListener('click', () => goPage(btn.dataset.page));
+});
+
+// ═══════════════════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════════════════
+function updateStats() {
+  document.getElementById('statLearned').textContent = state.learned.size;
+  document.getElementById('statTotal').textContent = VOCAB.length;
+  document.getElementById('statStreak').textContent = state.streak;
+  const acc = state.quizHistory.length
+    ? Math.round(state.quizHistory.filter(x=>x).length / state.quizHistory.length * 100) + '%'
+    : '0%';
+  document.getElementById('statQuizAcc').textContent = acc;
+  const learned = [...state.learned];
+  const maxLevel = (() => {
+    const lvls = ['A1','A2','B1','B2','C1','C2'];
+    for (let i = lvls.length-1; i >= 0; i--) {
+      if (VOCAB.filter(v=>v.level===lvls[i]).some(v=>learned.includes(v.id))) return lvls[i];
+    }
+    return 'A1';
+  })();
+  document.getElementById('statLevel').textContent = maxLevel;
+}
+
+// ═══════════════════════════════════════════════════════
+// VOCAB
+// ═══════════════════════════════════════════════════════
+function buildLevelTabs(containerId, currentLevel, onSelect) {
+  const c = document.getElementById(containerId);
+  c.innerHTML = '';
+  LEVELS.forEach(lv => {
+    const btn = document.createElement('button');
+    btn.className = 'level-tab' + (lv === currentLevel ? ' active' : '');
+    btn.textContent = lv;
+    btn.onclick = () => { onSelect(lv); buildLevelTabs(containerId, lv, onSelect); };
+    c.appendChild(btn);
+  });
+}
+
+function renderVocab() {
+  buildLevelTabs('vocabLevelTabs', state.vocabLevel, lv => {
+    state.vocabLevel = lv;
+    renderVocabGrid();
+  });
+  renderVocabGrid();
+}
+function filterVocab() { renderVocabGrid(); }
+function renderVocabGrid() {
+  const q = document.getElementById('vocabSearch').value.toLowerCase();
+  let list = getVocabByLevel(state.vocabLevel);
+  if (q) list = list.filter(v => v.word.toLowerCase().includes(q) || v.vi.toLowerCase().includes(q));
+  const grid = document.getElementById('vocabGrid');
+  grid.innerHTML = '';
+  list.forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'vocab-card' + (state.learned.has(v.id) ? ' learned' : '');
+    card.innerHTML = `
+      <div class="vc-badge">${v.level}</div>
+      <div class="vc-article">${v.article ? v.article + ' · ' : ''}${v.cls}</div>
+      <div class="vc-word">${v.word}</div>
+      <div class="vc-vi">${v.vi}</div>
+      <div class="vc-ex">${v.ex}</div>
+    `;
+    card.onclick = () => {
+      if (state.learned.has(v.id)) state.learned.delete(v.id);
+      else state.learned.add(v.id);
+      saveState(); updateStats(); renderVocabGrid();
+      toast(state.learned.has(v.id) ? '✅ Đã đánh dấu học' : '↩ Bỏ đánh dấu');
+    };
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// FLASHCARD
+// ═══════════════════════════════════════════════════════
+function initFlashcard() {
+  buildLevelTabs('fcLevelSel', state.fcLevel, lv => {
+    state.fcLevel = lv;
+    loadFcQueue();
+  });
+  loadFcQueue();
+}
+function loadFcQueue() {
+  state.fcQueue = shuffle(getVocabByLevel(state.fcLevel));
+  state.fcIndex = 0;
+  state.fcFlipped = false;
+  showCard();
+}
+function showCard() {
+  const card = document.getElementById('fcCard');
+  card.classList.remove('flipped');
+  state.fcFlipped = false;
+  document.getElementById('fcRatingBtns').style.display = 'none';
+  document.getElementById('fcNavBtns').style.display = 'flex';
+
+  const total = state.fcQueue.length;
+  document.getElementById('fcProgress').style.width = total ? (state.fcIndex / total * 100) + '%' : '0%';
+  document.getElementById('fcProgressText').textContent = `${state.fcIndex + 1} / ${total}`;
+
+  const v = state.fcQueue[state.fcIndex];
+  if (!v) return;
+  document.getElementById('fcArticle').textContent = v.article ? `${v.article} (${v.cls})` : v.cls;
+  document.getElementById('fcWord').textContent = v.word;
+  document.getElementById('fcPronounce').textContent = v.pronounce;
+  document.getElementById('fcVietnamese').textContent = v.vi;
+  document.getElementById('fcWordClass').textContent = v.cls;
+  document.getElementById('fcExample').textContent = v.ex;
+}
+function flipCard() {
+  const card = document.getElementById('fcCard');
+  state.fcFlipped = !state.fcFlipped;
+  card.classList.toggle('flipped', state.fcFlipped);
+  if (state.fcFlipped) {
+    document.getElementById('fcRatingBtns').style.display = 'flex';
+    document.getElementById('fcNavBtns').style.display = 'none';
+  } else {
+    document.getElementById('fcRatingBtns').style.display = 'none';
+    document.getElementById('fcNavBtns').style.display = 'flex';
+  }
+}
+function rateCard(rating) {
+  const v = state.fcQueue[state.fcIndex];
+  if (rating === 'easy' || rating === 'good') state.learned.add(v.id);
+  if (rating === 'again') { state.fcQueue.push(v); toast('🔄 Sẽ lặp lại sau'); }
+  saveState(); updateStats();
+  nextCard();
+}
+function nextCard() {
+  if (state.fcIndex < state.fcQueue.length - 1) { state.fcIndex++; showCard(); }
+  else { toast('🎉 Đã hết thẻ! Bắt đầu lại...'); state.fcIndex = 0; showCard(); }
+}
+function prevCard() {
+  if (state.fcIndex > 0) { state.fcIndex--; showCard(); }
+}
+
+// ═══════════════════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════════════════
+function initQuiz() {
+  buildLevelTabs('quizLevelTabs', state.quizLevel, lv => {
+    state.quizLevel = lv;
+    loadQuizQueue();
+  });
+  loadQuizQueue();
+}
+function loadQuizQueue() {
+  state.quizQueue = shuffle(getVocabByLevel(state.quizLevel));
+  state.quizIndex = 0;
+  state.quizCorrect = 0;
+  state.quizTotal = 0;
+  state.quizAnswered = false;
+  showQuizQuestion();
+}
+function showQuizQuestion() {
+  const q = state.quizQueue[state.quizIndex];
+  if (!q) { toast('🎉 Quiz hoàn thành!'); return; }
+  document.getElementById('quizScore').textContent = `${state.quizCorrect} / ${state.quizTotal}`;
+  document.getElementById('quizQ').textContent = state.quizIndex + 1;
+  document.getElementById('quizFeedback').style.display = 'none';
+  document.getElementById('quizNextBtn').style.display = 'none';
+  state.quizAnswered = false;
+
+  // type: 0 = de→vi, 1 = vi→de
+  const type = Math.random() < 0.5 ? 0 : 1;
+  if (type === 0) {
+    document.getElementById('quizQLabel').textContent = 'DỊCH SANG TIẾNG VIỆT';
+    document.getElementById('quizQuestion').textContent = (q.article ? q.article + ' ' : '') + q.word;
+    document.getElementById('quizQSub').textContent = q.pronounce;
+  } else {
+    document.getElementById('quizQLabel').textContent = 'DỊCH SANG TIẾNG ĐỨC';
+    document.getElementById('quizQuestion').textContent = q.vi;
+    document.getElementById('quizQSub').textContent = '';
+  }
+
+  // Build options
+  const pool = VOCAB.filter(v => v.id !== q.id);
+  const wrong = shuffle(pool).slice(0, 3);
+  const opts = shuffle([q, ...wrong]);
+  const letters = ['A','B','C','D'];
+  const container = document.getElementById('quizOptions');
+  container.innerHTML = '';
+  opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}.</span>${type===0 ? opt.vi : (opt.article ? opt.article + ' ' : '') + opt.word}`;
+    btn.onclick = () => answerQuiz(opt.id === q.id, btn, q, type);
+    container.appendChild(btn);
+  });
+}
+function answerQuiz(correct, btn, q, type) {
+  if (state.quizAnswered) return;
+  state.quizAnswered = true;
+  state.quizTotal++;
+  if (correct) state.quizCorrect++;
+  state.quizHistory.push(correct);
+  if (state.quizHistory.length > 100) state.quizHistory.shift();
+  saveState(); updateStats();
+
+  document.querySelectorAll('.quiz-opt').forEach(b => {
+    b.classList.add('disabled');
+    const text = b.textContent.slice(2).trim();
+    const isCorrect = type===0 ? text === q.vi : text === (q.article ? q.article + ' ' + q.word : q.word);
+    if (isCorrect) b.classList.add('correct');
+  });
+  if (!correct) btn.classList.add('wrong');
+
+  const fb = document.getElementById('quizFeedback');
+  fb.style.display = 'block';
+  fb.className = 'quiz-feedback ' + (correct ? 'correct-fb' : 'wrong-fb');
+  fb.innerHTML = correct
+    ? `✅ Chính xác! <strong>${q.article ? q.article + ' ' : ''}${q.word}</strong> = ${q.vi}`
+    : `❌ Sai! Đáp án: <strong>${q.article ? q.article + ' ' : ''}${q.word}</strong> = ${q.vi}`;
+  document.getElementById('quizNextBtn').style.display = 'block';
+  document.getElementById('quizScore').textContent = `${state.quizCorrect} / ${state.quizTotal}`;
+}
+function nextQuiz() {
+  if (state.quizIndex < state.quizQueue.length - 1) { state.quizIndex++; showQuizQuestion(); }
+  else { toast('🎉 Quiz hoàn thành! Bắt đầu lại...'); loadQuizQueue(); }
+}
+
+// ═══════════════════════════════════════════════════════
+// GRAMMAR
+// ═══════════════════════════════════════════════════════
+function renderGrammar() {
+  const grid = document.getElementById('grammarGrid');
+  grid.innerHTML = '';
+  GRAMMAR.forEach((g, i) => {
+    const card = document.createElement('div');
+    card.className = 'grammar-card';
+    let tableHtml = '';
+    if (g.table) {
+      tableHtml = `<table class="grammar-table">
+        <thead><tr>${g.table.headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+        <tbody>${g.table.rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table>`;
+    }
+    const exHtml = g.examples.map(ex => `
+      <div class="grammar-ex-item">${ex.de}<span>${ex.vi}</span></div>
+    `).join('');
+
+    card.innerHTML = `
+      <span class="grammar-tag">${g.tag}</span>
+      <h3>${g.title}</h3>
+      <p>${g.desc}</p>
+      <div class="grammar-examples" id="gex-${i}">
+        ${tableHtml}
+        <div style="margin-top:12px">${exHtml}</div>
+      </div>
+    `;
+    card.onclick = () => {
+      const ex = document.getElementById('gex-'+i);
+      ex.classList.toggle('open');
+    };
+    grid.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+loadState();
+updateStats();
+setTimeout(() => {
+  document.getElementById('loader').classList.add('hidden');
+}, 900);
+</script>
+</body>
+</html>
