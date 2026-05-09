@@ -891,12 +891,748 @@ main { flex:1; padding:32px var(--sp6); max-width:1160px; margin:0 auto; width:1
   .grammar-grid { grid-template-columns:1fr; }
   .fs-controls { display:none; }
 }
-@media(max-width:480px){
-  .quick-grid { grid-template-columns:repeat(2,1fr); }
-  .quiz-type-row { flex-direction:column; }
-  .quiz-q-word { font-size:calc(1.8rem * var(--reading-scale)) !important; }
-  .art-opts { gap:8px; }
-  .art-btn { width:66px; height:66px; font-size:var(--fs-lg); }
+/* ════════════════════════════════════════════════════════
+   VOCAB SYSTEM v2 — Enhanced UI
+════════════════════════════════════════════════════════ */
+
+/* Overview stats bar */
+.vov-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp2); margin-bottom: var(--sp5);
+}
+.vov-stat {
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: var(--r3); padding: 12px var(--sp3);
+  text-align: center; box-shadow: var(--s0); transition: all var(--t2);
+}
+.vov-stat:hover { border-color: var(--rose-light); box-shadow: var(--s2); }
+.vov-stat-val { font-family: var(--font-reading); font-size: var(--fs-xl); font-weight: 700; color: var(--rose-deep); line-height: 1; }
+.vov-stat-bar { height: 3px; background: var(--gray-100); border-radius: var(--rf); margin: 5px 0 3px; overflow: hidden; }
+.vov-stat-bar-fill { height: 100%; border-radius: var(--rf); transition: width .5s var(--ease); }
+.vov-stat-bar-fill.new      { background: var(--success); }
+.vov-stat-bar-fill.learning { background: var(--warning); }
+.vov-stat-bar-fill.mastered { background: var(--rose-deep); }
+.vov-stat-bar-fill.total    { background: var(--rose-light); }
+.vov-stat-lbl { font-size: .62rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+/* Random / review buttons */
+.vov-random-btn {
+  padding: 10px 16px; border-radius: var(--r2);
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--text3);
+  cursor: pointer; transition: all var(--t2); white-space: nowrap;
+}
+.vov-random-btn:hover { border-color: var(--rose-light); color: var(--rose-deep); background: var(--rose-faint); }
+
+/* Toolbar */
+.vov-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: var(--sp3); padding: 0 2px;
+}
+.vov-count { font-size: var(--fs-sm); color: var(--text-muted); font-weight: 500; }
+.vov-view-btn {
+  width: 32px; height: 32px; border-radius: var(--r1);
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: 1rem; color: var(--text-muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--t1);
+}
+.vov-view-btn:hover, .vov-view-btn.active {
+  border-color: var(--rose-light); background: var(--rose-faint); color: var(--rose-deep);
+}
+
+/* Status pill counts */
+.status-pill span {
+  font-size: .6rem; font-weight: 800; padding: 1px 5px;
+  background: rgba(0,0,0,.06); border-radius: var(--rf); margin-left: 4px;
+}
+
+/* ── VOCAB CARD v2 ── */
+.vcard-v2 {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r4);
+  padding: 0;
+  cursor: pointer;
+  transition: all .22s var(--ease);
+  position: relative; overflow: hidden;
+  box-shadow: var(--s0);
+  display: flex; flex-direction: column;
+}
+.vcard-v2:hover { border-color: var(--rose-light); box-shadow: var(--s2); transform: translateY(-2px); }
+
+/* Article color bar on top */
+.vcard-v2-top-bar {
+  height: 4px; width: 100%;
+  background: var(--border);
+  transition: background .22s;
+}
+.vcard-v2.art-der .vcard-v2-top-bar { background: #7080d0; }
+.vcard-v2.art-die .vcard-v2-top-bar { background: var(--rose-mid); }
+.vcard-v2.art-das .vcard-v2-top-bar { background: #50a070; }
+.vcard-v2.s-mastered { border-color: rgba(82,176,114,.3); }
+
+.vcard-v2-body { padding: 16px 18px 14px; flex: 1; }
+.vcard-v2-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+.vcard-v2-badges { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+
+.badge-lvl-a1 { background: #e8f7ed; color: #2e8050; }
+.badge-lvl-a2 { background: #d8f0e4; color: #1e6040; }
+.badge-lvl-b1 { background: var(--warning-bg); color: var(--warning); }
+
+.vcard-v2-icons { display: flex; gap: 4px; align-items: center; }
+.vcard-v2-icon-btn {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: none; background: none;
+  font-size: .8rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-faint); transition: all .15s; opacity: 0;
+}
+.vcard-v2:hover .vcard-v2-icon-btn { opacity: 1; }
+.vcard-v2-icon-btn:hover { background: var(--rose-pale); color: var(--rose-deep); }
+.vcard-v2-icon-btn.fav-on { color: #e8a030; opacity: 1; }
+.vcard-v2-icon-btn.learn-on { color: var(--success); opacity: 1; }
+
+.vcard-v2-art-row { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
+.vcard-v2-art {
+  font-size: .68rem; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 1.5px; padding: 2px 9px; border-radius: var(--rf);
+}
+.art-der .vcard-v2-art { background: #ededfc; color: #5050b0; }
+.art-die .vcard-v2-art { background: var(--rose-pale); color: var(--rose-deep); }
+.art-das .vcard-v2-art { background: #e8f5ed; color: #2e7050; }
+.vcard-v2-cls {
+  font-size: .62rem; color: var(--text-faint); font-weight: 500;
+  background: var(--gray-50); padding: 2px 7px; border-radius: var(--rf);
+}
+
+.vcard-v2-word {
+  font-family: var(--font-reading);
+  font-size: calc(var(--fs-xl) * var(--reading-scale));
+  font-weight: 600; color: var(--gray-900);
+  line-height: 1.15; margin-bottom: 2px;
+}
+.vcard-v2-plural { font-size: var(--fs-xs); color: var(--text-faint); margin-bottom: 4px; font-style: italic; }
+.vcard-v2-ipa { font-size: calc(var(--fs-xs) * var(--reading-scale)); color: var(--text-muted); font-style: italic; margin-bottom: 8px; }
+.vcard-v2-vi {
+  font-size: calc(var(--fs-base) * var(--reading-scale));
+  color: var(--text2); font-weight: 600; margin-bottom: 10px;
+  line-height: var(--lh-snug);
+}
+.vcard-v2-ex {
+  font-size: calc(var(--fs-sm) * var(--reading-scale));
+  color: var(--text-muted); font-style: italic;
+  line-height: var(--lh-base);
+  border-top: 1px dashed var(--border); padding-top: 9px;
+}
+.vcard-v2-ex-vi {
+  font-size: calc(var(--fs-xs) * var(--reading-scale));
+  color: var(--text-faint); margin-top: 2px;
+}
+
+/* Footer */
+.vcard-v2-footer {
+  padding: 8px 18px;
+  border-top: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface3);
+}
+.vcard-v2-status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--gray-300);
+}
+.vcard-v2.s-new .vcard-v2-status-dot     { background: var(--success); }
+.vcard-v2.s-learning .vcard-v2-status-dot { background: var(--warning); }
+.vcard-v2.s-mastered .vcard-v2-status-dot { background: var(--rose-deep); }
+.vcard-v2-status-lbl { font-size: .58rem; color: var(--text-faint); font-weight: 500; margin-left: 5px; }
+.vcard-v2-footer-right { display: flex; gap: 5px; align-items: center; }
+.vcard-v2-audio {
+  padding: 3px 10px; border-radius: var(--rf); border: 1px solid var(--border);
+  background: var(--surface); font-size: .65rem; font-weight: 600; color: var(--text-muted);
+  cursor: pointer; transition: all .15s;
+}
+.vcard-v2-audio:hover { border-color: var(--rose-light); color: var(--rose-deep); background: var(--rose-faint); }
+
+/* List view */
+.vocab-grid.list-view {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.vocab-grid.list-view .vcard-v2 {
+  flex-direction: row; padding: 0;
+}
+.vocab-grid.list-view .vcard-v2-top-bar {
+  width: 4px; height: auto;
+  border-radius: var(--r4) 0 0 var(--r4);
+}
+.vocab-grid.list-view .vcard-v2-body {
+  flex: 1; padding: 12px 16px;
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: 0 var(--sp4); align-items: center;
+}
+.vocab-grid.list-view .vcard-v2-head { margin-bottom: 0; }
+.vocab-grid.list-view .vcard-v2-art-row { margin-bottom: 0; }
+.vocab-grid.list-view .vcard-v2-ipa { display: none; }
+.vocab-grid.list-view .vcard-v2-ex { display: none; }
+.vocab-grid.list-view .vcard-v2-ex-vi { display: none; }
+.vocab-grid.list-view .vcard-v2-plural { display: none; }
+.vocab-grid.list-view .vcard-v2-footer { border-top: none; border-left: 1px solid var(--border2); border-radius: 0; padding: 8px 14px; }
+
+/* ── WORD DETAIL MODAL ── */
+.vmod-overlay {
+  display: none; position: fixed; inset: 0; z-index: 400;
+  background: rgba(30, 22, 18, .5);
+  backdrop-filter: blur(3px);
+}
+.vmod-overlay.show { display: block; animation: fadeIn .2s ease; }
+.vmod {
+  display: none; position: fixed; z-index: 401;
+  top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background: var(--surface); border-radius: var(--r6);
+  padding: var(--sp6) var(--sp6) var(--sp5);
+  width: min(520px, 92vw); max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+.vmod.show { display: block; animation: modalIn .28s var(--ease); }
+@keyframes modalIn { from{opacity:0;transform:translate(-50%,-45%)} to{opacity:1;transform:translate(-50%,-50%)} }
+.vmod-close {
+  position: absolute; top: 14px; right: 14px;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg2);
+  font-size: 1rem; cursor: pointer; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.vmod-close:hover { background: var(--danger-bg); color: var(--danger); }
+.vmod-art {
+  font-size: var(--fs-xs); font-weight: 800; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--rose); margin-bottom: 6px;
+}
+.vmod-word {
+  font-family: var(--font-reading);
+  font-size: 2.4rem; font-weight: 600; color: var(--gray-900);
+  line-height: 1.1; margin-bottom: 4px;
+}
+.vmod-plural { font-size: var(--fs-sm); color: var(--text-muted); font-style: italic; margin-bottom: 5px; }
+.vmod-ipa { font-size: var(--fs-base); color: var(--text-muted); font-style: italic; margin-bottom: 12px; }
+.vmod-vi { font-size: var(--fs-xl); color: var(--text2); font-weight: 600; margin-bottom: var(--sp3); line-height: var(--lh-snug); }
+.vmod-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: var(--sp4); }
+.vmod-tag { font-size: .65rem; font-weight: 700; padding: 3px 10px; border-radius: var(--rf); }
+.vmod-tag.lvl { background: var(--blush, var(--rose-pale)); color: var(--rose-deep); }
+.vmod-tag.cls { background: var(--gray-100); color: var(--gray-600); }
+.vmod-tag.cat { background: var(--info-bg, #f0f5fd); color: var(--info, #3878b8); }
+.vmod-ex {
+  font-family: var(--font-reading);
+  font-size: var(--fs-lg); color: var(--gray-800);
+  line-height: var(--lh-loose);
+  padding: var(--sp3) var(--sp4);
+  background: var(--rose-faint); border-left: 3px solid var(--rose-light);
+  border-radius: 0 var(--r2) var(--r2) 0;
+  margin-bottom: 6px;
+}
+.vmod-ex-vi { font-size: var(--fs-sm); color: var(--text-muted); font-style: italic; margin-bottom: var(--sp4); padding-left: var(--sp4); }
+.vmod-conj {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: var(--r3); padding: var(--sp3) var(--sp4); margin-bottom: var(--sp4);
+}
+.vmod-conj-title { font-size: var(--fs-xs); font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.vmod-conj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px 10px; }
+.vmod-conj-item { font-size: var(--fs-sm); color: var(--text2); }
+.vmod-conj-item span { color: var(--text-muted); font-size: var(--fs-xs); }
+.vmod-extra { font-size: var(--fs-sm); color: var(--text3); margin-bottom: var(--sp4); line-height: var(--lh-base); }
+.vmod-extra strong { color: var(--text2); }
+.vmod-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.vmod-btn {
+  flex: 1; min-width: 120px; padding: 11px 14px; border-radius: var(--r2);
+  border: 1px solid var(--border); background: var(--surface);
+  font-size: var(--fs-sm); font-weight: 700; cursor: pointer;
+  transition: all var(--t2); text-align: center;
+}
+.vmod-btn.audio { color: var(--rose-deep); border-color: var(--rose-light); }
+.vmod-btn.audio:hover { background: var(--rose-pale); }
+.vmod-btn.fav   { color: #b87020; border-color: #f0d098; }
+.vmod-btn.fav:hover { background: var(--xp-bg); }
+.vmod-btn.fav.fav-on { background: var(--xp-bg); color: #8a5010; }
+.vmod-btn.learn { color: var(--success); border-color: var(--success-bd); }
+.vmod-btn.learn:hover { background: var(--success-bg); }
+.vmod-btn.learn.learn-on { background: var(--success-bg); }
+
+/* Article legend */
+.art-legend {
+  display: flex; gap: 12px; align-items: center;
+  margin-bottom: var(--sp4); font-size: var(--fs-xs); color: var(--text-muted);
+}
+.art-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.art-dot.der { background: #7080d0; }
+.art-dot.die { background: var(--rose-mid); }
+.art-dot.das { background: #50a070; }
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .vov-stats { grid-template-columns: repeat(2, 1fr); }
+  .vocab-grid.list-view .vcard-v2-body { grid-template-columns: 1fr auto; }
+  .vmod { width: 95vw; padding: var(--sp4); }
+  .vmod-word { font-size: 2rem; }
+}
+@media (max-width: 480px) {
+  .vov-stats { grid-template-columns: repeat(2, 1fr); }
+  .vmod-actions { flex-direction: column; }
+  .art-legend { flex-wrap: wrap; }
+}
+
+/* Info tooltip on word type */
+.vov-type-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: var(--sp3); }
+</style>
+
+/* ── Level selector grid ── */
+.rd-level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: var(--sp3);
+  margin-bottom: var(--sp5);
+}
+.rd-lv-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r4);
+  padding: var(--sp4) var(--sp3);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--t2);
+  box-shadow: var(--s0);
+  position: relative;
+  overflow: hidden;
+}
+.rd-lv-card::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 4px;
+  border-radius: var(--r4) 0 0 var(--r4);
+}
+.rd-lv-card.lv-a1::before { background: #52b072; }
+.rd-lv-card.lv-a2::before { background: #3d9e6a; }
+.rd-lv-card.lv-b1::before { background: var(--xp-color); }
+.rd-lv-card.lv-b2::before { background: #d47830; }
+.rd-lv-card.lv-c1::before { background: var(--rose-deep); }
+.rd-lv-card.lv-c2::before { background: #8040a0; }
+.rd-lv-card:hover { border-color: var(--rose-light); box-shadow: var(--s2); transform: translateY(-2px); }
+.rd-lv-card.active { border-color: var(--rose-mid); background: var(--rose-faint); box-shadow: var(--s2); }
+.rd-lv-badge {
+  display: inline-block;
+  font-size: .7rem; font-weight: 800;
+  padding: 3px 12px; border-radius: var(--rf);
+  margin-bottom: 7px; letter-spacing: .5px;
+}
+.lv-a1 .rd-lv-badge { background: #e8f7ed; color: #2e8050; }
+.lv-a2 .rd-lv-badge { background: #d8f0e4; color: #236040; }
+.lv-b1 .rd-lv-badge { background: var(--warning-bg); color: var(--warning); }
+.lv-b2 .rd-lv-badge { background: #fdecd8; color: #a05820; }
+.lv-c1 .rd-lv-badge { background: var(--rose-pale); color: var(--rose-deep); }
+.lv-c2 .rd-lv-badge { background: #f0e4fc; color: #6030a0; }
+.rd-lv-name { font-size: var(--fs-sm); font-weight: 600; color: var(--text2); margin-bottom: 3px; }
+.rd-lv-count { font-size: var(--fs-xs); color: var(--text-muted); }
+
+/* ── Text list ── */
+.rd-list { display: flex; flex-direction: column; gap: var(--sp3); margin-bottom: var(--sp5); }
+.rd-text-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r4);
+  padding: var(--sp4) var(--sp5);
+  cursor: pointer;
+  transition: all var(--t2);
+  box-shadow: var(--s0);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp3);
+  align-items: center;
+}
+.rd-text-card:hover { border-color: var(--rose-light); box-shadow: var(--s2); transform: translateX(3px); }
+.rd-text-card.done { border-left: 3px solid var(--success); }
+.rd-tc-cat {
+  font-size: .62rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--rose); margin-bottom: 5px;
+}
+.rd-tc-title {
+  font-family: var(--font-reading);
+  font-size: calc(var(--fs-lg) * var(--reading-scale));
+  font-weight: 600; color: var(--gray-900); margin-bottom: 4px;
+  line-height: var(--lh-snug);
+}
+.rd-tc-preview {
+  font-size: calc(var(--fs-sm) * var(--reading-scale));
+  color: var(--text-muted); line-height: var(--lh-base);
+  overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.rd-tc-meta {
+  display: flex; flex-direction: column; align-items: flex-end;
+  gap: 6px; flex-shrink: 0;
+}
+.rd-tc-time {
+  font-size: var(--fs-xs); color: var(--text-muted);
+  background: var(--bg2); padding: 3px 10px; border-radius: var(--rf);
+  white-space: nowrap;
+}
+.rd-tc-done-badge {
+  font-size: var(--fs-xs); font-weight: 700;
+  background: var(--success-bg); color: var(--success);
+  padding: 3px 10px; border-radius: var(--rf);
+}
+
+/* ── Reader view ── */
+.rd-reader {
+  max-width: 760px; margin: 0 auto;
+  display: none;
+}
+.rd-reader.active { display: block; animation: pageIn var(--t3) var(--ease) both; }
+
+/* Back button */
+.rd-back {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: var(--fs-sm); font-weight: 600; color: var(--text3);
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 7px 16px; border-radius: var(--rf);
+  margin-bottom: var(--sp4); cursor: pointer;
+  transition: all var(--t2); box-shadow: var(--s0);
+}
+.rd-back:hover { color: var(--rose-deep); border-color: var(--rose-light); }
+
+/* Reader header */
+.rd-reader-head {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r5);
+  padding: var(--sp5) var(--sp6);
+  margin-bottom: var(--sp4);
+  box-shadow: var(--s1);
+}
+.rd-rh-cat {
+  font-size: .62rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--rose); margin-bottom: 8px;
+}
+.rd-rh-title {
+  font-family: var(--font-reading);
+  font-size: calc(var(--fs-3xl) * var(--reading-scale));
+  font-weight: 600; color: var(--gray-900);
+  line-height: var(--lh-tight); margin-bottom: var(--sp3);
+}
+.rd-rh-meta {
+  display: flex; gap: var(--sp4); flex-wrap: wrap; align-items: center;
+}
+.rd-rh-pill {
+  font-size: var(--fs-xs); padding: 3px 11px; border-radius: var(--rf);
+  background: var(--bg2); color: var(--text-muted); border: 1px solid var(--border2);
+}
+.rd-rh-pill.level { background: var(--rose-pale); color: var(--rose-deep); border-color: var(--rose-light); font-weight: 700; }
+
+/* Reader controls toolbar */
+.rd-toolbar {
+  display: flex; gap: var(--sp2); flex-wrap: wrap;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r3);
+  padding: 10px 14px;
+  margin-bottom: var(--sp4);
+  box-shadow: var(--s0);
+  align-items: center;
+}
+.rd-tb-label {
+  font-size: var(--fs-xs); color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-right: 6px; font-weight: 600;
+}
+.rd-tb-btn {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 13px; border-radius: var(--rf);
+  border: 1px solid var(--border); background: var(--bg2);
+  font-size: var(--fs-xs); font-weight: 600; color: var(--text3);
+  cursor: pointer; transition: all var(--t1);
+  white-space: nowrap;
+}
+.rd-tb-btn:hover { border-color: var(--rose-light); color: var(--rose-deep); background: var(--rose-faint); }
+.rd-tb-btn.active { background: var(--rose-deep); color: #fff; border-color: transparent; }
+.rd-tb-sep { width: 1px; height: 20px; background: var(--border); margin: 0 4px; }
+.rd-tb-audio {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 6px;
+}
+.rd-play-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 16px; border-radius: var(--rf);
+  background: var(--rose-deep); color: #fff; border: none;
+  font-size: var(--fs-sm); font-weight: 700;
+  cursor: pointer; transition: all var(--t2);
+  box-shadow: 0 2px 8px rgba(168,86,112,.25);
+}
+.rd-play-btn:hover { background: #97446a; transform: translateY(-1px); }
+.rd-play-btn.slow { background: var(--warning); }
+.rd-play-btn.slow:hover { background: #a06020; }
+
+/* Full paragraph view */
+.rd-full-view {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r5);
+  padding: var(--sp6) var(--sp7);
+  box-shadow: var(--s2);
+  margin-bottom: var(--sp4);
+  line-height: var(--lh-loose);
+}
+.rd-full-text {
+  font-family: var(--font-reading);
+  font-size: calc(var(--fs-lg) * var(--reading-scale));
+  color: var(--gray-800);
+  line-height: 2;
+  letter-spacing: .01em;
+}
+/* Clickable words */
+.rd-word {
+  cursor: pointer;
+  border-radius: 3px;
+  padding: 0 2px;
+  transition: background var(--t1), color var(--t1);
+  display: inline;
+}
+.rd-word:hover { background: var(--rose-pale); color: var(--rose-deep); }
+.rd-word.highlighted { background: #fef3c7; color: #92400e; }
+.rd-word.vocab-marked { background: var(--rose-pale); color: var(--rose-deep); border-bottom: 2px solid var(--rose-light); }
+
+/* Translation panel */
+.rd-translation {
+  background: var(--surface3);
+  border: 1px dashed var(--border);
+  border-radius: var(--r4);
+  padding: var(--sp4) var(--sp5);
+  margin-bottom: var(--sp4);
+  font-size: calc(var(--fs-base) * var(--reading-scale));
+  color: var(--text3);
+  line-height: var(--lh-loose);
+  font-style: italic;
+  display: none;
+}
+.rd-translation.show { display: block; animation: fadeIn .22s ease; }
+.rd-tl-label {
+  font-size: var(--fs-xs); font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 8px; display: block; font-style: normal;
+}
+
+/* Sentence-by-sentence view */
+.rd-sent-view { display: none; flex-direction: column; gap: var(--sp3); margin-bottom: var(--sp4); }
+.rd-sent-view.show { display: flex; }
+
+.rd-sent-card {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--r4);
+  padding: var(--sp4) var(--sp5);
+  box-shadow: var(--s0);
+  transition: all var(--t2);
+  position: relative;
+}
+.rd-sent-card.active-sent {
+  border-color: var(--rose-light);
+  box-shadow: var(--s2);
+  background: var(--rose-faint);
+}
+.rd-sent-card.bookmarked { border-left: 3px solid var(--xp-color); }
+
+.rd-sent-num {
+  position: absolute; top: var(--sp3); left: var(--sp3);
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--rose-pale); color: var(--rose-deep);
+  font-size: .62rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.rd-sent-body { padding-left: 30px; }
+.rd-sent-de {
+  font-family: var(--font-reading);
+  font-size: calc(var(--fs-lg) * var(--reading-scale));
+  color: var(--gray-900);
+  line-height: var(--lh-base);
+  margin-bottom: 8px;
+}
+.rd-sent-vi {
+  font-size: calc(var(--fs-base) * var(--reading-scale));
+  color: var(--text3); font-style: italic;
+  line-height: var(--lh-base);
+  margin-bottom: 10px;
+  display: none;
+}
+.rd-sent-vi.show { display: block; animation: fadeIn .2s ease; }
+
+/* Sentence action row */
+.rd-sent-actions {
+  display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding-left: 30px;
+}
+.rd-s-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 4px 11px; border-radius: var(--rf);
+  border: 1px solid var(--border); background: var(--bg2);
+  font-size: var(--fs-xs); font-weight: 600; color: var(--text-muted);
+  cursor: pointer; transition: all var(--t1);
+}
+.rd-s-btn:hover { border-color: var(--rose-light); color: var(--rose-deep); background: var(--rose-faint); }
+.rd-s-btn.active { background: var(--rose-pale); color: var(--rose-deep); border-color: var(--rose-light); }
+.rd-s-btn.bk-active { background: var(--xp-bg); color: var(--xp-color); border-color: var(--warning-bd); }
+
+/* Grammar notes per sentence */
+.rd-sent-grammar {
+  margin-top: 10px; padding: 10px 14px;
+  background: var(--info-bg); border-left: 2px solid var(--info);
+  border-radius: 0 var(--r2) var(--r2) 0;
+  font-size: calc(var(--fs-sm) * var(--reading-scale));
+  color: var(--info); line-height: var(--lh-base);
+  display: none;
+}
+.rd-sent-grammar.show { display: block; animation: fadeIn .2s ease; }
+.rd-sg-label { font-weight: 700; font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+
+/* Key vocabulary panel */
+.rd-vocab-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r4);
+  padding: var(--sp4) var(--sp5);
+  margin-bottom: var(--sp4);
+  box-shadow: var(--s1);
+}
+.rd-vp-title {
+  font-size: var(--fs-sm); font-weight: 700; color: var(--text2);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: var(--sp3);
+  display: flex; align-items: center; gap: 8px;
+}
+.rd-vp-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.rd-vocab-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.rd-vchip {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: var(--rf);
+  background: var(--rose-faint); border: 1px solid var(--rose-pale);
+  cursor: pointer; transition: all var(--t1);
+}
+.rd-vchip:hover { background: var(--rose-pale); border-color: var(--rose-light); }
+.rd-vchip-word { font-family: var(--font-reading); font-weight: 600; font-size: var(--fs-sm); color: var(--gray-900); }
+.rd-vchip-vi { font-size: var(--fs-xs); color: var(--text-muted); }
+.rd-vchip-art { font-size: .6rem; color: var(--rose); font-weight: 700; margin-right: 2px; }
+
+/* Word popup tooltip */
+.rd-word-popup {
+  position: fixed;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r4);
+  padding: var(--sp3) var(--sp4);
+  box-shadow: var(--s4);
+  z-index: 500;
+  min-width: 220px; max-width: 300px;
+  display: none;
+  animation: popIn .2s var(--ease);
+}
+.rd-word-popup.show { display: block; }
+.rd-wp-word {
+  font-family: var(--font-reading);
+  font-size: var(--fs-xl); font-weight: 600;
+  color: var(--gray-900); margin-bottom: 3px;
+}
+.rd-wp-art { font-size: var(--fs-xs); color: var(--rose); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+.rd-wp-ipa { font-size: var(--fs-xs); color: var(--text-muted); font-style: italic; margin-bottom: 6px; }
+.rd-wp-vi { font-size: var(--fs-base); color: var(--text2); font-weight: 500; margin-bottom: 4px; }
+.rd-wp-cls { font-size: var(--fs-xs); color: var(--text-muted); margin-bottom: 10px; }
+.rd-wp-ex { font-size: var(--fs-xs); color: var(--text3); font-style: italic; line-height: var(--lh-base); border-top: 1px dashed var(--border); padding-top: 8px; margin-bottom: 10px; }
+.rd-wp-actions { display: flex; gap: 6px; }
+.rd-wp-btn {
+  flex: 1; padding: 6px 10px; border-radius: var(--rf);
+  border: 1px solid var(--border); background: var(--bg2);
+  font-size: var(--fs-xs); font-weight: 600; color: var(--text3);
+  cursor: pointer; transition: all var(--t1); text-align: center;
+}
+.rd-wp-btn:hover { border-color: var(--rose-light); color: var(--rose-deep); background: var(--rose-faint); }
+.rd-wp-btn.primary { background: var(--rose-deep); color: #fff; border-color: transparent; }
+.rd-wp-btn.primary:hover { background: #97446a; }
+.rd-wp-close {
+  position: absolute; top: 8px; right: 8px;
+  width: 20px; height: 20px; border-radius: 50%;
+  border: none; background: var(--bg2); color: var(--text-muted);
+  font-size: .75rem; cursor: pointer; line-height: 1;
+}
+.rd-wp-close:hover { background: var(--danger-bg); color: var(--danger); }
+
+/* Progress bar at bottom of reader */
+.rd-progress-bar {
+  height: 4px; background: var(--border2);
+  border-radius: var(--rf); overflow: hidden;
+  margin-bottom: var(--sp4);
+}
+.rd-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--rose-light), var(--rose-deep));
+  border-radius: var(--rf); transition: width .5s var(--ease);
+}
+
+/* Distraction-free overlay */
+.rd-focus-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(28, 22, 18, .85);
+  backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+}
+.rd-focus-overlay.show { display: flex; }
+.rd-focus-inner {
+  background: var(--surface);
+  border-radius: var(--r6);
+  padding: var(--sp7) var(--sp8);
+  max-width: 680px; width: 90%;
+  max-height: 80vh; overflow-y: auto;
+  box-shadow: var(--s4);
+  position: relative;
+}
+.rd-focus-close {
+  position: absolute; top: 16px; right: 16px;
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--bg2);
+  font-size: 1rem; cursor: pointer; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--t1);
+}
+.rd-focus-close:hover { background: var(--danger-bg); color: var(--danger); }
+.rd-focus-text {
+  font-family: var(--font-reading);
+  font-size: calc(var(--fs-xl) * var(--reading-scale));
+  line-height: 2; color: var(--gray-800);
+  letter-spacing: .01em;
+}
+
+/* Reading stats card */
+.rd-stats-row {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp3);
+  margin-top: var(--sp5);
+}
+.rd-stat {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r3); padding: var(--sp3) var(--sp4);
+  text-align: center; box-shadow: var(--s0);
+}
+.rd-stat-val { font-family: var(--font-reading); font-size: var(--fs-2xl); font-weight: 700; color: var(--rose-deep); line-height: 1; }
+.rd-stat-lbl { font-size: var(--fs-xs); color: var(--text-muted); margin-top: 4px; letter-spacing: .5px; }
+
+/* Responsive for reading */
+@media (max-width: 768px) {
+  .rd-full-view { padding: var(--sp4) var(--sp4); }
+  .rd-reader-head { padding: var(--sp4); }
+  .rd-toolbar { flex-wrap: wrap; gap: 6px; }
+  .rd-tb-audio { margin-left: 0; width: 100%; justify-content: flex-start; }
+  .rd-stats-row { grid-template-columns: repeat(3, 1fr); }
+  .rd-level-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 480px) {
+  .rd-level-grid { grid-template-columns: repeat(2, 1fr); }
+  .rd-stats-row { grid-template-columns: repeat(3, 1fr); gap: var(--sp2); }
+  .rd-text-card { grid-template-columns: 1fr; }
+  .rd-tc-meta { flex-direction: row; align-items: center; }
 }
 </style>
 </head>
@@ -942,6 +1678,7 @@ main { flex:1; padding:32px var(--sp6); max-width:1160px; margin:0 auto; width:1
     <button data-page="flashcard">🃏 Flashcard</button>
     <button data-page="quiz">🎯 Quiz</button>
     <button data-page="grammar">📖 Ngữ pháp</button>
+    <button data-page="reading">📰 Đọc hiểu</button>
   </nav>
 
   <div class="header-right">
@@ -970,6 +1707,7 @@ main { flex:1; padding:32px var(--sp6); max-width:1160px; margin:0 auto; width:1
   <button onclick="goPage('flashcard');toggleMNav()">🃏 Flashcard</button>
   <button onclick="goPage('quiz');toggleMNav()">🎯 Quiz</button>
   <button onclick="goPage('grammar');toggleMNav()">📖 Ngữ pháp</button>
+  <button onclick="goPage('reading');toggleMNav()">📰 Đọc hiểu</button>
   <!-- Font size in mobile -->
   <div style="display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--border);margin-top:4px">
     <span style="font-size:.75rem;color:var(--text-muted);align-self:center">Cỡ chữ:</span>
@@ -1050,30 +1788,84 @@ main { flex:1; padding:32px var(--sp6); max-width:1160px; margin:0 auto; width:1
     <div class="quick-card" onclick="goPage('grammar')"><div class="quick-icon">📖</div><div class="quick-label">Ngữ pháp</div></div>
     <div class="quick-card" onclick="toast('🚧 Đang phát triển!')"><div class="quick-icon">🗺️</div><div class="quick-label">Lộ trình</div></div>
     <div class="quick-card" onclick="toast('🚧 Đang phát triển!')"><div class="quick-icon">🏆</div><div class="quick-label">Thành tích</div></div>
+    <div class="quick-card" onclick="goPage('reading')"><div class="quick-icon">📰</div><div class="quick-label">Đọc hiểu</div></div>
   </div>
 </div>
 
 <!-- ════ VOCAB ════ -->
 <div id="page-vocab" class="page">
+  <!-- Header + Stats -->
   <div class="sec-hd">
     <div class="sec-title">📚 Từ vựng <em>tiếng Đức</em></div>
-    <div class="sec-sub">Nhấn thẻ để đánh dấu học · 🔊 nghe phát âm · Lọc theo cấp độ và chủ đề</div>
+    <div class="sec-sub">300+ từ vựng A1–B1 có phân loại · Nhấn thẻ đánh dấu học · 🔊 Nghe phát âm</div>
   </div>
+
+  <!-- Vocab overview stats -->
+  <div class="vov-stats" id="vocabOverviewStats"></div>
+
+  <!-- Search -->
   <div class="vocab-controls">
-    <div class="search-wrap">
+    <div class="search-wrap" style="flex:1">
       <span class="search-icon">🔍</span>
       <input class="search-input" id="vSearch" placeholder="Tìm từ tiếng Đức hoặc tiếng Việt…" oninput="renderVocab()">
     </div>
+    <button class="vov-random-btn" onclick="vocabRandom()" title="Từ ngẫu nhiên">🎲 Ngẫu nhiên</button>
+    <button class="vov-random-btn" onclick="vocabReviewDifficult()" title="Từ khó">⚠️ Từ khó</button>
   </div>
+
+  <!-- Level filter -->
+  <div style="margin-bottom:8px;font-size:var(--fs-xs);color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px">Cấp độ</div>
   <div class="filter-row" id="vLevelPills"></div>
+
+  <!-- Word type filter -->
+  <div style="margin-bottom:8px;font-size:var(--fs-xs);color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px">Từ loại</div>
+  <div class="filter-row" id="vTypePills"></div>
+
+  <!-- Category filter -->
+  <div style="margin-bottom:8px;font-size:var(--fs-xs);color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px">Chủ đề</div>
   <div class="filter-row" id="vCatPills"></div>
+
+  <!-- Status filter -->
   <div class="status-bar">
-    <button class="status-pill s-active-all" id="sp-all"       onclick="setVSt('all')">Tất cả</button>
-    <button class="status-pill"              id="sp-new"       onclick="setVSt('new')">🆕 Mới</button>
-    <button class="status-pill"              id="sp-learning"  onclick="setVSt('learning')">📖 Đang học</button>
-    <button class="status-pill"              id="sp-mastered"  onclick="setVSt('mastered')">✅ Thuộc</button>
+    <button class="status-pill s-active-all" id="sp-all"      onclick="setVSt('all')">Tất cả <span id="spCntAll"></span></button>
+    <button class="status-pill"              id="sp-new"      onclick="setVSt('new')">🆕 Mới <span id="spCntNew"></span></button>
+    <button class="status-pill"              id="sp-learning" onclick="setVSt('learning')">📖 Đang học <span id="spCntLrn"></span></button>
+    <button class="status-pill"              id="sp-mastered" onclick="setVSt('mastered')">✅ Thuộc <span id="spCntMst"></span></button>
+    <button class="status-pill"             id="sp-fav"      onclick="setVSt('fav')">⭐ Yêu thích <span id="spCntFav"></span></button>
   </div>
+
+  <!-- Result count + view toggle -->
+  <div class="vov-toolbar">
+    <span class="vov-count" id="vocabCount">— từ</span>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="vov-view-btn active" id="vViewGrid" onclick="setVView('grid')" title="Lưới">⊞</button>
+      <button class="vov-view-btn"        id="vViewList" onclick="setVView('list')" title="Danh sách">≡</button>
+    </div>
+  </div>
+
+  <!-- Vocab grid/list -->
   <div class="vocab-grid" id="vocabGrid"></div>
+
+  <!-- Word detail modal -->
+  <div class="vmod-overlay" id="vmodOverlay" onclick="closeVmod()"></div>
+  <div class="vmod" id="vmodal">
+    <button class="vmod-close" onclick="closeVmod()">×</button>
+    <div class="vmod-art" id="vmodArt"></div>
+    <div class="vmod-word" id="vmodWord">—</div>
+    <div class="vmod-plural" id="vmodPlural"></div>
+    <div class="vmod-ipa" id="vmodIpa"></div>
+    <div class="vmod-vi" id="vmodVi">—</div>
+    <div class="vmod-tags" id="vmodTags"></div>
+    <div class="vmod-ex" id="vmodEx"></div>
+    <div class="vmod-ex-vi" id="vmodExVi"></div>
+    <div class="vmod-conj" id="vmodConj" style="display:none"></div>
+    <div class="vmod-extra" id="vmodExtra"></div>
+    <div class="vmod-actions">
+      <button class="vmod-btn audio" id="vmodAudio" onclick="vmodSpeak()">🔊 Nghe phát âm</button>
+      <button class="vmod-btn fav"   id="vmodFav"   onclick="vmodToggleFav()">⭐ Yêu thích</button>
+      <button class="vmod-btn learn" id="vmodLearn" onclick="vmodToggleLearn()">✅ Đánh dấu học</button>
+    </div>
+  </div>
 </div>
 
 <!-- ════ FLASHCARD ════ -->
@@ -1180,6 +1972,113 @@ main { flex:1; padding:32px var(--sp6); max-width:1160px; margin:0 auto; width:1
   </div>
   <div class="filter-row" id="gLevels"></div>
   <div class="grammar-grid" id="grammarGrid"></div>
+</div>
+
+<!-- ════ READING MODULE ════ -->
+<div id="page-reading" class="page">
+  <div class="sec-hd">
+    <div class="sec-title">📰 Đọc hiểu <em>tiếng Đức</em></div>
+    <div class="sec-sub">Học qua bài đọc thực tế · Chế độ toàn văn bản hoặc từng câu · Nhấn vào từ để tra nghĩa</div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="rd-stats-row" style="margin-bottom:var(--sp5);margin-top:0">
+    <div class="rd-stat"><div class="rd-stat-val" id="rdStatDone">0</div><div class="rd-stat-lbl">📖 Bài đã đọc</div></div>
+    <div class="rd-stat"><div class="rd-stat-val" id="rdStatSent">0</div><div class="rd-stat-lbl">💬 Câu đã học</div></div>
+    <div class="rd-stat"><div class="rd-stat-val" id="rdStatWords">0</div><div class="rd-stat-lbl">✨ Từ tra cứu</div></div>
+  </div>
+
+  <!-- Level tabs -->
+  <div class="filter-row" id="rdLevelTabs"></div>
+
+  <!-- Text list -->
+  <div class="rd-list" id="rdTextList"></div>
+
+  <!-- Reader view (hidden until text selected) -->
+  <div class="rd-reader" id="rdReader">
+    <button class="rd-back" onclick="closeReader()">← Quay lại danh sách</button>
+
+    <!-- Progress bar -->
+    <div class="rd-progress-bar"><div class="rd-progress-fill" id="rdProgFill" style="width:0%"></div></div>
+
+    <!-- Header -->
+    <div class="rd-reader-head">
+      <div class="rd-rh-cat" id="rdRhCat">—</div>
+      <div class="rd-rh-title" id="rdRhTitle">—</div>
+      <div class="rd-rh-meta">
+        <span class="rd-rh-pill level" id="rdRhLevel">A1</span>
+        <span class="rd-rh-pill" id="rdRhTime">⏱ 3 phút</span>
+        <span class="rd-rh-pill" id="rdRhSents">— câu</span>
+        <span class="rd-rh-pill" id="rdRhWords">— từ vựng</span>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="rd-toolbar">
+      <span class="rd-tb-label">Chế độ:</span>
+      <button class="rd-tb-btn active" id="rdBtnFull" onclick="rdSetView('full')">📄 Toàn văn</button>
+      <button class="rd-tb-btn" id="rdBtnSent" onclick="rdSetView('sent')">💬 Từng câu</button>
+      <div class="rd-tb-sep"></div>
+      <span class="rd-tb-label">Hiển thị:</span>
+      <button class="rd-tb-btn active" id="rdBtnTrans" onclick="rdToggleTrans()">🇻🇳 Dịch</button>
+      <button class="rd-tb-btn active" id="rdBtnVocab" onclick="rdToggleVocab()">🔤 Từ vựng</button>
+      <div class="rd-tb-sep"></div>
+      <button class="rd-tb-btn" onclick="rdFocusMode()">🎯 Tập trung</button>
+      <div class="rd-tb-audio">
+        <button class="rd-play-btn" onclick="rdPlayFull()">🔊 Nghe toàn bài</button>
+        <button class="rd-play-btn slow" onclick="rdPlaySlow()">🐢 Chậm</button>
+      </div>
+    </div>
+
+    <!-- Key vocabulary panel -->
+    <div class="rd-vocab-panel" id="rdVocabPanel">
+      <div class="rd-vp-title">🔑 Từ vựng quan trọng</div>
+      <div class="rd-vocab-chips" id="rdVocabChips"></div>
+    </div>
+
+    <!-- Full paragraph view -->
+    <div class="rd-full-view" id="rdFullView">
+      <div class="rd-full-text" id="rdFullText"></div>
+    </div>
+
+    <!-- Translation (full) -->
+    <div class="rd-translation" id="rdTransFull">
+      <span class="rd-tl-label">🇻🇳 Bản dịch tiếng Việt</span>
+      <span id="rdTransText"></span>
+    </div>
+
+    <!-- Sentence-by-sentence view -->
+    <div class="rd-sent-view" id="rdSentView"></div>
+
+    <!-- Mark done button -->
+    <div style="text-align:center;margin-top:var(--sp5)">
+      <button class="btn btn-primary" id="rdDoneBtn" onclick="rdMarkDone()">✅ Đánh dấu hoàn thành</button>
+    </div>
+  </div>
+</div>
+
+<!-- Word popup -->
+<div class="rd-word-popup" id="rdWordPopup">
+  <button class="rd-wp-close" onclick="closeWordPopup()">×</button>
+  <div class="rd-wp-art" id="wpArt"></div>
+  <div class="rd-wp-word" id="wpWord">—</div>
+  <div class="rd-wp-ipa" id="wpIpa"></div>
+  <div class="rd-wp-vi" id="wpVi">—</div>
+  <div class="rd-wp-cls" id="wpCls"></div>
+  <div class="rd-wp-ex" id="wpEx"></div>
+  <div class="rd-wp-actions">
+    <button class="rd-wp-btn" onclick="wpSpeak()">🔊 Nghe</button>
+    <button class="rd-wp-btn primary" onclick="wpSaveVocab()">+ Lưu từ</button>
+  </div>
+</div>
+
+<!-- Focus mode overlay -->
+<div class="rd-focus-overlay" id="rdFocusOverlay">
+  <div class="rd-focus-inner">
+    <button class="rd-focus-close" onclick="closeFocusMode()">×</button>
+    <div class="rd-focus-text" id="rdFocusText"></div>
+  </div>
+</div>
 </div>
 
 </main>
@@ -1503,6 +2402,7 @@ function goPage(p){
   if(p==='flashcard')initFC();
   if(p==='quiz')initQuiz();
   if(p==='grammar')renderGrammar();
+  if(p==='reading')renderReading();
 }
 document.querySelectorAll('#desknav button').forEach(b=>b.addEventListener('click',()=>goPage(b.dataset.page)));
 
@@ -1770,8 +2670,723 @@ function renderGGrid(){
 }
 
 /* ════════════════════════════════════════════════════════
-   KEYBOARD SHORTCUTS
+   MODULE ĐỌC HIỂU — DATA + ENGINE
 ════════════════════════════════════════════════════════ */
+
+/* ── READING TEXTS DATABASE ── */
+const READING_TEXTS = [
+
+  /* ══ A1 ══ */
+  {
+    id:'a1-1', level:'A1', cat:'Cuộc sống hàng ngày', time:'3 phút',
+    title:'Mein Morgen',
+    de:`Ich heiße Anna. Ich stehe jeden Morgen um sieben Uhr auf. Ich trinke Kaffee und esse Brot mit Butter. Dann gehe ich duschen. Um acht Uhr gehe ich zur Schule. Die Schule ist nicht weit von meinem Haus. Ich gehe zu Fuß.`,
+    vi:`Tôi tên là Anna. Mỗi buổi sáng tôi dậy lúc bảy giờ. Tôi uống cà phê và ăn bánh mì với bơ. Sau đó tôi đi tắm. Lúc tám giờ tôi đến trường. Trường không xa nhà tôi. Tôi đi bộ.`,
+    vocab:[
+      {w:'aufstehen',art:'',vi:'dậy, thức dậy',ipa:'[ˈaʊ̯fʃteːən]',cls:'Verb'},
+      {w:'Kaffee',art:'der',vi:'cà phê',ipa:'[ˈkafe]',cls:'Nomen'},
+      {w:'Brot',art:'das',vi:'bánh mì',ipa:'[bʁoːt]',cls:'Nomen'},
+      {w:'duschen',art:'',vi:'tắm vòi sen',ipa:'[ˈdʊʃn̩]',cls:'Verb'},
+      {w:'Schule',art:'die',vi:'trường học',ipa:'[ˈʃuːlə]',cls:'Nomen'},
+      {w:'zu Fuß',art:'',vi:'đi bộ',ipa:'[tsuː fuːs]',cls:'Phrase'},
+    ],
+    sentences:[
+      {de:'Ich heiße Anna.',vi:'Tôi tên là Anna.',grammar:'Động từ "heißen" = tên là. Chia ngôi: ich heiße, du heißt, er heißt.'},
+      {de:'Ich stehe jeden Morgen um sieben Uhr auf.',vi:'Mỗi buổi sáng tôi dậy lúc bảy giờ.',grammar:'"aufstehen" là động từ tách (trennbares Verb): "auf" tách ra cuối câu. "jeden Morgen" = mỗi buổi sáng (Akkusativ).'},
+      {de:'Ich trinke Kaffee und esse Brot mit Butter.',vi:'Tôi uống cà phê và ăn bánh mì với bơ.',grammar:'"und" nối hai mệnh đề — động từ giữ nguyên vị trí 2 trong mỗi mệnh đề.'},
+      {de:'Dann gehe ich duschen.',vi:'Sau đó tôi đi tắm.',grammar:'"Dann" (sau đó) đứng đầu câu → động từ "gehe" đứng vị trí 2, chủ ngữ "ich" đứng sau.'},
+      {de:'Um acht Uhr gehe ich zur Schule.',vi:'Lúc tám giờ tôi đến trường.',grammar:'"Um ... Uhr" = lúc ... giờ. "zur Schule" = zu + der Schule (Dativ).'},
+      {de:'Die Schule ist nicht weit von meinem Haus.',vi:'Trường không xa nhà tôi.',grammar:'"nicht" phủ định tính từ/trạng từ. "von meinem Haus" = Dativ sau giới từ "von".'},
+      {de:'Ich gehe zu Fuß.',vi:'Tôi đi bộ.',grammar:'"zu Fuß gehen" là cụm từ cố định = đi bộ (không dùng phương tiện).'},
+    ]
+  },
+  {
+    id:'a1-2', level:'A1', cat:'Gia đình', time:'3 phút',
+    title:'Meine Familie',
+    de:`Ich habe eine kleine Familie. Mein Vater heißt Thomas. Er ist 45 Jahre alt und arbeitet als Ingenieur. Meine Mutter heißt Maria. Sie ist Lehrerin von Beruf. Ich habe einen Bruder. Er heißt Felix und ist 12 Jahre alt. Wir wohnen zusammen in Berlin.`,
+    vi:`Tôi có một gia đình nhỏ. Bố tôi tên là Thomas. Ông ấy 45 tuổi và làm kỹ sư. Mẹ tôi tên là Maria. Bà ấy là giáo viên theo nghề. Tôi có một anh trai. Anh ấy tên Felix và 12 tuổi. Chúng tôi sống cùng nhau ở Berlin.`,
+    vocab:[
+      {w:'klein',art:'',vi:'nhỏ, bé',ipa:'[klaɪ̯n]',cls:'Adjektiv'},
+      {w:'Vater',art:'der',vi:'bố, cha',ipa:'[ˈfaːtɐ]',cls:'Nomen'},
+      {w:'arbeiten',art:'',vi:'làm việc',ipa:'[ˈaʁbaɪ̯tn̩]',cls:'Verb'},
+      {w:'Ingenieur',art:'der',vi:'kỹ sư',ipa:'[ɪnʒeˈnjøːɐ̯]',cls:'Nomen'},
+      {w:'Lehrerin',art:'die',vi:'giáo viên (nữ)',ipa:'[ˈleːʁəʁɪn]',cls:'Nomen'},
+      {w:'zusammen',art:'',vi:'cùng nhau',ipa:'[tsuˈzamən]',cls:'Adverb'},
+    ],
+    sentences:[
+      {de:'Ich habe eine kleine Familie.',vi:'Tôi có một gia đình nhỏ.',grammar:'"eine kleine Familie" — "klein" chia theo giống Feminin Akkusativ: kleine. "haben" + Akkusativ.'},
+      {de:'Mein Vater heißt Thomas.',vi:'Bố tôi tên là Thomas.',grammar:'"Mein Vater" — sở hữu từ "mein" + Maskulin Nominativ. Không có "-em" hay "-en".'},
+      {de:'Er ist 45 Jahre alt und arbeitet als Ingenieur.',vi:'Ông ấy 45 tuổi và làm kỹ sư.',grammar:'"X Jahre alt" = X tuổi. "als" = với tư cách là (nghề nghiệp, không dùng mạo từ sau "als").'},
+      {de:'Sie ist Lehrerin von Beruf.',vi:'Bà ấy là giáo viên theo nghề.',grammar:'"von Beruf" = theo nghề nghiệp — cụm từ cố định, không dùng mạo từ sau "ist" khi nói nghề.'},
+      {de:'Ich habe einen Bruder.',vi:'Tôi có một anh trai.',grammar:'"einen Bruder" — Maskulin Akkusativ: ein → einen. Đây là lỗi phổ biến nhất của người học!'},
+      {de:'Wir wohnen zusammen in Berlin.',vi:'Chúng tôi sống cùng nhau ở Berlin.',grammar:'"in Berlin" — Dativ (vị trí). Không dùng mạo từ với tên thành phố.'},
+    ]
+  },
+  {
+    id:'a1-3', level:'A1', cat:'Mua sắm', time:'4 phút',
+    title:'Im Supermarkt',
+    de:`Anna geht heute in den Supermarkt. Sie braucht Milch, Brot und Äpfel. Die Milch kostet einen Euro. Das Brot kostet zwei Euro. Die Äpfel kosten drei Euro pro Kilo. Anna bezahlt an der Kasse. Sie gibt der Kassiererin zehn Euro. Sie bekommt vier Euro zurück.`,
+    vi:`Hôm nay Anna đi siêu thị. Cô ấy cần sữa, bánh mì và táo. Sữa giá một euro. Bánh mì giá hai euro. Táo giá ba euro một kilo. Anna thanh toán ở quầy thu ngân. Cô đưa cho thu ngân viên mười euro. Cô nhận lại bốn euro.`,
+    vocab:[
+      {w:'Supermarkt',art:'der',vi:'siêu thị',ipa:'[ˈzuːpɐmaʁkt]',cls:'Nomen'},
+      {w:'brauchen',art:'',vi:'cần',ipa:'[ˈbʁaʊ̯xn̩]',cls:'Verb'},
+      {w:'kosten',art:'',vi:'có giá, tốn',ipa:'[ˈkɔstn̩]',cls:'Verb'},
+      {w:'bezahlen',art:'',vi:'thanh toán',ipa:'[bəˈtsaːlən]',cls:'Verb'},
+      {w:'Kasse',art:'die',vi:'quầy thu ngân',ipa:'[ˈkasə]',cls:'Nomen'},
+      {w:'zurück',art:'',vi:'lại, trở lại',ipa:'[tsuˈʁʏk]',cls:'Adverb'},
+    ],
+    sentences:[
+      {de:'Anna geht heute in den Supermarkt.',vi:'Hôm nay Anna đi siêu thị.',grammar:'"in den Supermarkt" — Akkusativ (hướng đi vào). "in den" = Maskulin Akkusativ.'},
+      {de:'Sie braucht Milch, Brot und Äpfel.',vi:'Cô ấy cần sữa, bánh mì và táo.',grammar:'"brauchen" + Akkusativ. "Milch", "Brot" không có mạo từ khi nói về số lượng không xác định.'},
+      {de:'Die Milch kostet einen Euro.',vi:'Sữa giá một euro.',grammar:'"kosten" = có giá. "einen Euro" — Maskulin Akkusativ.'},
+      {de:'Anna bezahlt an der Kasse.',vi:'Anna thanh toán ở quầy thu ngân.',grammar:'"an der Kasse" — Dativ (vị trí). "an" + Dativ = tại (vị trí tiếp xúc).'},
+      {de:'Sie gibt der Kassiererin zehn Euro.',vi:'Cô đưa cho thu ngân viên mười euro.',grammar:'"geben" + Dativ + Akkusativ. "der Kassiererin" = Dativ Feminin. "zehn Euro" = Akkusativ.'},
+      {de:'Sie bekommt vier Euro zurück.',vi:'Cô nhận lại bốn euro.',grammar:'"zurückbekommen" là động từ tách. "zurück" tách ra cuối câu.'},
+    ]
+  },
+
+  /* ══ A2 ══ */
+  {
+    id:'a2-1', level:'A2', cat:'Du lịch', time:'4 phút',
+    title:'Eine Reise nach München',
+    de:`Letztes Jahr habe ich München besucht. Ich bin mit dem Zug gefahren. Die Fahrt hat vier Stunden gedauert. In München habe ich das Oktoberfest gesehen. Es war sehr laut und lustig. Ich habe Bratwurst gegessen und Bier getrunken. Das Wetter war schön und sonnig. Ich möchte nächstes Jahr wieder dorthin fahren.`,
+    vi:`Năm ngoái tôi đã thăm Munich. Tôi đi bằng tàu hỏa. Hành trình mất bốn tiếng. Ở Munich tôi đã xem Oktoberfest. Nó rất ồn ào và vui vẻ. Tôi đã ăn xúc xích nướng và uống bia. Thời tiết đẹp và nắng. Năm tới tôi muốn đến đó lại.`,
+    vocab:[
+      {w:'besuchen',art:'',vi:'thăm, ghé thăm',ipa:'[bəˈzuːxn̩]',cls:'Verb'},
+      {w:'Fahrt',art:'die',vi:'hành trình, chuyến đi',ipa:'[faːʁt]',cls:'Nomen'},
+      {w:'dauern',art:'',vi:'kéo dài, mất (thời gian)',ipa:'[ˈdaʊ̯ɐn]',cls:'Verb'},
+      {w:'laut',art:'',vi:'ồn ào, to tiếng',ipa:'[laʊ̯t]',cls:'Adjektiv'},
+      {w:'lustig',art:'',vi:'vui vẻ, buồn cười',ipa:'[ˈlʊstɪç]',cls:'Adjektiv'},
+      {w:'sonnig',art:'',vi:'có nắng',ipa:'[ˈzɔnɪç]',cls:'Adjektiv'},
+    ],
+    sentences:[
+      {de:'Letztes Jahr habe ich München besucht.',vi:'Năm ngoái tôi đã thăm Munich.',grammar:'Perfekt: haben + Partizip II. "besucht" là Partizip II của "besuchen". "Letztes Jahr" đứng đầu → "habe" đứng thứ 2.'},
+      {de:'Ich bin mit dem Zug gefahren.',vi:'Tôi đã đi bằng tàu hỏa.',grammar:'"fahren" dùng "sein" (không phải "haben") vì là động từ chuyển vị trí. "mit dem Zug" = Dativ sau "mit".'},
+      {de:'Die Fahrt hat vier Stunden gedauert.',vi:'Hành trình mất bốn tiếng.',grammar:'"dauern" dùng "haben" trong Perfekt. "vier Stunden" = Akkusativ của thời gian.'},
+      {de:'Es war sehr laut und lustig.',vi:'Nó rất ồn ào và vui vẻ.',grammar:'"war" = Präteritum của "sein". Trong văn nói, "sein" và "haben" thường dùng Präteritum thay Perfekt.'},
+      {de:'Ich möchte nächstes Jahr wieder dorthin fahren.',vi:'Năm tới tôi muốn đến đó lại.',grammar:'"möchte" = Konjunktiv II của mögen (muốn, lịch sự). Động từ chính "fahren" ra cuối câu.'},
+    ]
+  },
+  {
+    id:'a2-2', level:'A2', cat:'Công việc', time:'4 phút',
+    title:'Mein Arbeitstag',
+    de:`Ich arbeite in einem Büro in der Stadtmitte. Ich fange jeden Tag um neun Uhr an. Zuerst lese ich meine E-Mails. Dann habe ich oft Besprechungen mit meinen Kollegen. Wir besprechen die Projekte der Woche. Mittags esse ich in der Kantine. Am Nachmittag arbeite ich meistens am Computer. Um achtzehn Uhr fahre ich nach Hause. Ich bin dann sehr müde, aber zufrieden.`,
+    vi:`Tôi làm việc ở văn phòng trong trung tâm thành phố. Tôi bắt đầu mỗi ngày lúc chín giờ. Đầu tiên tôi đọc email. Sau đó tôi thường họp với đồng nghiệp. Chúng tôi thảo luận các dự án trong tuần. Buổi trưa tôi ăn ở căng tin. Buổi chiều tôi thường làm việc với máy tính. Lúc sáu giờ chiều tôi về nhà. Khi đó tôi rất mệt nhưng hài lòng.`,
+    vocab:[
+      {w:'anfangen',art:'',vi:'bắt đầu',ipa:'[ˈanfaŋən]',cls:'Verb'},
+      {w:'Besprechung',art:'die',vi:'cuộc họp',ipa:'[bəˈʃpʁɛçʊŋ]',cls:'Nomen'},
+      {w:'besprechen',art:'',vi:'thảo luận',ipa:'[bəˈʃpʁɛçn̩]',cls:'Verb'},
+      {w:'Kantine',art:'die',vi:'căng tin',ipa:'[kanˈtiːnə]',cls:'Nomen'},
+      {w:'meistens',art:'',vi:'thường xuyên, đa phần',ipa:'[ˈmaɪ̯stns]',cls:'Adverb'},
+      {w:'zufrieden',art:'',vi:'hài lòng',ipa:'[tsuˈfʁiːdn̩]',cls:'Adjektiv'},
+    ],
+    sentences:[
+      {de:'Ich arbeite in einem Büro in der Stadtmitte.',vi:'Tôi làm việc ở văn phòng trong trung tâm thành phố.',grammar:'"in einem Büro" — Dativ (vị trí): Neutrum "Büro" → "einem". "in der Stadtmitte" — Dativ Feminin.'},
+      {de:'Ich fange jeden Tag um neun Uhr an.',vi:'Tôi bắt đầu mỗi ngày lúc chín giờ.',grammar:'"anfangen" là động từ tách: "an" tách ra cuối câu. "jeden Tag" — Akkusativ thời gian thường xuyên.'},
+      {de:'Dann habe ich oft Besprechungen mit meinen Kollegen.',vi:'Sau đó tôi thường họp với đồng nghiệp.',grammar:'"mit meinen Kollegen" — Dativ Plural sau "mit". Plural Dativ thêm "-n": Kollegen → Kollegen (đã có n).'},
+      {de:'Wir besprechen die Projekte der Woche.',vi:'Chúng tôi thảo luận các dự án trong tuần.',grammar:'"die Projekte" — Akkusativ Plural. "der Woche" — Genitiv Feminin (dự án của tuần).'},
+    ]
+  },
+  {
+    id:'a2-3', level:'A2', cat:'Cảm xúc', time:'3 phút',
+    title:'Ein schlechter Tag',
+    de:`Heute war ein schlechter Tag für mich. Ich habe den Bus verpasst und bin zu spät zur Arbeit gekommen. Mein Chef war nicht zufrieden. Dann habe ich meinen Kaffee auf die Tastatur geschüttet. Am Abend hatte ich Kopfschmerzen. Aber danach habe ich mit meiner besten Freundin telefoniert. Das hat mir geholfen. Morgen wird es besser sein.`,
+    vi:`Hôm nay là một ngày tệ với tôi. Tôi đã lỡ xe buýt và đến làm trễ. Sếp tôi không hài lòng. Rồi tôi đã đổ cà phê lên bàn phím. Buổi tối tôi bị đau đầu. Nhưng sau đó tôi đã gọi điện với người bạn thân nhất của tôi. Điều đó đã giúp tôi. Ngày mai sẽ tốt hơn.`,
+    vocab:[
+      {w:'verpassen',art:'',vi:'lỡ, bỏ lỡ',ipa:'[fɛʁˈpasn̩]',cls:'Verb'},
+      {w:'schütten',art:'',vi:'đổ, rót (ngẫu nhiên)',ipa:'[ˈʃʏtn̩]',cls:'Verb'},
+      {w:'Tastatur',art:'die',vi:'bàn phím',ipa:'[tastaˈtuːɐ̯]',cls:'Nomen'},
+      {w:'Kopfschmerzen',art:'',vi:'đau đầu',ipa:'[ˈkɔpfʃmɛʁtsn̩]',cls:'Nomen (Pl.)'},
+      {w:'telefonieren',art:'',vi:'gọi điện thoại',ipa:'[telefoˈniːʁən]',cls:'Verb'},
+      {w:'helfen',art:'',vi:'giúp đỡ',ipa:'[ˈhɛlfn̩]',cls:'Verb'},
+    ],
+    sentences:[
+      {de:'Heute war ein schlechter Tag für mich.',vi:'Hôm nay là một ngày tệ với tôi.',grammar:'"war" — Präteritum của "sein". "ein schlechter Tag" — Maskulin Nominativ, tính từ đuôi "-er".'},
+      {de:'Ich habe den Bus verpasst und bin zu spät zur Arbeit gekommen.',vi:'Tôi đã lỡ xe buýt và đến làm trễ.',grammar:'Hai Perfekt nối với "und". "verpassen" dùng "haben", "kommen" dùng "sein". "zu spät" = quá trễ.'},
+      {de:'Das hat mir geholfen.',vi:'Điều đó đã giúp tôi.',grammar:'"helfen" đi với Dativ: "mir" (Dativ của "ich"). Không dùng "mich" (Akkusativ).'},
+      {de:'Morgen wird es besser sein.',vi:'Ngày mai sẽ tốt hơn.',grammar:'Futur I: werden + Infinitiv. "besser" — so sánh hơn của "gut". "sein" ra cuối câu.'},
+    ]
+  },
+
+  /* ══ B1 ══ */
+  {
+    id:'b1-1', level:'B1', cat:'Văn hóa', time:'5 phút',
+    title:'Das Oktoberfest',
+    de:`Das Oktoberfest ist das größte Volksfest der Welt. Es findet jährlich in München statt und dauert etwa zwei bis drei Wochen. Jedes Jahr kommen Millionen von Besuchern aus aller Welt. Auf dem Fest kann man traditionelle bayerische Kleidung sehen, Bier trinken und Musik hören. Die Veranstaltung begann ursprünglich als Hochzeitsfeier des bayerischen Kronprinzen im Jahr 1810. Heute ist es ein Symbol der deutschen Kultur und Tradition.`,
+    vi:`Oktoberfest là lễ hội dân gian lớn nhất thế giới. Nó được tổ chức hàng năm ở Munich và kéo dài khoảng hai đến ba tuần. Mỗi năm hàng triệu du khách từ khắp thế giới đến tham dự. Tại lễ hội, người ta có thể thấy trang phục truyền thống vùng Bavaria, uống bia và nghe nhạc. Sự kiện này ban đầu bắt đầu như một buổi tiệc cưới của Thái tử Bavaria vào năm 1810. Ngày nay nó là biểu tượng của văn hóa và truyền thống Đức.`,
+    vocab:[
+      {w:'Volksfest',art:'das',vi:'lễ hội dân gian',ipa:'[ˈfɔlksfɛst]',cls:'Nomen'},
+      {w:'jährlich',art:'',vi:'hàng năm',ipa:'[ˈjɛːʁlɪç]',cls:'Adjektiv'},
+      {w:'stattfinden',art:'',vi:'diễn ra, được tổ chức',ipa:'[ˈʃtatfɪndn̩]',cls:'Verb'},
+      {w:'Besucher',art:'der',vi:'du khách, người thăm',ipa:'[bəˈzuːxɐ]',cls:'Nomen'},
+      {w:'ursprünglich',art:'',vi:'ban đầu, nguyên thủy',ipa:'[ˈʊʁʃpʁʏŋlɪç]',cls:'Adjektiv'},
+      {w:'Symbol',art:'das',vi:'biểu tượng',ipa:'[zʏmˈboːl]',cls:'Nomen'},
+    ],
+    sentences:[
+      {de:'Das Oktoberfest ist das größte Volksfest der Welt.',vi:'Oktoberfest là lễ hội dân gian lớn nhất thế giới.',grammar:'"größte" — so sánh tuyệt đối của "groß": groß → größer → am größten / das größte. "der Welt" — Genitiv.'},
+      {de:'Es findet jährlich in München statt und dauert etwa zwei bis drei Wochen.',vi:'Nó được tổ chức hàng năm ở Munich và kéo dài khoảng hai đến ba tuần.',grammar:'"stattfinden" — động từ tách: "statt" ra cuối. "etwa" = khoảng (xấp xỉ). "bis" = đến (giới hạn).'},
+      {de:'Jedes Jahr kommen Millionen von Besuchern aus aller Welt.',vi:'Mỗi năm hàng triệu du khách từ khắp thế giới đến.',grammar:'"Jedes Jahr" đứng đầu → đảo ngữ: "kommen" ở vị trí 2. "von Besuchern" — Dativ Plural. "aus aller Welt" — Genitiv.'},
+      {de:'Die Veranstaltung begann ursprünglich als Hochzeitsfeier des bayerischen Kronprinzen.',vi:'Sự kiện này ban đầu bắt đầu như một buổi tiệc cưới của Thái tử Bavaria.',grammar:'"begann" — Präteritum của "beginnen" (bất quy tắc). "als" = như là (vai trò/chức năng). "des bayerischen Kronprinzen" — Genitiv Maskulin.'},
+    ]
+  },
+  {
+    id:'b1-2', level:'B1', cat:'Ý kiến cá nhân', time:'5 phút',
+    title:'Soziale Medien — Fluch oder Segen?',
+    de:`Soziale Medien sind aus unserem Alltag nicht mehr wegzudenken. Millionen von Menschen nutzen täglich Plattformen wie Instagram, TikTok oder Facebook. Einerseits ermöglichen sie schnelle Kommunikation und helfen dabei, Freundschaften zu pflegen. Andererseits besteht die Gefahr, zu viel Zeit am Bildschirm zu verbringen. Studien zeigen, dass übermäßiger Konsum von sozialen Medien zu Schlafproblemen und Unzufriedenheit führen kann. Meiner Meinung nach ist ein bewusster Umgang mit diesen Plattformen entscheidend.`,
+    vi:`Mạng xã hội không còn thể thiếu trong cuộc sống hàng ngày của chúng ta. Hàng triệu người sử dụng các nền tảng như Instagram, TikTok hay Facebook mỗi ngày. Một mặt, chúng cho phép giao tiếp nhanh chóng và giúp duy trì các mối quan hệ bạn bè. Mặt khác, có nguy cơ dành quá nhiều thời gian trước màn hình. Các nghiên cứu cho thấy việc sử dụng mạng xã hội quá mức có thể dẫn đến các vấn đề về giấc ngủ và sự không hài lòng. Theo ý kiến của tôi, việc sử dụng có ý thức các nền tảng này là điều quyết định.`,
+    vocab:[
+      {w:'Alltag',art:'der',vi:'cuộc sống hàng ngày',ipa:'[ˈaltaːk]',cls:'Nomen'},
+      {w:'ermöglichen',art:'',vi:'cho phép, tạo điều kiện',ipa:'[ɛʁˈmøːklɪçn̩]',cls:'Verb'},
+      {w:'einerseits',art:'',vi:'một mặt',ipa:'[ˈaɪ̯nɐzaɪ̯ts]',cls:'Adverb'},
+      {w:'andererseits',art:'',vi:'mặt khác',ipa:'[ˈandəʁɐzaɪ̯ts]',cls:'Adverb'},
+      {w:'übermäßig',art:'',vi:'quá mức, thái quá',ipa:'[yːbɐˈmɛːsɪç]',cls:'Adjektiv'},
+      {w:'bewusst',art:'',vi:'có ý thức, có chủ đích',ipa:'[bəˈvʊst]',cls:'Adjektiv'},
+    ],
+    sentences:[
+      {de:'Soziale Medien sind aus unserem Alltag nicht mehr wegzudenken.',vi:'Mạng xã hội không còn thể thiếu trong cuộc sống hàng ngày của chúng ta.',grammar:'"wegzudenken" — Infinitiv với "zu". "nicht mehr wegzudenken" = không thể tưởng tượng thiếu đi. "aus unserem Alltag" — Dativ Maskulin sau "aus".'},
+      {de:'Einerseits ermöglichen sie schnelle Kommunikation und helfen dabei, Freundschaften zu pflegen.',vi:'Một mặt, chúng cho phép giao tiếp nhanh và giúp duy trì các mối quan hệ bạn bè.',grammar:'"dabei, ... zu pflegen" — Infinitivkonstruktion với "zu". "helfen dabei" + Infinitiv với zu.'},
+      {de:'Studien zeigen, dass übermäßiger Konsum zu Schlafproblemen führen kann.',vi:'Các nghiên cứu cho thấy rằng tiêu thụ quá mức có thể dẫn đến các vấn đề giấc ngủ.',grammar:'"dass"-Satz: động từ "führen kann" ra cuối câu. Modalverb "kann" đứng sau Infinitiv.'},
+      {de:'Meiner Meinung nach ist ein bewusster Umgang entscheidend.',vi:'Theo ý kiến của tôi, việc sử dụng có ý thức là điều quyết định.',grammar:'"Meiner Meinung nach" — cụm từ cố định (Genitiv). Đứng đầu → động từ đứng thứ 2.'},
+    ]
+  },
+
+  /* ══ B2 ══ */
+  {
+    id:'b2-1', level:'B2', cat:'Tin tức', time:'6 phút',
+    title:'Klimawandel und seine Folgen',
+    de:`Der Klimawandel stellt eine der größten Herausforderungen unserer Zeit dar. Wissenschaftler warnen seit Jahrzehnten vor den katastrophalen Folgen des Temperaturanstiegs. Durch den vermehrten Ausstoß von Treibhausgasen, insbesondere CO₂, erwärmt sich die Erde schneller als je zuvor. Dies führt zu häufigeren Extremwetterereignissen wie Überschwemmungen, Dürren und Hitzewellen. Um den Klimawandel zu bremsen, müssen Regierungen, Unternehmen und Einzelpersonen gemeinsam handeln und auf erneuerbare Energien umsteigen.`,
+    vi:`Biến đổi khí hậu là một trong những thách thức lớn nhất của thời đại chúng ta. Các nhà khoa học đã cảnh báo về những hậu quả thảm khốc của sự gia tăng nhiệt độ trong nhiều thập kỷ. Do lượng khí nhà kính thải ra ngày càng tăng, đặc biệt là CO₂, Trái đất đang ấm lên nhanh hơn bao giờ hết. Điều này dẫn đến các hiện tượng thời tiết cực đoan thường xuyên hơn như lũ lụt, hạn hán và nắng nóng. Để hãm chế biến đổi khí hậu, chính phủ, doanh nghiệp và cá nhân cần cùng nhau hành động và chuyển sang năng lượng tái tạo.`,
+    vocab:[
+      {w:'Herausforderung',art:'die',vi:'thách thức',ipa:'[hɛˈʁaʊ̯sfɔʁdəʁʊŋ]',cls:'Nomen'},
+      {w:'katastrophal',art:'',vi:'thảm khốc',ipa:'[katastʁoˈfaːl]',cls:'Adjektiv'},
+      {w:'Treibhausgas',art:'das',vi:'khí nhà kính',ipa:'[ˈtʁaɪ̯bhaʊ̯sɡaːs]',cls:'Nomen'},
+      {w:'Überschwemmung',art:'die',vi:'lũ lụt',ipa:'[ˈyːbɐʃvɛmʊŋ]',cls:'Nomen'},
+      {w:'erneuerbar',art:'',vi:'có thể tái tạo',ipa:'[ɛʁˈnɔɪ̯ɐbaːɐ̯]',cls:'Adjektiv'},
+      {w:'umsteigen',art:'',vi:'chuyển sang, đổi phương tiện',ipa:'[ˈʊmʃtaɪ̯ɡn̩]',cls:'Verb'},
+    ],
+    sentences:[
+      {de:'Der Klimawandel stellt eine der größten Herausforderungen unserer Zeit dar.',vi:'Biến đổi khí hậu là một trong những thách thức lớn nhất của thời đại chúng ta.',grammar:'"darstellen" — động từ tách cụm. "eine der größten" — Genitiv Plural: "der" sau "eine von/der".'},
+      {de:'Durch den vermehrten Ausstoß von Treibhausgasen erwärmt sich die Erde schneller.',vi:'Do lượng khí nhà kính thải ra ngày càng tăng, Trái đất đang ấm lên nhanh hơn.',grammar:'"durch" + Akkusativ (nguyên nhân). "sich erwärmen" — reflexiv verb. "schneller" — so sánh hơn.'},
+      {de:'Um den Klimawandel zu bremsen, müssen alle gemeinsam handeln.',vi:'Để hãm chế biến đổi khí hậu, tất cả cần cùng nhau hành động.',grammar:'"Um ... zu" — mệnh đề mục đích. Động từ "bremsen" với "zu". Cả câu: "um" + Infinitiv với zu ở cuối.'},
+    ]
+  },
+
+  /* ══ C1 ══ */
+  {
+    id:'c1-1', level:'C1', cat:'Triết học', time:'7 phút',
+    title:'Was ist Glück?',
+    de:`Die Frage nach dem Glück beschäftigt die Menschheit seit Jahrtausenden. Philosophen wie Aristoteles argumentierten, dass wahres Glück durch ein tugendhaftes Leben erlangt werde — ein Zustand, den er als Eudaimonia bezeichnete. Moderne Glücksforschung hingegen unterscheidet zwischen momentanen Gefühlen der Freude und einem tiefergehenden Lebensgefühl der Zufriedenheit. Paradoxerweise zeigen Studien, dass Menschen in wohlhabenderen Gesellschaften nicht zwangsläufig glücklicher sind als jene in ärmeren Ländern. Dies legt nahe, dass Glück weniger von materiellen Gütern abhängt als von sozialen Bindungen und dem Gefühl, das eigene Leben sinnvoll zu gestalten.`,
+    vi:`Câu hỏi về hạnh phúc đã thu hút sự quan tâm của nhân loại trong hàng nghìn năm. Các triết gia như Aristotle lập luận rằng hạnh phúc thực sự đạt được thông qua một cuộc sống đức hạnh — một trạng thái mà ông gọi là Eudaimonia. Ngược lại, nghiên cứu hạnh phúc hiện đại phân biệt giữa cảm giác vui mừng tức thời và cảm giác sống sâu sắc hơn của sự thỏa mãn. Nghịch lý thay, các nghiên cứu cho thấy người ở các xã hội giàu có hơn không nhất thiết hạnh phúc hơn những người ở các quốc gia nghèo hơn. Điều này gợi ý rằng hạnh phúc ít phụ thuộc vào của cải vật chất hơn là vào các mối gắn kết xã hội và cảm giác tạo ra ý nghĩa cho cuộc sống của chính mình.`,
+    vocab:[
+      {w:'tugendhaft',art:'',vi:'đức hạnh, có đạo đức',ipa:'[ˈtuːɡəntˌhaft]',cls:'Adjektiv'},
+      {w:'erlangen',art:'',vi:'đạt được, thu được',ipa:'[ɛʁˈlaŋən]',cls:'Verb'},
+      {w:'wohlhabend',art:'',vi:'giàu có, khá giả',ipa:'[ˈvoːlhaːbənt]',cls:'Adjektiv'},
+      {w:'zwangsläufig',art:'',vi:'tất yếu, không thể tránh',ipa:'[ˈtsvaŋslɔɪ̯fɪç]',cls:'Adjektiv'},
+      {w:'nahelegen',art:'',vi:'gợi ý, ngụ ý',ipa:'[ˈnaːəleːɡn̩]',cls:'Verb'},
+      {w:'sinnvoll',art:'',vi:'có ý nghĩa, có giá trị',ipa:'[ˈzɪnfoːl]',cls:'Adjektiv'},
+    ],
+    sentences:[
+      {de:'Philosophen wie Aristoteles argumentierten, dass wahres Glück durch ein tugendhaftes Leben erlangt werde.',vi:'Các triết gia như Aristotle lập luận rằng hạnh phúc thực sự đạt được thông qua một cuộc sống đức hạnh.',grammar:'"dass"-Satz với Konjunktiv I ("werde" thay vì "wird") — dùng trong văn viết trang trọng khi tường thuật ý kiến người khác (indirekte Rede).'},
+      {de:'Dies legt nahe, dass Glück weniger von materiellen Gütern abhängt als von sozialen Bindungen.',vi:'Điều này gợi ý rằng hạnh phúc ít phụ thuộc vào của cải vật chất hơn là vào các mối gắn kết xã hội.',grammar:'"nahelegen" — động từ tách. "weniger ... als" — so sánh kém (less ... than). "abhängen von" + Dativ.'},
+    ]
+  },
+];
+
+/* ── READING STATE ── */
+let rdState = {
+  level: 'Tất cả',
+  currentTextId: null,
+  viewMode: 'full',       // 'full' | 'sent'
+  showTrans: true,
+  showVocab: true,
+  sentStates: {},         // {sentIdx: {showVi, showGrammar, bookmarked}}
+  activeSent: -1,
+  wordPopupTarget: null,
+  startTime: null,
+  done: new Set(),
+  sentDone: 0,
+  wordLookups: 0,
+};
+
+/* Load from storage */
+function rdLoadState() {
+  try {
+    const d = JSON.parse(localStorage.getItem('rd_state') || '{}');
+    rdState.done = new Set(d.done || []);
+    rdState.sentDone = d.sentDone || 0;
+    rdState.wordLookups = d.wordLookups || 0;
+  } catch(e) {}
+}
+function rdSaveState() {
+  try {
+    localStorage.setItem('rd_state', JSON.stringify({
+      done: [...rdState.done],
+      sentDone: rdState.sentDone,
+      wordLookups: rdState.wordLookups,
+    }));
+  } catch(e) {}
+}
+
+/* ── RENDER READING PAGE ── */
+function renderReading() {
+  rdLoadState();
+  rdUpdateStats();
+  buildPills('rdLevelTabs', ['Tất cả','A1','A2','B1','B2','C1','C2'], rdState.level, lv => {
+    rdState.level = lv;
+    renderRdList();
+  });
+  renderRdList();
+  // Hide reader
+  const reader = document.getElementById('rdReader');
+  const list = document.getElementById('rdTextList');
+  if (reader) reader.classList.remove('active');
+  if (list) list.style.display = 'flex';
+}
+
+function rdUpdateStats() {
+  setText('rdStatDone', rdState.done.size);
+  setText('rdStatSent', rdState.sentDone);
+  setText('rdStatWords', rdState.wordLookups);
+}
+
+function renderRdList() {
+  let texts = READING_TEXTS;
+  if (rdState.level !== 'Tất cả') texts = texts.filter(t => t.level === rdState.level);
+  const list = document.getElementById('rdTextList');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!texts.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📚</div><p>Chưa có bài đọc cho cấp độ này</p></div>';
+    return;
+  }
+  texts.forEach(t => {
+    const done = rdState.done.has(t.id);
+    const card = document.createElement('div');
+    card.className = 'rd-text-card' + (done ? ' done' : '');
+    const preview = t.de.slice(0, 100) + (t.de.length > 100 ? '…' : '');
+    card.innerHTML = `
+      <div>
+        <div class="rd-tc-cat">${t.cat} · ${t.level}</div>
+        <div class="rd-tc-title">${t.title}</div>
+        <div class="rd-tc-preview">${preview}</div>
+      </div>
+      <div class="rd-tc-meta">
+        <span class="rd-tc-time">⏱ ${t.time}</span>
+        <span class="rd-rh-pill level">${t.level}</span>
+        ${done ? '<span class="rd-tc-done-badge">✅ Xong</span>' : ''}
+      </div>`;
+    card.onclick = () => openText(t.id);
+    list.appendChild(card);
+  });
+}
+
+/* ── OPEN TEXT ── */
+function openText(id) {
+  const t = READING_TEXTS.find(x => x.id === id);
+  if (!t) return;
+  rdState.currentTextId = id;
+  rdState.sentStates = {};
+  rdState.activeSent = -1;
+  rdState.startTime = Date.now();
+  rdState.viewMode = 'full';
+  rdState.showTrans = true;
+  rdState.showVocab = true;
+
+  // Hide list, show reader
+  document.getElementById('rdTextList').style.display = 'none';
+  const reader = document.getElementById('rdReader');
+  reader.classList.add('active');
+
+  // Fill header
+  setText('rdRhCat', t.cat);
+  setText('rdRhTitle', t.title);
+  setText('rdRhLevel', t.level);
+  setText('rdRhTime', '⏱ ' + t.time);
+  setText('rdRhSents', t.sentences.length + ' câu');
+  setText('rdRhWords', t.vocab.length + ' từ vựng');
+
+  // Reset toolbar state
+  document.getElementById('rdBtnFull').classList.add('active');
+  document.getElementById('rdBtnSent').classList.remove('active');
+  document.getElementById('rdBtnTrans').classList.add('active');
+  document.getElementById('rdBtnVocab').classList.add('active');
+
+  // Render vocab chips
+  renderVocabChips(t);
+
+  // Render full text with clickable words
+  renderFullText(t);
+
+  // Render sentence view
+  renderSentView(t);
+
+  // Set view
+  rdSetView('full');
+  rdProgressUpdate(0);
+
+  // Translation
+  setText('rdTransText', t.vi);
+  document.getElementById('rdTransFull').classList.add('show');
+
+  // Scroll to top
+  reader.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeReader() {
+  document.getElementById('rdReader').classList.remove('active');
+  document.getElementById('rdTextList').style.display = 'flex';
+  rdUpdateStats();
+}
+
+/* ── RENDER VOCAB CHIPS ── */
+function renderVocabChips(t) {
+  const panel = document.getElementById('rdVocabPanel');
+  const chips = document.getElementById('rdVocabChips');
+  if (!chips) return;
+  chips.innerHTML = t.vocab.map(v => `
+    <div class="rd-vchip" onclick="showWordInfo('${escQ(v.w)}','${escQ(v.art)}','${escQ(v.vi)}','${escQ(v.ipa)}','${escQ(v.cls)}','',event)">
+      <span class="rd-vchip-art">${v.art}</span>
+      <span class="rd-vchip-word">${v.w}</span>
+      <span class="rd-vchip-vi">${v.vi}</span>
+    </div>`).join('');
+  panel.style.display = rdState.showVocab ? 'block' : 'none';
+}
+
+/* ── RENDER FULL TEXT with clickable words ── */
+function renderFullText(t) {
+  const el = document.getElementById('rdFullText');
+  if (!el) return;
+
+  // Build word-lookup map from vocab
+  const vocabMap = {};
+  t.vocab.forEach(v => { vocabMap[v.w.toLowerCase()] = v; });
+
+  // Also check global VOCAB
+  VOCAB.forEach(v => { vocabMap[v.w.toLowerCase()] = {w:v.w,art:v.art,vi:v.vi,ipa:v.ipa,cls:v.cls,ex:v.ex}; });
+
+  // Tokenize preserving punctuation
+  const html = t.de.replace(/([A-Za-zÄÖÜäöüß]+)/g, (match) => {
+    const key = match.toLowerCase();
+    const isVocab = vocabMap[key];
+    const cls = isVocab ? 'rd-word vocab-marked' : 'rd-word';
+    const vdata = isVocab
+      ? `data-w="${escA(vocabMap[key].w||match)}" data-art="${escA(vocabMap[key].art||'')}" data-vi="${escA(vocabMap[key].vi||'')}" data-ipa="${escA(vocabMap[key].ipa||'')}" data-cls="${escA(vocabMap[key].cls||'')}" data-ex="${escA(vocabMap[key].ex||'')}"`
+      : `data-w="${escA(match)}"`;
+    return `<span class="${cls}" ${vdata} onclick="wordClick(this,event)">${match}</span>`;
+  });
+  el.innerHTML = html;
+}
+
+/* ── RENDER SENTENCE VIEW ── */
+function renderSentView(t) {
+  const view = document.getElementById('rdSentView');
+  if (!view) return;
+  view.innerHTML = '';
+  t.sentences.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'rd-sent-card';
+    card.id = 'rdSentCard-' + i;
+
+    // Tokenize DE sentence
+    const vocabMap = {};
+    VOCAB.forEach(v => { vocabMap[v.w.toLowerCase()] = {w:v.w,art:v.art,vi:v.vi,ipa:v.ipa,cls:v.cls,ex:v.ex}; });
+    t.vocab.forEach(v => { vocabMap[v.w.toLowerCase()] = v; });
+
+    const deHtml = s.de.replace(/([A-Za-zÄÖÜäöüß]+)/g, (match) => {
+      const key = match.toLowerCase();
+      const vd = vocabMap[key];
+      if (vd) {
+        return `<span class="rd-word vocab-marked" data-w="${escA(vd.w||match)}" data-art="${escA(vd.art||'')}" data-vi="${escA(vd.vi||'')}" data-ipa="${escA(vd.ipa||'')}" data-cls="${escA(vd.cls||'')}" data-ex="${escA(vd.ex||'')}" onclick="wordClick(this,event)">${match}</span>`;
+      }
+      return `<span class="rd-word" data-w="${escA(match)}" onclick="wordClick(this,event)">${match}</span>`;
+    });
+
+    card.innerHTML = `
+      <div class="rd-sent-num">${i + 1}</div>
+      <div class="rd-sent-body">
+        <div class="rd-sent-de">${deHtml}</div>
+        <div class="rd-sent-vi" id="rdSentVi-${i}">${s.vi}</div>
+        ${s.grammar ? `<div class="rd-sent-grammar" id="rdSentGr-${i}"><div class="rd-sg-label">📝 Ghi chú ngữ pháp</div>${s.grammar}</div>` : ''}
+      </div>
+      <div class="rd-sent-actions">
+        <button class="rd-s-btn" onclick="rdSentAudio(${i})">🔊 Nghe</button>
+        <button class="rd-s-btn" onclick="rdSentSlow(${i})">🐢 Chậm</button>
+        <button class="rd-s-btn" id="rdBtnVi-${i}" onclick="rdToggleSentVi(${i})">🇻🇳 Dịch</button>
+        ${s.grammar ? `<button class="rd-s-btn" id="rdBtnGr-${i}" onclick="rdToggleSentGr(${i})">📝 Ngữ pháp</button>` : ''}
+        <button class="rd-s-btn" id="rdBtnBk-${i}" onclick="rdToggleBookmark(${i})">🔖 Đánh dấu</button>
+      </div>`;
+    card.onclick = (e) => {
+      if (e.target.classList.contains('rd-s-btn') || e.target.classList.contains('rd-word')) return;
+      rdSetActiveSent(i, t);
+    };
+    view.appendChild(card);
+  });
+}
+
+/* ── SENTENCE INTERACTIONS ── */
+function rdSetActiveSent(i, t) {
+  // Remove previous
+  document.querySelectorAll('.rd-sent-card').forEach(c => c.classList.remove('active-sent'));
+  const card = document.getElementById('rdSentCard-' + i);
+  if (card) { card.classList.add('active-sent'); card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+  rdState.activeSent = i;
+
+  // Auto-show translation
+  const vi = document.getElementById('rdSentVi-' + i);
+  if (vi && !vi.classList.contains('show')) {
+    vi.classList.add('show');
+    rdState.sentDone++;
+    rdSaveState();
+  }
+
+  // Progress
+  const total = t ? t.sentences.length : 1;
+  rdProgressUpdate(Math.round(((i + 1) / total) * 100));
+
+  // Play audio
+  if (t) speak(t.sentences[i].de);
+}
+
+function rdToggleSentVi(i) {
+  const el = document.getElementById('rdSentVi-' + i);
+  const btn = document.getElementById('rdBtnVi-' + i);
+  if (!el) return;
+  el.classList.toggle('show');
+  if (btn) btn.classList.toggle('active', el.classList.contains('show'));
+}
+function rdToggleSentGr(i) {
+  const el = document.getElementById('rdSentGr-' + i);
+  const btn = document.getElementById('rdBtnGr-' + i);
+  if (!el) return;
+  el.classList.toggle('show');
+  if (btn) btn.classList.toggle('active', el.classList.contains('show'));
+}
+function rdToggleBookmark(i) {
+  const card = document.getElementById('rdSentCard-' + i);
+  const btn = document.getElementById('rdBtnBk-' + i);
+  if (!card) return;
+  card.classList.toggle('bookmarked');
+  const bk = card.classList.contains('bookmarked');
+  if (btn) { btn.classList.toggle('bk-active', bk); btn.textContent = bk ? '🔖 Đã đánh dấu' : '🔖 Đánh dấu'; }
+  toast(bk ? '🔖 Đã đánh dấu câu này!' : '↩ Bỏ đánh dấu');
+}
+function rdSentAudio(i) {
+  const t = READING_TEXTS.find(x => x.id === rdState.currentTextId);
+  if (t && t.sentences[i]) speak(t.sentences[i].de);
+}
+function rdSentSlow(i) {
+  const t = READING_TEXTS.find(x => x.id === rdState.currentTextId);
+  if (!t || !t.sentences[i]) return;
+  if (!speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t.sentences[i].de);
+  u.lang = 'de-DE'; u.rate = 0.55; u.pitch = 1;
+  speechSynthesis.speak(u);
+}
+
+/* ── VIEW CONTROLS ── */
+function rdSetView(mode) {
+  rdState.viewMode = mode;
+  const full = document.getElementById('rdFullView');
+  const sent = document.getElementById('rdSentView');
+  const trans = document.getElementById('rdTransFull');
+  const bFull = document.getElementById('rdBtnFull');
+  const bSent = document.getElementById('rdBtnSent');
+
+  if (mode === 'full') {
+    if (full) full.style.display = 'block';
+    if (sent) sent.classList.remove('show');
+    if (trans) trans.style.display = rdState.showTrans ? 'block' : 'none';
+    if (bFull) bFull.classList.add('active');
+    if (bSent) bSent.classList.remove('active');
+  } else {
+    if (full) full.style.display = 'none';
+    if (sent) sent.classList.add('show');
+    if (trans) trans.style.display = 'none';
+    if (bFull) bFull.classList.remove('active');
+    if (bSent) bSent.classList.add('active');
+  }
+}
+
+function rdToggleTrans() {
+  rdState.showTrans = !rdState.showTrans;
+  const btn = document.getElementById('rdBtnTrans');
+  if (btn) btn.classList.toggle('active', rdState.showTrans);
+  const trans = document.getElementById('rdTransFull');
+  if (trans && rdState.viewMode === 'full') {
+    trans.style.display = rdState.showTrans ? 'block' : 'none';
+  }
+}
+
+function rdToggleVocab() {
+  rdState.showVocab = !rdState.showVocab;
+  const btn = document.getElementById('rdBtnVocab');
+  if (btn) btn.classList.toggle('active', rdState.showVocab);
+  const panel = document.getElementById('rdVocabPanel');
+  if (panel) panel.style.display = rdState.showVocab ? 'block' : 'none';
+  // Toggle vocab highlight in text
+  document.querySelectorAll('.rd-word.vocab-marked').forEach(el => {
+    el.style.background = rdState.showVocab ? '' : 'none';
+    el.style.borderBottom = rdState.showVocab ? '' : 'none';
+    el.style.color = rdState.showVocab ? '' : 'inherit';
+  });
+}
+
+/* ── AUDIO ── */
+function rdPlayFull() {
+  const t = READING_TEXTS.find(x => x.id === rdState.currentTextId);
+  if (!t) return;
+  speak(t.de);
+  toast('🔊 Đang phát toàn bài…');
+}
+function rdPlaySlow() {
+  const t = READING_TEXTS.find(x => x.id === rdState.currentTextId);
+  if (!t) return;
+  if (!speechSynthesis) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(t.de);
+  u.lang = 'de-DE'; u.rate = 0.55;
+  speechSynthesis.speak(u);
+  toast('🐢 Đang phát chậm…');
+}
+
+/* ── FOCUS MODE ── */
+function rdFocusMode() {
+  const t = READING_TEXTS.find(x => x.id === rdState.currentTextId);
+  if (!t) return;
+  const overlay = document.getElementById('rdFocusOverlay');
+  const focusText = document.getElementById('rdFocusText');
+  if (!overlay || !focusText) return;
+
+  // Build clickable words
+  const vocabMap = {};
+  VOCAB.forEach(v => { vocabMap[v.w.toLowerCase()] = {w:v.w,art:v.art,vi:v.vi,ipa:v.ipa,cls:v.cls,ex:v.ex}; });
+  t.vocab.forEach(v => { vocabMap[v.w.toLowerCase()] = v; });
+
+  const html = t.de.replace(/([A-Za-zÄÖÜäöüß]+)/g, (match) => {
+    const vd = vocabMap[match.toLowerCase()];
+    if (vd) return `<span class="rd-word vocab-marked" data-w="${escA(vd.w||match)}" data-art="${escA(vd.art||'')}" data-vi="${escA(vd.vi||'')}" data-ipa="${escA(vd.ipa||'')}" data-cls="${escA(vd.cls||'')}" data-ex="${escA(vd.ex||'')}" onclick="wordClick(this,event)">${match}</span>`;
+    return `<span class="rd-word" data-w="${escA(match)}" onclick="wordClick(this,event)">${match}</span>`;
+  });
+  focusText.innerHTML = html;
+  overlay.classList.add('show');
+}
+function closeFocusMode() {
+  document.getElementById('rdFocusOverlay').classList.remove('show');
+}
+
+/* ── WORD CLICK ── */
+function wordClick(el, event) {
+  event.stopPropagation();
+  const w = el.dataset.w || el.textContent;
+  const art = el.dataset.art || '';
+  const vi = el.dataset.vi || '';
+  const ipa = el.dataset.ipa || '';
+  const cls = el.dataset.cls || '';
+  const ex = el.dataset.ex || '';
+
+  // If no data, try lookup in VOCAB
+  const found = VOCAB.find(v => v.w.toLowerCase() === w.toLowerCase());
+
+  showWordInfo(
+    found ? found.w : w,
+    found ? found.art : art,
+    found ? found.vi : vi,
+    found ? found.ipa : ipa,
+    found ? found.cls : cls,
+    found ? found.ex : ex,
+    event
+  );
+}
+
+function showWordInfo(w, art, vi, ipa, cls, ex, event) {
+  const popup = document.getElementById('rdWordPopup');
+  if (!popup) return;
+
+  setText('wpWord', w);
+  setText('wpArt', art ? art + ' (' + cls + ')' : cls);
+  setText('wpIpa', ipa);
+  setText('wpVi', vi || '(Nhấn 🔊 để nghe)');
+  setText('wpCls', '');
+  setText('wpEx', ex || '');
+
+  // Store for audio
+  rdState.wordPopupTarget = { w, art, vi, ipa, cls, ex };
+
+  // Position popup near click
+  const px = event.clientX, py = event.clientY;
+  const pw = 260, ph = 200;
+  let left = px + 10, top = py + 10;
+  if (left + pw > window.innerWidth - 16) left = px - pw - 10;
+  if (top + ph > window.innerHeight - 16) top = py - ph - 10;
+  popup.style.left = left + 'px';
+  popup.style.top = top + 'px';
+  popup.classList.add('show');
+
+  // Count lookup
+  rdState.wordLookups++;
+  rdSaveState();
+  rdUpdateStats();
+}
+
+function closeWordPopup() {
+  document.getElementById('rdWordPopup').classList.remove('show');
+}
+function wpSpeak() {
+  if (rdState.wordPopupTarget) speak(rdState.wordPopupTarget.w);
+}
+function wpSaveVocab() {
+  const t = rdState.wordPopupTarget;
+  if (!t) return;
+  toast(`✨ Đã lưu "${t.w}" vào từ vựng!`);
+  closeWordPopup();
+}
+
+/* ── PROGRESS ── */
+function rdProgressUpdate(pct) {
+  const fill = document.getElementById('rdProgFill');
+  if (fill) fill.style.width = pct + '%';
+}
+
+/* ── MARK DONE ── */
+function rdMarkDone() {
+  const id = rdState.currentTextId;
+  if (!id) return;
+  if (rdState.done.has(id)) {
+    rdState.done.delete(id);
+    document.getElementById('rdDoneBtn').textContent = '✅ Đánh dấu hoàn thành';
+    toast('↩ Bỏ đánh dấu hoàn thành');
+  } else {
+    rdState.done.add(id);
+    document.getElementById('rdDoneBtn').textContent = '✅ Đã hoàn thành';
+    addXP(20, document.getElementById('rdDoneBtn'));
+    toast('🎉 Hoàn thành bài đọc! +20 XP');
+    rdProgressUpdate(100);
+    if (rdState.done.size % 3 === 0) confetti();
+  }
+  rdSaveState();
+  rdUpdateStats();
+}
+
+/* ── HELPERS ── */
+function escQ(s) { return (s||'').replace(/'/g,"\\'").replace(/\n/g,' '); }
+function escA(s) { return (s||'').replace(/"/g,'&quot;').replace(/\n/g,' '); }
+
+// Close word popup on outside click
+document.addEventListener('click', (e) => {
+  const popup = document.getElementById('rdWordPopup');
+  if (popup && popup.classList.contains('show') && !popup.contains(e.target)) {
+    closeWordPopup();
+  }
+});
+// Close focus overlay on Escape
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    closeFocusMode();
+    closeWordPopup();
+  }
+});
+</script>
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='INPUT')return;
   const p=document.querySelector('.page.active')?.id;
@@ -1786,6 +3401,7 @@ document.addEventListener('keydown',e=>{
    INIT
 ════════════════════════════════════════════════════════ */
 loadS();
+rdLoadState();
 // Apply saved font size
 setFontSize(currentFS);
 renderDash();
