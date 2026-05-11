@@ -1834,6 +1834,14 @@ main { flex:1; padding:32px var(--sp6); max-width:1160px; margin:0 auto; width:1
     <button class="status-pill"             id="sp-fav"      onclick="setVSt('fav')">⭐ Yêu thích <span id="spCntFav"></span></button>
   </div>
 
+  <!-- Article legend -->
+  <div class="art-legend">
+    <span>Màu đầu thẻ:</span>
+    <span><span class="art-dot der"></span> der (Maskulin)</span>
+    <span><span class="art-dot die"></span> die (Feminin)</span>
+    <span><span class="art-dot das"></span> das (Neutrum)</span>
+  </div>
+
   <!-- Result count + view toggle -->
   <div class="vov-toolbar">
     <span class="vov-count" id="vocabCount">— từ</span>
@@ -2085,195 +2093,277 @@ main { flex:1; padding:32px var(--sp6); max-width:1160px; margin:0 auto; width:1
 </div>
 
 <script>
-/* ════════════════════════════════════════════════════════
-   VOCAB DATABASE — 160 từ, 12 chủ đề
-════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   VOCAB DATABASE v2 — 250+ từ A1/A2/B1 theo CEFR chuẩn
+   Schema: {id,l,cat,art,pl,w,vi,cls,ipa,ex,ex_vi,conj,note}
+══════════════════════════════════════════════════════════ */
 const VOCAB = [
-  // ── GIAO TIẾP (14) ──
-  {id:1,l:'A1',cat:'Giao tiếp',art:'',w:'Hallo',vi:'Xin chào',cls:'Interjektion',ex:'Hallo! Wie geht es dir?',ipa:'[haˈloː]'},
-  {id:2,l:'A1',cat:'Giao tiếp',art:'',w:'Danke',vi:'Cảm ơn',cls:'Interjektion',ex:'Danke schön für deine Hilfe!',ipa:'[ˈdaŋkə]'},
-  {id:3,l:'A1',cat:'Giao tiếp',art:'',w:'Bitte',vi:'Làm ơn / Không có gì',cls:'Interjektion',ex:'Bitte helfen Sie mir.',ipa:'[ˈbɪtə]'},
-  {id:4,l:'A1',cat:'Giao tiếp',art:'',w:'Entschuldigung',vi:'Xin lỗi / Cho hỏi',cls:'Interjektion',ex:'Entschuldigung, wo ist der Bahnhof?',ipa:'[ɛntˈʃʊldɪɡʊŋ]'},
-  {id:5,l:'A1',cat:'Giao tiếp',art:'',w:'Ja',vi:'Có, vâng',cls:'Interjektion',ex:'Ja, natürlich!',ipa:'[jaː]'},
-  {id:6,l:'A1',cat:'Giao tiếp',art:'',w:'Nein',vi:'Không',cls:'Interjektion',ex:'Nein, das stimmt nicht.',ipa:'[naɪ̯n]'},
-  {id:7,l:'A1',cat:'Giao tiếp',art:'',w:'Tschüss',vi:'Tạm biệt (thân mật)',cls:'Interjektion',ex:'Tschüss! Bis morgen!',ipa:'[tʃʏs]'},
-  {id:8,l:'A1',cat:'Giao tiếp',art:'',w:'Guten Morgen',vi:'Chào buổi sáng',cls:'Phrase',ex:'Guten Morgen! Wie geht es Ihnen?',ipa:'[ɡuːtn̩ ˈmɔʁɡn̩]'},
-  {id:9,l:'A1',cat:'Giao tiếp',art:'',w:'Guten Abend',vi:'Chào buổi tối',cls:'Phrase',ex:'Guten Abend! Herzlich willkommen.',ipa:'[ɡuːtn̩ ˈaːbn̩t]'},
-  {id:10,l:'A2',cat:'Giao tiếp',art:'',w:'Wie bitte?',vi:'Xin nhắc lại?',cls:'Phrase',ex:'Wie bitte? Ich habe das nicht verstanden.',ipa:'[viː ˈbɪtə]'},
-  {id:11,l:'A2',cat:'Giao tiếp',art:'',w:'natürlich',vi:'Tất nhiên, dĩ nhiên',cls:'Adverb',ex:'Natürlich kann ich helfen!',ipa:'[naˈtyːʁlɪç]'},
-  {id:12,l:'A2',cat:'Giao tiếp',art:'',w:'leider',vi:'Tiếc là, đáng tiếc',cls:'Adverb',ex:'Leider kann ich nicht kommen.',ipa:'[ˈlaɪ̯dɐ]'},
-  {id:13,l:'B1',cat:'Giao tiếp',art:'',w:'übrigens',vi:'Nhân tiện',cls:'Adverb',ex:'Übrigens, hast du Zeit morgen?',ipa:'[ˈyːbʁɪɡn̩s]'},
-  {id:14,l:'A1',cat:'Giao tiếp',art:'',w:'Auf Wiedersehen',vi:'Tạm biệt (lịch sự)',cls:'Phrase',ex:'Auf Wiedersehen, Frau Müller!',ipa:'[aʊ̯f ˈviːdɐzeːən]'},
-
-  // ── GIA ĐÌNH (10) ──
-  {id:15,l:'A1',cat:'Gia đình',art:'der',w:'Vater',vi:'Bố, cha',cls:'Nomen',ex:'Mein Vater ist Arzt.',ipa:'[ˈfaːtɐ]'},
-  {id:16,l:'A1',cat:'Gia đình',art:'die',w:'Mutter',vi:'Mẹ',cls:'Nomen',ex:'Meine Mutter kocht sehr gut.',ipa:'[ˈmʊtɐ]'},
-  {id:17,l:'A1',cat:'Gia đình',art:'der',w:'Bruder',vi:'Anh trai / Em trai',cls:'Nomen',ex:'Mein Bruder studiert Informatik.',ipa:'[ˈbʁuːdɐ]'},
-  {id:18,l:'A1',cat:'Gia đình',art:'die',w:'Schwester',vi:'Chị / Em gái',cls:'Nomen',ex:'Meine Schwester wohnt in Berlin.',ipa:'[ˈʃvɛstɐ]'},
-  {id:19,l:'A1',cat:'Gia đình',art:'das',w:'Kind',vi:'Đứa trẻ, con cái',cls:'Nomen',ex:'Das Kind spielt im Garten.',ipa:'[kɪnt]'},
-  {id:20,l:'A1',cat:'Gia đình',art:'der',w:'Mann',vi:'Người đàn ông / Chồng',cls:'Nomen',ex:'Ihr Mann ist sehr nett.',ipa:'[man]'},
-  {id:21,l:'A1',cat:'Gia đình',art:'die',w:'Frau',vi:'Người phụ nữ / Vợ',cls:'Nomen',ex:'Die Frau arbeitet als Lehrerin.',ipa:'[fʁaʊ̯]'},
-  {id:22,l:'A2',cat:'Gia đình',art:'die',w:'Großmutter',vi:'Bà nội / Bà ngoại',cls:'Nomen',ex:'Meine Großmutter ist 80 Jahre alt.',ipa:'[ˈɡʁoːsmʊtɐ]'},
-  {id:23,l:'A2',cat:'Gia đình',art:'der',w:'Großvater',vi:'Ông nội / Ông ngoại',cls:'Nomen',ex:'Mein Großvater lebt auf dem Land.',ipa:'[ˈɡʁoːsfaːtɐ]'},
-  {id:24,l:'A2',cat:'Gia đình',art:'die',w:'Familie',vi:'Gia đình',cls:'Nomen',ex:'Meine Familie ist sehr groß.',ipa:'[faˈmiːliə]'},
-
-  // ── ĂN UỐNG (14) ──
-  {id:25,l:'A1',cat:'Ăn uống',art:'das',w:'Brot',vi:'Bánh mì',cls:'Nomen',ex:'Ich esse morgens Brot mit Butter.',ipa:'[bʁoːt]'},
-  {id:26,l:'A1',cat:'Ăn uống',art:'das',w:'Wasser',vi:'Nước',cls:'Nomen',ex:'Ich trinke lieber Wasser als Saft.',ipa:'[ˈvasɐ]'},
-  {id:27,l:'A1',cat:'Ăn uống',art:'der',w:'Kaffee',vi:'Cà phê',cls:'Nomen',ex:'Jeden Morgen trinke ich Kaffee.',ipa:'[ˈkafe]'},
-  {id:28,l:'A1',cat:'Ăn uống',art:'der',w:'Tee',vi:'Trà',cls:'Nomen',ex:'Möchtest du Tee oder Kaffee?',ipa:'[teː]'},
-  {id:29,l:'A1',cat:'Ăn uống',art:'das',w:'Fleisch',vi:'Thịt',cls:'Nomen',ex:'Ich esse kein Fleisch.',ipa:'[flaɪ̯ʃ]'},
-  {id:30,l:'A1',cat:'Ăn uống',art:'das',w:'Gemüse',vi:'Rau củ',cls:'Nomen',ex:'Gemüse ist sehr gesund.',ipa:'[ɡəˈmyːzə]'},
-  {id:31,l:'A1',cat:'Ăn uống',art:'die',w:'Suppe',vi:'Súp, canh',cls:'Nomen',ex:'Die Suppe ist heiß und lecker.',ipa:'[ˈzʊpə]'},
-  {id:32,l:'A1',cat:'Ăn uống',art:'der',w:'Kuchen',vi:'Bánh ngọt',cls:'Nomen',ex:'Der Kuchen schmeckt sehr gut.',ipa:'[ˈkuːxn̩]'},
-  {id:33,l:'A2',cat:'Ăn uống',art:'die',w:'Speisekarte',vi:'Thực đơn',cls:'Nomen',ex:'Kann ich die Speisekarte sehen?',ipa:'[ˈʃpaɪ̯zəkaʁtə]'},
-  {id:34,l:'A2',cat:'Ăn uống',art:'',w:'lecker',vi:'Ngon',cls:'Adjektiv',ex:'Das Essen ist wirklich lecker!',ipa:'[ˈlɛkɐ]'},
-  {id:35,l:'A2',cat:'Ăn uống',art:'die',w:'Rechnung',vi:'Hóa đơn',cls:'Nomen',ex:'Die Rechnung bitte!',ipa:'[ˈʁɛçnʊŋ]'},
-  {id:36,l:'A2',cat:'Ăn uống',art:'das',w:'Frühstück',vi:'Bữa sáng',cls:'Nomen',ex:'Das Frühstück ist sehr wichtig.',ipa:'[ˈfʁyːʃtʏk]'},
-  {id:37,l:'A2',cat:'Ăn uống',art:'das',w:'Mittagessen',vi:'Bữa trưa',cls:'Nomen',ex:'Wir essen zusammen Mittagessen.',ipa:'[ˈmɪtaːkˌɛsn̩]'},
-  {id:38,l:'B1',cat:'Ăn uống',art:'',w:'vegetarisch',vi:'Ăn chay',cls:'Adjektiv',ex:'Haben Sie vegetarische Gerichte?',ipa:'[veɡeˈtaːʁɪʃ]'},
-
-  // ── DU LỊCH (12) ──
-  {id:39,l:'A1',cat:'Du lịch',art:'der',w:'Bahnhof',vi:'Ga tàu, nhà ga',cls:'Nomen',ex:'Der Bahnhof ist in der Stadtmitte.',ipa:'[ˈbaːnhoːf]'},
-  {id:40,l:'A1',cat:'Du lịch',art:'das',w:'Hotel',vi:'Khách sạn',cls:'Nomen',ex:'Wir wohnen in einem schönen Hotel.',ipa:'[hoˈtɛl]'},
-  {id:41,l:'A1',cat:'Du lịch',art:'das',w:'Flugzeug',vi:'Máy bay',cls:'Nomen',ex:'Das Flugzeug landet um 10 Uhr.',ipa:'[ˈfluːktsɔɪ̯k]'},
-  {id:42,l:'A1',cat:'Du lịch',art:'der',w:'Zug',vi:'Tàu hỏa',cls:'Nomen',ex:'Wir nehmen den Zug nach München.',ipa:'[tsuːk]'},
-  {id:43,l:'A1',cat:'Du lịch',art:'die',w:'Straße',vi:'Đường phố',cls:'Nomen',ex:'Die Straße ist sehr lang.',ipa:'[ˈʃtʁaːsə]'},
-  {id:44,l:'A2',cat:'Du lịch',art:'das',w:'Ticket',vi:'Vé',cls:'Nomen',ex:'Ich möchte zwei Tickets kaufen.',ipa:'[ˈtɪkɪt]'},
-  {id:45,l:'A2',cat:'Du lịch',art:'',w:'links',vi:'Bên trái',cls:'Adverb',ex:'Biegen Sie links ab.',ipa:'[lɪŋks]'},
-  {id:46,l:'A2',cat:'Du lịch',art:'',w:'rechts',vi:'Bên phải',cls:'Adverb',ex:'Das Restaurant ist rechts.',ipa:'[ʁɛçts]'},
-  {id:47,l:'A2',cat:'Du lịch',art:'',w:'geradeaus',vi:'Đi thẳng',cls:'Adverb',ex:'Gehen Sie geradeaus, dann links.',ipa:'[ɡəˈʁaːdəˌaʊ̯s]'},
-  {id:48,l:'A2',cat:'Du lịch',art:'das',w:'Gepäck',vi:'Hành lý',cls:'Nomen',ex:'Mein Gepäck ist sehr schwer.',ipa:'[ɡəˈpɛk]'},
-  {id:49,l:'B1',cat:'Du lịch',art:'die',w:'Sehenswürdigkeit',vi:'Điểm tham quan',cls:'Nomen',ex:'Berlin hat viele Sehenswürdigkeiten.',ipa:'[ˈzeːənsvʏʁdɪçkaɪ̯t]'},
-  {id:50,l:'A2',cat:'Du lịch',art:'der',w:'Reisepass',vi:'Hộ chiếu',cls:'Nomen',ex:'Bitte zeigen Sie Ihren Reisepass.',ipa:'[ˈʁaɪ̯zəpas]'},
-
-  // ── CÔNG VIỆC (10) ──
-  {id:51,l:'A1',cat:'Công việc',art:'der',w:'Beruf',vi:'Nghề nghiệp',cls:'Nomen',ex:'Was ist dein Beruf?',ipa:'[bəˈʁuːf]'},
-  {id:52,l:'A1',cat:'Công việc',art:'die',w:'Arbeit',vi:'Công việc',cls:'Nomen',ex:'Ich habe viel Arbeit heute.',ipa:'[ˈaʁbaɪ̯t]'},
-  {id:53,l:'A2',cat:'Công việc',art:'das',w:'Büro',vi:'Văn phòng',cls:'Nomen',ex:'Ich arbeite im Büro.',ipa:'[byˈʁoː]'},
-  {id:54,l:'A2',cat:'Công việc',art:'das',w:'Gehalt',vi:'Lương',cls:'Nomen',ex:'Das Gehalt ist gut.',ipa:'[ɡəˈhalt]'},
-  {id:55,l:'A2',cat:'Công việc',art:'der',w:'Chef',vi:'Sếp, giám đốc',cls:'Nomen',ex:'Mein Chef ist sehr streng.',ipa:'[ʃɛf]'},
-  {id:56,l:'B1',cat:'Công việc',art:'die',w:'Besprechung',vi:'Cuộc họp',cls:'Nomen',ex:'Ich habe um 10 Uhr eine Besprechung.',ipa:'[bəˈʃpʁɛçʊŋ]'},
-  {id:57,l:'B1',cat:'Công việc',art:'die',w:'Bewerbung',vi:'Đơn xin việc',cls:'Nomen',ex:'Ich schicke meine Bewerbung heute.',ipa:'[bəˈvɛʁbʊŋ]'},
-  {id:58,l:'B2',cat:'Công việc',art:'die',w:'Verantwortung',vi:'Trách nhiệm',cls:'Nomen',ex:'Ich übernehme die Verantwortung.',ipa:'[fɛʁˈantvɔʁtʊŋ]'},
-  {id:59,l:'A2',cat:'Công việc',art:'die',w:'Firma',vi:'Công ty',cls:'Nomen',ex:'Die Firma hat 200 Mitarbeiter.',ipa:'[ˈfɪʁma]'},
-  {id:60,l:'B1',cat:'Công việc',art:'der',w:'Kollege',vi:'Đồng nghiệp (nam)',cls:'Nomen',ex:'Mein Kollege ist sehr hilfsbereit.',ipa:'[kɔˈleːɡə]'},
-
-  // ── CẢM XÚC (12) ──
-  {id:61,l:'A1',cat:'Cảm xúc',art:'',w:'glücklich',vi:'Vui vẻ, hạnh phúc',cls:'Adjektiv',ex:'Ich bin sehr glücklich heute.',ipa:'[ˈɡlʏklɪç]'},
-  {id:62,l:'A1',cat:'Cảm xúc',art:'',w:'traurig',vi:'Buồn',cls:'Adjektiv',ex:'Warum bist du so traurig?',ipa:'[ˈtʁaʊ̯ʁɪç]'},
-  {id:63,l:'A1',cat:'Cảm xúc',art:'',w:'müde',vi:'Mệt, buồn ngủ',cls:'Adjektiv',ex:'Ich bin sehr müde nach der Arbeit.',ipa:'[ˈmyːdə]'},
-  {id:64,l:'A2',cat:'Cảm xúc',art:'',w:'ärgerlich',vi:'Tức giận, bực bội',cls:'Adjektiv',ex:'Er ist ärgerlich über den Fehler.',ipa:'[ˈɛʁɡɐlɪç]'},
-  {id:65,l:'A2',cat:'Cảm xúc',art:'',w:'überrascht',vi:'Ngạc nhiên, bất ngờ',cls:'Adjektiv',ex:'Ich bin total überrascht!',ipa:'[yːbɐˈʁaʃt]'},
-  {id:66,l:'A2',cat:'Cảm xúc',art:'',w:'zufrieden',vi:'Hài lòng, thỏa mãn',cls:'Adjektiv',ex:'Ich bin zufrieden mit meinem Leben.',ipa:'[tsuˈfʁiːdn̩]'},
-  {id:67,l:'B1',cat:'Cảm xúc',art:'',w:'besorgt',vi:'Lo lắng, quan tâm',cls:'Adjektiv',ex:'Sie ist besorgt um ihre Gesundheit.',ipa:'[bəˈzɔʁkt]'},
-  {id:68,l:'B1',cat:'Cảm xúc',art:'',w:'enttäuscht',vi:'Thất vọng',cls:'Adjektiv',ex:'Ich bin sehr enttäuscht.',ipa:'[ɛntˈtɔɪ̯ʃt]'},
-  {id:69,l:'B1',cat:'Cảm xúc',art:'',w:'entspannt',vi:'Thư thái, thả lỏng',cls:'Adjektiv',ex:'Am Wochenende bin ich entspannt.',ipa:'[ɛntˈʃpant]'},
-  {id:70,l:'A2',cat:'Cảm xúc',art:'',w:'aufgeregt',vi:'Hồi hộp, hào hứng',cls:'Adjektiv',ex:'Das Kind ist aufgeregt vor dem Fest.',ipa:'[ˈaʊ̯fɡəʁeːkt]'},
-  {id:71,l:'A2',cat:'Cảm xúc',art:'',w:'nervös',vi:'Hồi hộp, căng thẳng',cls:'Adjektiv',ex:'Ich bin heute nervös.',ipa:'[nɛʁˈvøːs]'},
-  {id:72,l:'B2',cat:'Cảm xúc',art:'die',w:'Sehnsucht',vi:'Nỗi nhớ, khao khát',cls:'Nomen',ex:'Ich habe Sehnsucht nach Hause.',ipa:'[ˈzeːnzʊxt]'},
-
-  // ── ĐỘNG TỪ THÔNG DỤNG (20) ──
-  {id:73,l:'A1',cat:'Động từ',art:'',w:'sein',vi:'Là (to be)',cls:'Verb',ex:'Ich bin Student.',ipa:'[zaɪ̯n]'},
-  {id:74,l:'A1',cat:'Động từ',art:'',w:'haben',vi:'Có (to have)',cls:'Verb',ex:'Ich habe ein Auto.',ipa:'[ˈhaːbn̩]'},
-  {id:75,l:'A1',cat:'Động từ',art:'',w:'gehen',vi:'Đi bộ, đi',cls:'Verb',ex:'Ich gehe in die Schule.',ipa:'[ˈɡeːən]'},
-  {id:76,l:'A1',cat:'Động từ',art:'',w:'kommen',vi:'Đến, tới',cls:'Verb',ex:'Woher kommst du?',ipa:'[ˈkɔmən]'},
-  {id:77,l:'A1',cat:'Động từ',art:'',w:'machen',vi:'Làm, thực hiện',cls:'Verb',ex:'Was machst du heute?',ipa:'[ˈmaxn̩]'},
-  {id:78,l:'A1',cat:'Động từ',art:'',w:'sprechen',vi:'Nói, nói chuyện',cls:'Verb',ex:'Ich spreche Deutsch.',ipa:'[ˈʃpʁɛçn̩]'},
-  {id:79,l:'A1',cat:'Động từ',art:'',w:'lernen',vi:'Học',cls:'Verb',ex:'Sie lernt jeden Tag Deutsch.',ipa:'[ˈlɛʁnən]'},
-  {id:80,l:'A1',cat:'Động từ',art:'',w:'essen',vi:'Ăn',cls:'Verb',ex:'Was möchtest du essen?',ipa:'[ˈɛsn̩]'},
-  {id:81,l:'A1',cat:'Động từ',art:'',w:'trinken',vi:'Uống',cls:'Verb',ex:'Er trinkt Kaffee.',ipa:'[ˈtʁɪŋkn̩]'},
-  {id:82,l:'A1',cat:'Động từ',art:'',w:'kaufen',vi:'Mua',cls:'Verb',ex:'Ich möchte ein Buch kaufen.',ipa:'[ˈkaʊ̯fn̩]'},
-  {id:83,l:'A2',cat:'Động từ',art:'',w:'wohnen',vi:'Sống, cư trú',cls:'Verb',ex:'Ich wohne in Hanoi.',ipa:'[ˈvoːnən]'},
-  {id:84,l:'A2',cat:'Động từ',art:'',w:'arbeiten',vi:'Làm việc',cls:'Verb',ex:'Mein Vater arbeitet in einer Firma.',ipa:'[ˈaʁbaɪ̯tn̩]'},
-  {id:85,l:'A2',cat:'Động từ',art:'',w:'helfen',vi:'Giúp đỡ',cls:'Verb',ex:'Kannst du mir helfen?',ipa:'[ˈhɛlfn̩]'},
-  {id:86,l:'A2',cat:'Động từ',art:'',w:'verstehen',vi:'Hiểu',cls:'Verb',ex:'Ich verstehe das nicht.',ipa:'[fɛʁˈʃteːən]'},
-  {id:87,l:'A2',cat:'Động từ',art:'',w:'brauchen',vi:'Cần',cls:'Verb',ex:'Ich brauche mehr Zeit.',ipa:'[ˈbʁaʊ̯xn̩]'},
-  {id:88,l:'A2',cat:'Động từ',art:'',w:'fahren',vi:'Lái xe, đi bằng phương tiện',cls:'Verb',ex:'Ich fahre mit dem Bus.',ipa:'[ˈfaːʁən]'},
-  {id:89,l:'B1',cat:'Động từ',art:'',w:'erklären',vi:'Giải thích',cls:'Verb',ex:'Kannst du das besser erklären?',ipa:'[ɛʁˈklɛːʁən]'},
-  {id:90,l:'B1',cat:'Động từ',art:'',w:'entscheiden',vi:'Quyết định',cls:'Verb',ex:'Ich kann mich nicht entscheiden.',ipa:'[ɛntˈʃaɪ̯dn̩]'},
-  {id:91,l:'B1',cat:'Động từ',art:'',w:'vergessen',vi:'Quên',cls:'Verb',ex:'Ich habe meinen Schlüssel vergessen.',ipa:'[fɛʁˈɡɛsn̩]'},
-  {id:92,l:'A2',cat:'Độngitzb',art:'',w:'schlafen',vi:'Ngủ',cls:'Verb',ex:'Das Baby schläft tief.',ipa:'[ˈʃlaːfn̩]'},
-
-  // ── TÍNH TỪ (10) ──
-  {id:93,l:'A1',cat:'Tính từ',art:'',w:'groß',vi:'Lớn, to',cls:'Adjektiv',ex:'Berlin ist eine große Stadt.',ipa:'[ɡʁoːs]'},
-  {id:94,l:'A1',cat:'Tính từ',art:'',w:'klein',vi:'Nhỏ, bé',cls:'Adjektiv',ex:'Das Kätzchen ist so klein!',ipa:'[klaɪ̯n]'},
-  {id:95,l:'A1',cat:'Tính từ',art:'',w:'gut',vi:'Tốt, ngon',cls:'Adjektiv',ex:'Das Essen ist wirklich gut.',ipa:'[ɡuːt]'},
-  {id:96,l:'A1',cat:'Tính từ',art:'',w:'schön',vi:'Đẹp',cls:'Adjektiv',ex:'Das Kleid ist sehr schön.',ipa:'[ʃøːn]'},
-  {id:97,l:'A1',cat:'Tính từ',art:'',w:'schnell',vi:'Nhanh',cls:'Adjektiv',ex:'Das Auto fährt sehr schnell.',ipa:'[ʃnɛl]'},
-  {id:98,l:'A1',cat:'Tính từ',art:'',w:'langsam',vi:'Chậm',cls:'Adjektiv',ex:'Bitte sprechen Sie langsamer.',ipa:'[ˈlaŋzaːm]'},
-  {id:99,l:'A2',cat:'Tính từ',art:'',w:'wichtig',vi:'Quan trọng',cls:'Adjektiv',ex:'Das ist sehr wichtig.',ipa:'[ˈvɪçtɪç]'},
-  {id:100,l:'A2',cat:'Tính từ',art:'',w:'schwierig',vi:'Khó, phức tạp',cls:'Adjektiv',ex:'Deutsch ist schwierig, aber interessant.',ipa:'[ˈʃviːʁɪç]'},
-  {id:101,l:'A2',cat:'Tính từ',art:'',w:'einfach',vi:'Đơn giản, dễ',cls:'Adjektiv',ex:'Das ist ganz einfach.',ipa:'[ˈaɪ̯nfax]'},
-  {id:102,l:'B1',cat:'Tính từ',art:'',w:'notwendig',vi:'Cần thiết, bắt buộc',cls:'Adjektiv',ex:'Das ist absolut notwendig.',ipa:'[ˈnoːtvɛndɪç]'},
-
-  // ── MUA SẮM (8) ──
-  {id:103,l:'A1',cat:'Mua sắm',art:'das',w:'Geld',vi:'Tiền',cls:'Nomen',ex:'Ich habe nicht genug Geld.',ipa:'[ɡɛlt]'},
-  {id:104,l:'A1',cat:'Mua sắm',art:'der',w:'Preis',vi:'Giá cả',cls:'Nomen',ex:'Was kostet das? Der Preis ist hoch.',ipa:'[pʁaɪ̯s]'},
-  {id:105,l:'A2',cat:'Mua sắm',art:'der',w:'Laden',vi:'Cửa hàng',cls:'Nomen',ex:'Der Laden ist um 9 Uhr geöffnet.',ipa:'[ˈlaːdn̩]'},
-  {id:106,l:'A2',cat:'Mua sắm',art:'die',w:'Kasse',vi:'Quầy thu ngân',cls:'Nomen',ex:'Die Kasse ist dort hinten.',ipa:'[ˈkasə]'},
-  {id:107,l:'A2',cat:'Mua sắm',art:'',w:'billig',vi:'Rẻ, bình dân',cls:'Adjektiv',ex:'Das ist sehr billig.',ipa:'[ˈbɪlɪç]'},
-  {id:108,l:'A2',cat:'Mua sắm',art:'',w:'teuer',vi:'Đắt',cls:'Adjektiv',ex:'Diese Tasche ist sehr teuer.',ipa:'[ˈtɔɪ̯ɐ]'},
-  {id:109,l:'A2',cat:'Mua sắm',art:'die',w:'Quittung',vi:'Biên lai, hóa đơn',cls:'Nomen',ex:'Kann ich eine Quittung bekommen?',ipa:'[ˈkvɪtʊŋ]'},
-  {id:110,l:'B1',cat:'Mua sắm',art:'der',w:'Rabatt',vi:'Giảm giá',cls:'Nomen',ex:'Gibt es einen Rabatt?',ipa:'[ʁaˈbat]'},
-
-  // ── CÔNG NGHỆ (8) ──
-  {id:111,l:'A2',cat:'Công nghệ',art:'das',w:'Handy',vi:'Điện thoại di động',cls:'Nomen',ex:'Mein Handy ist kaputt.',ipa:'[ˈhɛndi]'},
-  {id:112,l:'A2',cat:'Công nghệ',art:'der',w:'Computer',vi:'Máy tính',cls:'Nomen',ex:'Ich arbeite am Computer.',ipa:'[kɔmˈpjuːtɐ]'},
-  {id:113,l:'A2',cat:'Công nghệ',art:'das',w:'Internet',vi:'Internet',cls:'Nomen',ex:'Das Internet ist sehr langsam.',ipa:'[ˈɪntɐnɛt]'},
-  {id:114,l:'A2',cat:'Công nghệ',art:'die',w:'E-Mail',vi:'Thư điện tử',cls:'Nomen',ex:'Ich habe eine E-Mail bekommen.',ipa:'[ˈiːmeɪ̯l]'},
-  {id:115,l:'B1',cat:'Công nghệ',art:'die',w:'App',vi:'Ứng dụng',cls:'Nomen',ex:'Diese App ist sehr nützlich.',ipa:'[ɛp]'},
-  {id:116,l:'B1',cat:'Công nghệ',art:'das',w:'Passwort',vi:'Mật khẩu',cls:'Nomen',ex:'Ich habe mein Passwort vergessen.',ipa:'[ˈpasvɔʁt]'},
-  {id:117,l:'A2',cat:'Công nghệ',art:'',w:'herunterladen',vi:'Tải xuống',cls:'Verb',ex:'Ich lade die App herunter.',ipa:'[hɛˈʁʊntɐlaːdn̩]'},
-  {id:118,l:'B1',cat:'Công nghệ',art:'das',w:'Netzwerk',vi:'Mạng lưới, network',cls:'Nomen',ex:'Das Netzwerk ist sicher.',ipa:'[ˈnɛtsvɛʁk]'},
-
-  // ── HỌC TẬP (8) ──
-  {id:119,l:'A1',cat:'Học tập',art:'die',w:'Schule',vi:'Trường học',cls:'Nomen',ex:'Ich gehe jeden Tag in die Schule.',ipa:'[ˈʃuːlə]'},
-  {id:120,l:'A1',cat:'Học tập',art:'das',w:'Buch',vi:'Sách',cls:'Nomen',ex:'Das Buch ist sehr interessant.',ipa:'[buːx]'},
-  {id:121,l:'A1',cat:'Học tập',art:'der',w:'Lehrer',vi:'Giáo viên (nam)',cls:'Nomen',ex:'Der Lehrer erklärt sehr gut.',ipa:'[ˈleːʁɐ]'},
-  {id:122,l:'A2',cat:'Học tập',art:'die',w:'Hausaufgaben',vi:'Bài tập về nhà',cls:'Nomen',ex:'Ich mache meine Hausaufgaben.',ipa:'[ˈhaʊ̯sˌʔaʊ̯fɡaːbn̩]'},
-  {id:123,l:'A2',cat:'Học tập',art:'der',w:'Kurs',vi:'Khóa học',cls:'Nomen',ex:'Ich besuche einen Deutschkurs.',ipa:'[kʊʁs]'},
-  {id:124,l:'A2',cat:'Học tập',art:'die',w:'Prüfung',vi:'Kỳ thi',cls:'Nomen',ex:'Die Prüfung ist morgen.',ipa:'[ˈpʁyːfʊŋ]'},
-  {id:125,l:'B1',cat:'Học tập',art:'das',w:'Wörterbuch',vi:'Từ điển',cls:'Nomen',ex:'Ich schlage im Wörterbuch nach.',ipa:'[ˈvœʁtɐbuːx]'},
-  {id:126,l:'B1',cat:'Học tập',art:'die',w:'Note',vi:'Điểm số',cls:'Nomen',ex:'Ich habe eine gute Note bekommen.',ipa:'[ˈnoːtə]'},
-
-  // ── TỪ VỰNG HỮU ÍCH (20) ──
-  {id:127,l:'A1',cat:'Từ vựng hữu ích',art:'das',w:'Haus',vi:'Ngôi nhà',cls:'Nomen',ex:'Das Haus ist groß und schön.',ipa:'[haʊ̯s]'},
-  {id:128,l:'A1',cat:'Từ vựng hữu ích',art:'die',w:'Stadt',vi:'Thành phố',cls:'Nomen',ex:'Berlin ist eine große Stadt.',ipa:'[ʃtat]'},
-  {id:129,l:'A1',cat:'Từ vựng hữu ích',art:'das',w:'Wetter',vi:'Thời tiết',cls:'Nomen',ex:'Das Wetter heute ist sehr schön.',ipa:'[ˈvɛtɐ]'},
-  {id:130,l:'A1',cat:'Từ vựng hữu ích',art:'die',w:'Zeit',vi:'Thời gian',cls:'Nomen',ex:'Ich habe keine Zeit.',ipa:'[tsaɪ̯t]'},
-  {id:131,l:'A1',cat:'Từ vựng hữu ích',art:'',w:'heute',vi:'Hôm nay',cls:'Adverb',ex:'Was machst du heute?',ipa:'[ˈhɔɪ̯tə]'},
-  {id:132,l:'A1',cat:'Từ vựng hữu ích',art:'',w:'morgen',vi:'Ngày mai / Buổi sáng',cls:'Adverb',ex:'Morgen habe ich frei.',ipa:'[ˈmɔʁɡn̩]'},
-  {id:133,l:'A1',cat:'Từ vựng hữu ích',art:'',w:'hier',vi:'Ở đây',cls:'Adverb',ex:'Ich wohne hier seit 5 Jahren.',ipa:'[hiːɐ̯]'},
-  {id:134,l:'A1',cat:'Từ vựng hữu ích',art:'',w:'dort',vi:'Ở đó',cls:'Adverb',ex:'Das Restaurant ist dort.',ipa:'[dɔʁt]'},
-  {id:135,l:'A2',cat:'Từ vựng hữu ích',art:'',w:'immer',vi:'Luôn luôn',cls:'Adverb',ex:'Er ist immer pünktlich.',ipa:'[ˈɪmɐ]'},
-  {id:136,l:'A2',cat:'Từ vựng hữu ích',art:'',w:'vielleicht',vi:'Có lẽ',cls:'Adverb',ex:'Vielleicht regnet es morgen.',ipa:'[fiˈlaɪ̯çt]'},
-  {id:137,l:'A2',cat:'Từ vựng hữu ích',art:'',w:'zusammen',vi:'Cùng nhau',cls:'Adverb',ex:'Wir essen zusammen.',ipa:'[tsuˈzamən]'},
-  {id:138,l:'A2',cat:'Từ vựng hữu ích',art:'',w:'noch',vi:'Vẫn còn, thêm',cls:'Adverb',ex:'Ich brauche noch Zeit.',ipa:'[nɔx]'},
-  {id:139,l:'B1',cat:'Từ vựng hữu ích',art:'die',w:'Erfahrung',vi:'Kinh nghiệm',cls:'Nomen',ex:'Ich habe viel Erfahrung.',ipa:'[ɛʁˈfaːʁʊŋ]'},
-  {id:140,l:'B1',cat:'Từ vựng hữu ích',art:'die',w:'Möglichkeit',vi:'Khả năng, cơ hội',cls:'Nomen',ex:'Es gibt immer eine Möglichkeit.',ipa:'[ˈmøːklɪçkaɪ̯t]'},
-  {id:141,l:'B1',cat:'Từ vựng hữu ích',art:'',w:'wahrscheinlich',vi:'Chắc là, có vẻ như',cls:'Adverb',ex:'Er kommt wahrscheinlich morgen.',ipa:'[vaːʁˈʃaɪ̯nlɪç]'},
-  {id:142,l:'B1',cat:'Từ vựng hữu ích',art:'',w:'obwohl',vi:'Mặc dù',cls:'Konjunktion',ex:'Obwohl es regnet, gehe ich spazieren.',ipa:'[ˈɔpvoːl]'},
-  {id:143,l:'B1',cat:'Từ vựng hữu ích',art:'',w:'außerdem',vi:'Ngoài ra, thêm vào đó',cls:'Adverb',ex:'Außerdem muss ich einkaufen.',ipa:'[ˈaʊ̯sɐdeːm]'},
-  {id:144,l:'B2',cat:'Từ vựng hữu ích',art:'die',w:'Herausforderung',vi:'Thách thức',cls:'Nomen',ex:'Das ist eine große Herausforderung.',ipa:'[hɛˈʁaʊ̯sfɔʁdəʁʊŋ]'},
-  {id:145,l:'C1',cat:'Từ vựng hữu ích',art:'die',w:'Schlussfolgerung',vi:'Kết luận',cls:'Nomen',ex:'Was ist die Schlussfolgerung?',ipa:'[ˈʃlʊsfɔlɡəʁʊŋ]'},
-  {id:146,l:'C2',cat:'Từ vựng hữu ích',art:'',w:'unumgänglich',vi:'Không thể tránh khỏi',cls:'Adjektiv',ex:'Eine Entscheidung ist unumgänglich.',ipa:'[ˌʊnʔʊmˈɡɛŋlɪç]'},
-
-  // ── CỤM TỪ THÔNG DỤNG (14) ──
-  {id:147,l:'A1',cat:'Cụm từ',art:'',w:'Wie geht es Ihnen?',vi:'Bạn có khỏe không? (lịch sự)',cls:'Phrase',ex:'Guten Tag! Wie geht es Ihnen?',ipa:'[viː ɡeːt ɛs ˈiːnən]'},
-  {id:148,l:'A1',cat:'Cụm từ',art:'',w:'Mir geht es gut.',vi:'Tôi khỏe.',cls:'Phrase',ex:'Mir geht es gut, danke!',ipa:'[miːɐ̯ ɡeːt ɛs ɡuːt]'},
-  {id:149,l:'A1',cat:'Cụm từ',art:'',w:'Ich verstehe nicht.',vi:'Tôi không hiểu.',cls:'Phrase',ex:'Entschuldigung, ich verstehe nicht.',ipa:'[ɪç fɛʁˈʃteːə nɪçt]'},
-  {id:150,l:'A1',cat:'Cụm từ',art:'',w:'Können Sie das wiederholen?',vi:'Bạn có thể nhắc lại không?',cls:'Phrase',ex:'Können Sie das bitte wiederholen?',ipa:'[ˈkœnən ziː das ˈviːdɐhoːlən]'},
-  {id:151,l:'A1',cat:'Cụm từ',art:'',w:'Ich bin aus Vietnam.',vi:'Tôi đến từ Việt Nam.',cls:'Phrase',ex:'Hallo, ich bin aus Vietnam.',ipa:'[ɪç bɪn aʊ̯s ˈviːɛtnam]'},
-  {id:152,l:'A2',cat:'Cụm từ',art:'',w:'Es tut mir leid.',vi:'Tôi rất tiếc. / Xin lỗi.',cls:'Phrase',ex:'Es tut mir leid, das war mein Fehler.',ipa:'[ɛs tuːt miːɐ̯ laɪ̯t]'},
-  {id:153,l:'A2',cat:'Cụm từ',art:'',w:'Ich hätte gern…',vi:'Tôi muốn…(đặt hàng)',cls:'Phrase',ex:'Ich hätte gern ein Bier, bitte.',ipa:'[ɪç ˈhɛtə ɡɛʁn]'},
-  {id:154,l:'A2',cat:'Cụm từ',art:'',w:'Wie viel kostet das?',vi:'Cái này giá bao nhiêu?',cls:'Phrase',ex:'Entschuldigung, wie viel kostet das?',ipa:'[viː fiːl ˈkɔstət das]'},
-  {id:155,l:'A2',cat:'Cụm từ',art:'',w:'Wo ist die Toilette?',vi:'Nhà vệ sinh ở đâu?',cls:'Phrase',ex:'Entschuldigung, wo ist die Toilette?',ipa:'[voː ɪst diː toaˈlɛtə]'},
-  {id:156,l:'B1',cat:'Cụm từ',art:'',w:'Meiner Meinung nach…',vi:'Theo ý kiến của tôi…',cls:'Phrase',ex:'Meiner Meinung nach ist das falsch.',ipa:'[ˈmaɪ̯nɐ ˈmaɪ̯nʊŋ nax]'},
-  {id:157,l:'B1',cat:'Cụm từ',art:'',w:'Das kommt darauf an.',vi:'Còn tùy.',cls:'Phrase',ex:'Kommt er? – Das kommt darauf an.',ipa:'[das ˈkɔmt daˈʁaʊ̯f an]'},
-  {id:158,l:'A2',cat:'Cụm từ',art:'',w:'Gute Nacht!',vi:'Chúc ngủ ngon!',cls:'Phrase',ex:'Gute Nacht! Schlaf gut!',ipa:'[ˈɡuːtə naxt]'},
-  {id:159,l:'A2',cat:'Cụm từ',art:'',w:'Herzlichen Glückwunsch!',vi:'Chúc mừng!',cls:'Phrase',ex:'Herzlichen Glückwunsch zum Geburtstag!',ipa:'[ˈhɛʁtslɪçn̩ ˈɡlʏkvʊnʃ]'},
-  {id:160,l:'A1',cat:'Cụm từ',art:'',w:'Ich heiße…',vi:'Tên tôi là…',cls:'Phrase',ex:'Ich heiße Linh. Und Sie?',ipa:'[ɪç ˈhaɪ̯sə]'},
+// ═══ A1 — CHÀO HỎI ═══
+{id:1,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Hallo',vi:'Xin chào (thân mật)',cls:'Interjektion',ipa:'[haˈloː]',ex:'Hallo! Wie geht es dir?',ex_vi:'Xin chào! Bạn có khỏe không?'},
+{id:2,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Guten Morgen',vi:'Chào buổi sáng',cls:'Phrase',ipa:'[ɡuːtn̩ ˈmɔʁɡn̩]',ex:'Guten Morgen, Frau Müller!',ex_vi:'Chào buổi sáng, bà Müller!'},
+{id:3,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Guten Tag',vi:'Xin chào (ban ngày)',cls:'Phrase',ipa:'[ɡuːtn̩ taːk]',ex:'Guten Tag! Kann ich helfen?',ex_vi:'Xin chào! Tôi có thể giúp gì không?'},
+{id:4,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Guten Abend',vi:'Chào buổi tối',cls:'Phrase',ipa:'[ɡuːtn̩ ˈaːbn̩t]',ex:'Guten Abend! Herzlich willkommen.',ex_vi:'Chào buổi tối! Xin chào mừng.'},
+{id:5,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Auf Wiedersehen',vi:'Tạm biệt (lịch sự)',cls:'Phrase',ipa:'[aʊ̯f ˈviːdɐzeːən]',ex:'Auf Wiedersehen! Bis morgen.',ex_vi:'Tạm biệt! Hẹn gặp lại ngày mai.'},
+{id:6,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Tschüss',vi:'Tạm biệt (thân mật)',cls:'Interjektion',ipa:'[tʃʏs]',ex:'Tschüss! Bis bald!',ex_vi:'Tạm biệt! Hẹn sớm gặp lại!'},
+{id:7,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Danke',vi:'Cảm ơn',cls:'Interjektion',ipa:'[ˈdaŋkə]',ex:'Danke schön für Ihre Hilfe!',ex_vi:'Cảm ơn bạn rất nhiều!'},
+{id:8,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Bitte',vi:'Làm ơn / Không có gì',cls:'Interjektion',ipa:'[ˈbɪtə]',ex:'Bitte helfen Sie mir.',ex_vi:'Làm ơn giúp tôi với.'},
+{id:9,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Entschuldigung',vi:'Xin lỗi / Cho hỏi',cls:'Interjektion',ipa:'[ɛntˈʃʊldɪɡʊŋ]',ex:'Entschuldigung, wo ist der Bahnhof?',ex_vi:'Cho hỏi, ga tàu ở đâu?'},
+{id:10,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Ja',vi:'Có, vâng',cls:'Interjektion',ipa:'[jaː]',ex:'Ja, das ist richtig!',ex_vi:'Vâng, đúng vậy!'},
+{id:11,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Nein',vi:'Không',cls:'Interjektion',ipa:'[naɪ̯n]',ex:'Nein, das stimmt nicht.',ex_vi:'Không, điều đó không đúng.'},
+{id:12,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Gute Nacht',vi:'Chúc ngủ ngon',cls:'Phrase',ipa:'[ˈɡuːtə naxt]',ex:'Gute Nacht und süße Träume!',ex_vi:'Chúc ngủ ngon và mơ đẹp!'},
+{id:13,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Wie geht es Ihnen?',vi:'Bạn có khỏe không? (lịch sự)',cls:'Phrase',ipa:'[viː ɡeːt ɛs ˈiːnən]',ex:'Guten Tag! Wie geht es Ihnen?',ex_vi:'Xin chào! Bạn có khỏe không?'},
+{id:14,l:'A1',cat:'Chào hỏi',art:'',pl:'',w:'Mir geht es gut.',vi:'Tôi khỏe, cảm ơn.',cls:'Phrase',ipa:'[miːɐ̯ ɡeːt ɛs ɡuːt]',ex:'Mir geht es gut, danke! Und Ihnen?',ex_vi:'Tôi khỏe, cảm ơn! Còn bạn?'},
+{id:15,l:'A2',cat:'Chào hỏi',art:'',pl:'',w:'Herzlichen Glückwunsch!',vi:'Chúc mừng!',cls:'Phrase',ipa:'[ˈhɛʁtslɪçn̩ ˈɡlʏkvʊnʃ]',ex:'Herzlichen Glückwunsch zum Geburtstag!',ex_vi:'Chúc mừng sinh nhật!'},
+// ═══ A1 — GIA ĐÌNH ═══
+{id:16,l:'A1',cat:'Gia đình',art:'der',pl:'Väter',w:'Vater',vi:'Bố, cha',cls:'Nomen',ipa:'[ˈfaːtɐ]',ex:'Mein Vater ist Arzt von Beruf.',ex_vi:'Bố tôi làm bác sĩ theo nghề.'},
+{id:17,l:'A1',cat:'Gia đình',art:'die',pl:'Mütter',w:'Mutter',vi:'Mẹ',cls:'Nomen',ipa:'[ˈmʊtɐ]',ex:'Meine Mutter kocht sehr gut.',ex_vi:'Mẹ tôi nấu ăn rất ngon.'},
+{id:18,l:'A1',cat:'Gia đình',art:'der',pl:'Brüder',w:'Bruder',vi:'Anh trai / Em trai',cls:'Nomen',ipa:'[ˈbʁuːdɐ]',ex:'Mein Bruder studiert in Berlin.',ex_vi:'Anh trai tôi học ở Berlin.'},
+{id:19,l:'A1',cat:'Gia đình',art:'die',pl:'Schwestern',w:'Schwester',vi:'Chị gái / Em gái',cls:'Nomen',ipa:'[ˈʃvɛstɐ]',ex:'Meine Schwester ist 15 Jahre alt.',ex_vi:'Em gái tôi 15 tuổi.'},
+{id:20,l:'A1',cat:'Gia đình',art:'das',pl:'Kinder',w:'Kind',vi:'Đứa trẻ, con cái',cls:'Nomen',ipa:'[kɪnt]',ex:'Das Kind spielt im Garten.',ex_vi:'Đứa trẻ đang chơi trong vườn.'},
+{id:21,l:'A1',cat:'Gia đình',art:'der',pl:'Männer',w:'Mann',vi:'Người đàn ông / Chồng',cls:'Nomen',ipa:'[man]',ex:'Ihr Mann ist sehr nett.',ex_vi:'Chồng cô ấy rất tốt bụng.'},
+{id:22,l:'A1',cat:'Gia đình',art:'die',pl:'Frauen',w:'Frau',vi:'Người phụ nữ / Vợ',cls:'Nomen',ipa:'[fʁaʊ̯]',ex:'Die Frau arbeitet als Ärztin.',ex_vi:'Người phụ nữ đó làm bác sĩ.'},
+{id:23,l:'A1',cat:'Gia đình',art:'die',pl:'Familien',w:'Familie',vi:'Gia đình',cls:'Nomen',ipa:'[faˈmiːliə]',ex:'Meine Familie ist sehr wichtig für mich.',ex_vi:'Gia đình rất quan trọng với tôi.'},
+{id:24,l:'A1',cat:'Gia đình',art:'die',pl:'— (Pl.only)',w:'Eltern',vi:'Bố mẹ (số nhiều)',cls:'Nomen',ipa:'[ˈɛltɐn]',ex:'Meine Eltern wohnen in Hanoi.',ex_vi:'Bố mẹ tôi sống ở Hà Nội.',note:'Chỉ dùng số nhiều'},
+{id:25,l:'A2',cat:'Gia đình',art:'die',pl:'Großmütter',w:'Großmutter',vi:'Bà nội / Bà ngoại',cls:'Nomen',ipa:'[ˈɡʁoːsmʊtɐ]',ex:'Meine Großmutter ist 75 Jahre alt.',ex_vi:'Bà tôi 75 tuổi.'},
+{id:26,l:'A2',cat:'Gia đình',art:'der',pl:'Großväter',w:'Großvater',vi:'Ông nội / Ông ngoại',cls:'Nomen',ipa:'[ˈɡʁoːsfaːtɐ]',ex:'Mein Großvater lebt auf dem Land.',ex_vi:'Ông tôi sống ở nông thôn.'},
+{id:27,l:'A2',cat:'Gia đình',art:'der',pl:'Söhne',w:'Sohn',vi:'Con trai',cls:'Nomen',ipa:'[zoːn]',ex:'Ihr Sohn ist sehr klug.',ex_vi:'Con trai cô ấy rất thông minh.'},
+{id:28,l:'A2',cat:'Gia đình',art:'die',pl:'Töchter',w:'Tochter',vi:'Con gái',cls:'Nomen',ipa:'[ˈtɔxtɐ]',ex:'Ihre Tochter studiert Medizin.',ex_vi:'Con gái bà ấy học y khoa.'},
+// ═══ A1 — NHÀ Ở ═══
+{id:29,l:'A1',cat:'Nhà ở',art:'das',pl:'Häuser',w:'Haus',vi:'Ngôi nhà',cls:'Nomen',ipa:'[haʊ̯s]',ex:'Wir haben ein großes Haus.',ex_vi:'Chúng tôi có một ngôi nhà lớn.'},
+{id:30,l:'A1',cat:'Nhà ở',art:'die',pl:'Wohnungen',w:'Wohnung',vi:'Căn hộ, chỗ ở',cls:'Nomen',ipa:'[ˈvoːnʊŋ]',ex:'Ich wohne in einer kleinen Wohnung.',ex_vi:'Tôi sống trong một căn hộ nhỏ.'},
+{id:31,l:'A1',cat:'Nhà ở',art:'das',pl:'Zimmer',w:'Zimmer',vi:'Phòng',cls:'Nomen',ipa:'[ˈtsɪmɐ]',ex:'Mein Zimmer ist sehr ordentlich.',ex_vi:'Phòng tôi rất gọn gàng.'},
+{id:32,l:'A1',cat:'Nhà ở',art:'die',pl:'Küchen',w:'Küche',vi:'Nhà bếp',cls:'Nomen',ipa:'[ˈkʏçə]',ex:'Die Küche ist modern und groß.',ex_vi:'Nhà bếp hiện đại và rộng.'},
+{id:33,l:'A1',cat:'Nhà ở',art:'der',pl:'Tische',w:'Tisch',vi:'Cái bàn',cls:'Nomen',ipa:'[tɪʃ]',ex:'Das Buch liegt auf dem Tisch.',ex_vi:'Cuốn sách nằm trên bàn.'},
+{id:34,l:'A1',cat:'Nhà ở',art:'der',pl:'Stühle',w:'Stuhl',vi:'Cái ghế',cls:'Nomen',ipa:'[ʃtuːl]',ex:'Bitte setz dich auf den Stuhl.',ex_vi:'Làm ơn ngồi xuống ghế.'},
+{id:35,l:'A1',cat:'Nhà ở',art:'das',pl:'Betten',w:'Bett',vi:'Cái giường',cls:'Nomen',ipa:'[bɛt]',ex:'Das Bett ist sehr bequem.',ex_vi:'Cái giường rất thoải mái.'},
+// ═══ A1 — ĂN UỐNG ═══
+{id:36,l:'A1',cat:'Ăn uống',art:'das',pl:'—',w:'Brot',vi:'Bánh mì',cls:'Nomen',ipa:'[bʁoːt]',ex:'Ich esse morgens Brot mit Butter.',ex_vi:'Buổi sáng tôi ăn bánh mì với bơ.'},
+{id:37,l:'A1',cat:'Ăn uống',art:'das',pl:'—',w:'Wasser',vi:'Nước',cls:'Nomen',ipa:'[ˈvasɐ]',ex:'Ich trinke jeden Tag viel Wasser.',ex_vi:'Mỗi ngày tôi uống nhiều nước.'},
+{id:38,l:'A1',cat:'Ăn uống',art:'der',pl:'—',w:'Kaffee',vi:'Cà phê',cls:'Nomen',ipa:'[ˈkafe]',ex:'Ich trinke morgens immer Kaffee.',ex_vi:'Buổi sáng tôi luôn uống cà phê.'},
+{id:39,l:'A1',cat:'Ăn uống',art:'der',pl:'—',w:'Tee',vi:'Trà',cls:'Nomen',ipa:'[teː]',ex:'Möchtest du Tee oder Kaffee?',ex_vi:'Bạn muốn uống trà hay cà phê?'},
+{id:40,l:'A1',cat:'Ăn uống',art:'die',pl:'—',w:'Milch',vi:'Sữa',cls:'Nomen',ipa:'[mɪlç]',ex:'Kinder brauchen jeden Tag Milch.',ex_vi:'Trẻ em cần uống sữa mỗi ngày.'},
+{id:41,l:'A1',cat:'Ăn uống',art:'das',pl:'—',w:'Fleisch',vi:'Thịt',cls:'Nomen',ipa:'[flaɪ̯ʃ]',ex:'Ich esse kein Fleisch.',ex_vi:'Tôi không ăn thịt.'},
+{id:42,l:'A1',cat:'Ăn uống',art:'das',pl:'—',w:'Gemüse',vi:'Rau củ',cls:'Nomen',ipa:'[ɡəˈmyːzə]',ex:'Ich esse gern Gemüse.',ex_vi:'Tôi thích ăn rau củ.'},
+{id:43,l:'A1',cat:'Ăn uống',art:'das',pl:'—',w:'Obst',vi:'Hoa quả',cls:'Nomen',ipa:'[ˈoːpst]',ex:'Obst ist gesund und lecker.',ex_vi:'Hoa quả vừa ngon vừa tốt.'},
+{id:44,l:'A1',cat:'Ăn uống',art:'der',pl:'Kuchen',w:'Kuchen',vi:'Bánh ngọt',cls:'Nomen',ipa:'[ˈkuːxn̩]',ex:'Der Kuchen schmeckt wunderbar.',ex_vi:'Bánh ngọt này ngon tuyệt.'},
+{id:45,l:'A2',cat:'Ăn uống',art:'die',pl:'Speisekarten',w:'Speisekarte',vi:'Thực đơn',cls:'Nomen',ipa:'[ˈʃpaɪ̯zəkaʁtə]',ex:'Kann ich bitte die Speisekarte sehen?',ex_vi:'Cho tôi xem thực đơn được không?'},
+{id:46,l:'A2',cat:'Ăn uống',art:'',pl:'',w:'lecker',vi:'Ngon, hấp dẫn',cls:'Adjektiv',ipa:'[ˈlɛkɐ]',ex:'Das Essen ist wirklich sehr lecker!',ex_vi:'Món ăn này ngon thật sự!'},
+{id:47,l:'A2',cat:'Ăn uống',art:'die',pl:'Rechnungen',w:'Rechnung',vi:'Hóa đơn',cls:'Nomen',ipa:'[ˈʁɛçnʊŋ]',ex:'Die Rechnung bitte!',ex_vi:'Cho tôi hóa đơn nhé!'},
+{id:48,l:'A2',cat:'Ăn uống',art:'das',pl:'Frühstücke',w:'Frühstück',vi:'Bữa sáng',cls:'Nomen',ipa:'[ˈfʁyːʃtʏk]',ex:'Das Frühstück ist die wichtigste Mahlzeit.',ex_vi:'Bữa sáng là bữa ăn quan trọng nhất.'},
+{id:49,l:'A2',cat:'Ăn uống',art:'das',pl:'Mittagessen',w:'Mittagessen',vi:'Bữa trưa',cls:'Nomen',ipa:'[ˈmɪtaːkˌɛsn̩]',ex:'Wir essen Mittagessen um 12 Uhr.',ex_vi:'Chúng tôi ăn trưa lúc 12 giờ.'},
+{id:50,l:'A2',cat:'Ăn uống',art:'das',pl:'Abendessen',w:'Abendessen',vi:'Bữa tối',cls:'Nomen',ipa:'[ˈaːbn̩tˌɛsn̩]',ex:'Das Abendessen ist fertig!',ex_vi:'Bữa tối đã sẵn sàng!'},
+// ═══ A1 — THỜI GIAN ═══
+{id:51,l:'A1',cat:'Thời gian',art:'die',pl:'Uhren',w:'Uhr',vi:'Đồng hồ / Giờ',cls:'Nomen',ipa:'[uːɐ̯]',ex:'Wie viel Uhr ist es? Es ist drei Uhr.',ex_vi:'Mấy giờ rồi? Bây giờ là ba giờ.'},
+{id:52,l:'A1',cat:'Thời gian',art:'der',pl:'Tage',w:'Tag',vi:'Ngày',cls:'Nomen',ipa:'[taːk]',ex:'Heute ist ein schöner Tag.',ex_vi:'Hôm nay là một ngày đẹp.'},
+{id:53,l:'A1',cat:'Thời gian',art:'die',pl:'Wochen',w:'Woche',vi:'Tuần',cls:'Nomen',ipa:'[ˈvɔxə]',ex:'Ich lerne jeden Tag in der Woche.',ex_vi:'Tôi học mỗi ngày trong tuần.'},
+{id:54,l:'A1',cat:'Thời gian',art:'der',pl:'Monate',w:'Monat',vi:'Tháng',cls:'Nomen',ipa:'[ˈmoːnat]',ex:'Ich bin seit einem Monat hier.',ex_vi:'Tôi đã ở đây được một tháng.'},
+{id:55,l:'A1',cat:'Thời gian',art:'das',pl:'Jahre',w:'Jahr',vi:'Năm',cls:'Nomen',ipa:'[jaːɐ̯]',ex:'Das Jahr hat 365 Tage.',ex_vi:'Một năm có 365 ngày.'},
+{id:56,l:'A1',cat:'Thời gian',art:'',pl:'',w:'heute',vi:'Hôm nay',cls:'Adverb',ipa:'[ˈhɔɪ̯tə]',ex:'Was machst du heute?',ex_vi:'Hôm nay bạn làm gì?'},
+{id:57,l:'A1',cat:'Thời gian',art:'',pl:'',w:'morgen',vi:'Ngày mai / Buổi sáng',cls:'Adverb',ipa:'[ˈmɔʁɡn̩]',ex:'Morgen gehe ich zum Arzt.',ex_vi:'Ngày mai tôi đi khám bác sĩ.'},
+{id:58,l:'A1',cat:'Thời gian',art:'',pl:'',w:'gestern',vi:'Hôm qua',cls:'Adverb',ipa:'[ˈɡɛstɐn]',ex:'Gestern war das Wetter schön.',ex_vi:'Hôm qua thời tiết đẹp.'},
+{id:59,l:'A1',cat:'Thời gian',art:'',pl:'',w:'jetzt',vi:'Bây giờ, hiện tại',cls:'Adverb',ipa:'[jɛtst]',ex:'Jetzt gehe ich nach Hause.',ex_vi:'Bây giờ tôi về nhà.'},
+// ═══ A1 — MÀU SẮC ═══
+{id:60,l:'A1',cat:'Màu sắc',art:'',pl:'',w:'rot',vi:'Màu đỏ',cls:'Adjektiv',ipa:'[ʁoːt]',ex:'Die Rose ist rot.',ex_vi:'Bông hồng màu đỏ.'},
+{id:61,l:'A1',cat:'Màu sắc',art:'',pl:'',w:'blau',vi:'Màu xanh dương',cls:'Adjektiv',ipa:'[blaʊ̯]',ex:'Der Himmel ist blau.',ex_vi:'Bầu trời xanh.'},
+{id:62,l:'A1',cat:'Màu sắc',art:'',pl:'',w:'grün',vi:'Màu xanh lá',cls:'Adjektiv',ipa:'[ɡʁyːn]',ex:'Das Gras ist grün.',ex_vi:'Cỏ màu xanh.'},
+{id:63,l:'A1',cat:'Màu sắc',art:'',pl:'',w:'gelb',vi:'Màu vàng',cls:'Adjektiv',ipa:'[ɡɛlp]',ex:'Die Banane ist gelb.',ex_vi:'Quả chuối màu vàng.'},
+{id:64,l:'A1',cat:'Màu sắc',art:'',pl:'',w:'schwarz',vi:'Màu đen',cls:'Adjektiv',ipa:'[ʃvaʁts]',ex:'Die Katze ist schwarz.',ex_vi:'Con mèo màu đen.'},
+{id:65,l:'A1',cat:'Màu sắc',art:'',pl:'',w:'weiß',vi:'Màu trắng',cls:'Adjektiv',ipa:'[vaɪ̯s]',ex:'Der Schnee ist weiß.',ex_vi:'Tuyết màu trắng.'},
+// ═══ A1 — TÍNH TỪ CƠ BẢN ═══
+{id:66,l:'A1',cat:'Tính từ',art:'',pl:'',w:'groß',vi:'Lớn, to, cao',cls:'Adjektiv',ipa:'[ɡʁoːs]',ex:'Berlin ist eine große Stadt.',ex_vi:'Berlin là một thành phố lớn.'},
+{id:67,l:'A1',cat:'Tính từ',art:'',pl:'',w:'klein',vi:'Nhỏ, bé',cls:'Adjektiv',ipa:'[klaɪ̯n]',ex:'Das Baby ist sehr klein.',ex_vi:'Em bé rất nhỏ.'},
+{id:68,l:'A1',cat:'Tính từ',art:'',pl:'',w:'gut',vi:'Tốt, ngon, giỏi',cls:'Adjektiv',ipa:'[ɡuːt]',ex:'Das Essen schmeckt gut.',ex_vi:'Đồ ăn ngon.'},
+{id:69,l:'A1',cat:'Tính từ',art:'',pl:'',w:'schlecht',vi:'Xấu, tồi, kém',cls:'Adjektiv',ipa:'[ʃlɛçt]',ex:'Das Wetter ist heute schlecht.',ex_vi:'Thời tiết hôm nay xấu.'},
+{id:70,l:'A1',cat:'Tính từ',art:'',pl:'',w:'schön',vi:'Đẹp, hay',cls:'Adjektiv',ipa:'[ʃøːn]',ex:'Das ist ein schönes Kleid.',ex_vi:'Đây là một chiếc váy đẹp.'},
+{id:71,l:'A1',cat:'Tính từ',art:'',pl:'',w:'neu',vi:'Mới',cls:'Adjektiv',ipa:'[nɔɪ̯]',ex:'Ich habe ein neues Handy.',ex_vi:'Tôi có một chiếc điện thoại mới.'},
+{id:72,l:'A1',cat:'Tính từ',art:'',pl:'',w:'alt',vi:'Cũ / Già',cls:'Adjektiv',ipa:'[alt]',ex:'Mein Auto ist schon sehr alt.',ex_vi:'Xe của tôi đã rất cũ.'},
+{id:73,l:'A1',cat:'Tính từ',art:'',pl:'',w:'heiß',vi:'Nóng (nhiệt độ)',cls:'Adjektiv',ipa:'[haɪ̯s]',ex:'Der Tee ist heiß.',ex_vi:'Trà nóng.'},
+{id:74,l:'A1',cat:'Tính từ',art:'',pl:'',w:'kalt',vi:'Lạnh',cls:'Adjektiv',ipa:'[kalt]',ex:'Das Wasser ist kalt.',ex_vi:'Nước lạnh.'},
+{id:75,l:'A1',cat:'Tính từ',art:'',pl:'',w:'billig',vi:'Rẻ, bình dân',cls:'Adjektiv',ipa:'[ˈbɪlɪç]',ex:'Das ist sehr billig!',ex_vi:'Cái này rẻ lắm!'},
+{id:76,l:'A1',cat:'Tính từ',art:'',pl:'',w:'teuer',vi:'Đắt',cls:'Adjektiv',ipa:'[ˈtɔɪ̯ɐ]',ex:'Das Kleid ist sehr teuer.',ex_vi:'Chiếc váy này rất đắt.'},
+// ═══ A1 — ĐỘNG TỪ CƠ BẢN ═══
+{id:77,l:'A1',cat:'Động từ',art:'',pl:'',w:'sein',vi:'Là, thì (to be)',cls:'Verb',ipa:'[zaɪ̯n]',ex:'Ich bin Student aus Vietnam.',ex_vi:'Tôi là sinh viên từ Việt Nam.',conj:{ich:'bin',du:'bist',er:'ist',wir:'sind',ihr:'seid',sie:'sind'}},
+{id:78,l:'A1',cat:'Động từ',art:'',pl:'',w:'haben',vi:'Có (to have)',cls:'Verb',ipa:'[ˈhaːbn̩]',ex:'Ich habe einen Hund.',ex_vi:'Tôi có một con chó.',conj:{ich:'habe',du:'hast',er:'hat',wir:'haben',ihr:'habt',sie:'haben'}},
+{id:79,l:'A1',cat:'Động từ',art:'',pl:'',w:'werden',vi:'Trở thành, sẽ',cls:'Verb',ipa:'[ˈveːɐ̯dn̩]',ex:'Ich werde Arzt.',ex_vi:'Tôi sẽ trở thành bác sĩ.',conj:{ich:'werde',du:'wirst',er:'wird',wir:'werden',ihr:'werdet',sie:'werden'}},
+{id:80,l:'A1',cat:'Động từ',art:'',pl:'',w:'machen',vi:'Làm, thực hiện',cls:'Verb',ipa:'[ˈmaxn̩]',ex:'Was machst du gerade?',ex_vi:'Bạn đang làm gì vậy?',conj:{ich:'mache',du:'machst',er:'macht',wir:'machen',ihr:'macht',sie:'machen'}},
+{id:81,l:'A1',cat:'Động từ',art:'',pl:'',w:'gehen',vi:'Đi, đi bộ',cls:'Verb',ipa:'[ˈɡeːən]',ex:'Ich gehe jeden Tag spazieren.',ex_vi:'Tôi đi dạo mỗi ngày.',conj:{ich:'gehe',du:'gehst',er:'geht',wir:'gehen',ihr:'geht',sie:'gehen'}},
+{id:82,l:'A1',cat:'Động từ',art:'',pl:'',w:'kommen',vi:'Đến, tới',cls:'Verb',ipa:'[ˈkɔmən]',ex:'Woher kommst du?',ex_vi:'Bạn đến từ đâu?',conj:{ich:'komme',du:'kommst',er:'kommt',wir:'kommen',ihr:'kommt',sie:'kommen'}},
+{id:83,l:'A1',cat:'Động từ',art:'',pl:'',w:'sprechen',vi:'Nói, nói chuyện',cls:'Verb',ipa:'[ˈʃpʁɛçn̩]',ex:'Ich spreche ein bisschen Deutsch.',ex_vi:'Tôi nói được một chút tiếng Đức.',conj:{ich:'spreche',du:'sprichst',er:'spricht',wir:'sprechen',ihr:'sprecht',sie:'sprechen'}},
+{id:84,l:'A1',cat:'Động từ',art:'',pl:'',w:'lernen',vi:'Học',cls:'Verb',ipa:'[ˈlɛʁnən]',ex:'Ich lerne jeden Tag Deutsch.',ex_vi:'Tôi học tiếng Đức mỗi ngày.',conj:{ich:'lerne',du:'lernst',er:'lernt',wir:'lernen',ihr:'lernt',sie:'lernen'}},
+{id:85,l:'A1',cat:'Động từ',art:'',pl:'',w:'essen',vi:'Ăn',cls:'Verb',ipa:'[ˈɛsn̩]',ex:'Was möchtest du essen?',ex_vi:'Bạn muốn ăn gì?',conj:{ich:'esse',du:'isst',er:'isst',wir:'essen',ihr:'esst',sie:'essen'}},
+{id:86,l:'A1',cat:'Động từ',art:'',pl:'',w:'trinken',vi:'Uống',cls:'Verb',ipa:'[ˈtʁɪŋkn̩]',ex:'Er trinkt gern Kaffee.',ex_vi:'Anh ấy thích uống cà phê.',conj:{ich:'trinke',du:'trinkst',er:'trinkt',wir:'trinken',ihr:'trinkt',sie:'trinken'}},
+{id:87,l:'A1',cat:'Động từ',art:'',pl:'',w:'sehen',vi:'Thấy, nhìn',cls:'Verb',ipa:'[ˈzeːən]',ex:'Ich sehe dich.',ex_vi:'Tôi thấy bạn.',conj:{ich:'sehe',du:'siehst',er:'sieht',wir:'sehen',ihr:'seht',sie:'sehen'}},
+{id:88,l:'A1',cat:'Động từ',art:'',pl:'',w:'hören',vi:'Nghe',cls:'Verb',ipa:'[ˈhøːʁən]',ex:'Ich höre gern Musik.',ex_vi:'Tôi thích nghe nhạc.',conj:{ich:'höre',du:'hörst',er:'hört',wir:'hören',ihr:'hört',sie:'hören'}},
+{id:89,l:'A1',cat:'Động từ',art:'',pl:'',w:'kaufen',vi:'Mua',cls:'Verb',ipa:'[ˈkaʊ̯fn̩]',ex:'Ich kaufe jeden Tag Brot.',ex_vi:'Tôi mua bánh mì mỗi ngày.',conj:{ich:'kaufe',du:'kaufst',er:'kauft',wir:'kaufen',ihr:'kauft',sie:'kaufen'}},
+{id:90,l:'A1',cat:'Động từ',art:'',pl:'',w:'schlafen',vi:'Ngủ',cls:'Verb',ipa:'[ˈʃlaːfn̩]',ex:'Das Kind schläft tief.',ex_vi:'Đứa bé ngủ sâu.',conj:{ich:'schlafe',du:'schläfst',er:'schläft',wir:'schlafen',ihr:'schlaft',sie:'schlafen'}},
+{id:91,l:'A1',cat:'Động từ',art:'',pl:'',w:'heißen',vi:'Tên là, có tên',cls:'Verb',ipa:'[ˈhaɪ̯sn̩]',ex:'Wie heißt du? Ich heiße Anna.',ex_vi:'Bạn tên là gì? Tôi tên Anna.',conj:{ich:'heiße',du:'heißt',er:'heißt',wir:'heißen',ihr:'heißt',sie:'heißen'}},
+{id:92,l:'A1',cat:'Động từ',art:'',pl:'',w:'wohnen',vi:'Sống, cư trú',cls:'Verb',ipa:'[ˈvoːnən]',ex:'Ich wohne in Ho-Chi-Minh-Stadt.',ex_vi:'Tôi sống ở TP. Hồ Chí Minh.',conj:{ich:'wohne',du:'wohnst',er:'wohnt',wir:'wohnen',ihr:'wohnt',sie:'wohnen'}},
+{id:93,l:'A1',cat:'Động từ',art:'',pl:'',w:'lesen',vi:'Đọc',cls:'Verb',ipa:'[ˈleːzn̩]',ex:'Ich lese jeden Abend ein Buch.',ex_vi:'Mỗi tối tôi đọc một cuốn sách.',conj:{ich:'lese',du:'liest',er:'liest',wir:'lesen',ihr:'lest',sie:'lesen'}},
+{id:94,l:'A1',cat:'Động từ',art:'',pl:'',w:'schreiben',vi:'Viết',cls:'Verb',ipa:'[ˈʃʁaɪ̯bn̩]',ex:'Ich schreibe einen Brief.',ex_vi:'Tôi viết một lá thư.',conj:{ich:'schreibe',du:'schreibst',er:'schreibt',wir:'schreiben',ihr:'schreibt',sie:'schreiben'}},
+// ═══ A1 — TRƯỜNG HỌC ═══
+{id:95,l:'A1',cat:'Trường học',art:'die',pl:'Schulen',w:'Schule',vi:'Trường học',cls:'Nomen',ipa:'[ˈʃuːlə]',ex:'Ich gehe jeden Tag in die Schule.',ex_vi:'Tôi đến trường mỗi ngày.'},
+{id:96,l:'A1',cat:'Trường học',art:'das',pl:'Bücher',w:'Buch',vi:'Sách, cuốn sách',cls:'Nomen',ipa:'[buːx]',ex:'Das Buch ist sehr interessant.',ex_vi:'Cuốn sách này rất thú vị.'},
+{id:97,l:'A1',cat:'Trường học',art:'der',pl:'Lehrer',w:'Lehrer',vi:'Giáo viên (nam)',cls:'Nomen',ipa:'[ˈleːʁɐ]',ex:'Unser Lehrer erklärt sehr gut.',ex_vi:'Giáo viên của chúng tôi giải thích rất rõ.'},
+{id:98,l:'A1',cat:'Trường học',art:'die',pl:'Lehrerinnen',w:'Lehrerin',vi:'Giáo viên (nữ)',cls:'Nomen',ipa:'[ˈleːʁəʁɪn]',ex:'Die Lehrerin ist sehr nett.',ex_vi:'Cô giáo rất dễ thương.'},
+{id:99,l:'A2',cat:'Trường học',art:'die',pl:'Hausaufgaben',w:'Hausaufgaben',vi:'Bài tập về nhà',cls:'Nomen',ipa:'[ˈhaʊ̯sˌʔaʊ̯fɡaːbn̩]',ex:'Ich mache meine Hausaufgaben.',ex_vi:'Tôi làm bài tập về nhà.'},
+{id:100,l:'A2',cat:'Trường học',art:'die',pl:'Prüfungen',w:'Prüfung',vi:'Kỳ thi, bài kiểm tra',cls:'Nomen',ipa:'[ˈpʁyːfʊŋ]',ex:'Die Prüfung ist morgen um 10 Uhr.',ex_vi:'Kỳ thi ngày mai lúc 10 giờ.'},
+// ═══ A2 — GIAO THÔNG ═══
+{id:101,l:'A2',cat:'Giao thông',art:'der',pl:'Bahnhöfe',w:'Bahnhof',vi:'Ga tàu, nhà ga',cls:'Nomen',ipa:'[ˈbaːnhoːf]',ex:'Der Bahnhof ist in der Stadtmitte.',ex_vi:'Ga tàu nằm ở trung tâm thành phố.'},
+{id:102,l:'A2',cat:'Giao thông',art:'der',pl:'Züge',w:'Zug',vi:'Tàu hỏa',cls:'Nomen',ipa:'[tsuːk]',ex:'Der Zug fährt um 10 Uhr ab.',ex_vi:'Tàu khởi hành lúc 10 giờ.'},
+{id:103,l:'A2',cat:'Giao thông',art:'der',pl:'Busse',w:'Bus',vi:'Xe buýt',cls:'Nomen',ipa:'[bʊs]',ex:'Ich fahre mit dem Bus zur Arbeit.',ex_vi:'Tôi đi xe buýt đến cơ quan.'},
+{id:104,l:'A2',cat:'Giao thông',art:'das',pl:'Autos',w:'Auto',vi:'Ô tô, xe hơi',cls:'Nomen',ipa:'[ˈaʊ̯to]',ex:'Ich habe kein Auto.',ex_vi:'Tôi không có xe hơi.'},
+{id:105,l:'A2',cat:'Giao thông',art:'das',pl:'Fahrräder',w:'Fahrrad',vi:'Xe đạp',cls:'Nomen',ipa:'[ˈfaːɐ̯ʁaːt]',ex:'Ich fahre gern Fahrrad.',ex_vi:'Tôi thích đi xe đạp.'},
+{id:106,l:'A2',cat:'Giao thông',art:'das',pl:'Flugzeuge',w:'Flugzeug',vi:'Máy bay',cls:'Nomen',ipa:'[ˈfluːktsɔɪ̯k]',ex:'Das Flugzeug landet in zwei Stunden.',ex_vi:'Máy bay hạ cánh sau hai tiếng nữa.'},
+{id:107,l:'A2',cat:'Giao thông',art:'',pl:'',w:'links',vi:'Bên trái',cls:'Adverb',ipa:'[lɪŋks]',ex:'Biegen Sie links ab!',ex_vi:'Rẽ trái đi!'},
+{id:108,l:'A2',cat:'Giao thông',art:'',pl:'',w:'rechts',vi:'Bên phải',cls:'Adverb',ipa:'[ʁɛçts]',ex:'Das Hotel ist rechts.',ex_vi:'Khách sạn ở bên phải.'},
+{id:109,l:'A2',cat:'Giao thông',art:'',pl:'',w:'geradeaus',vi:'Đi thẳng',cls:'Adverb',ipa:'[ɡəˈʁaːdəˌaʊ̯s]',ex:'Gehen Sie geradeaus bis zur Ampel.',ex_vi:'Đi thẳng đến đèn giao thông.'},
+// ═══ A2 — CÔNG VIỆC ═══
+{id:110,l:'A2',cat:'Công việc',art:'der',pl:'Berufe',w:'Beruf',vi:'Nghề nghiệp',cls:'Nomen',ipa:'[bəˈʁuːf]',ex:'Was ist dein Beruf?',ex_vi:'Bạn làm nghề gì?'},
+{id:111,l:'A2',cat:'Công việc',art:'die',pl:'—',w:'Arbeit',vi:'Công việc',cls:'Nomen',ipa:'[ˈaʁbaɪ̯t]',ex:'Die Arbeit macht mir Spaß.',ex_vi:'Tôi thích công việc của mình.'},
+{id:112,l:'A2',cat:'Công việc',art:'das',pl:'Büros',w:'Büro',vi:'Văn phòng',cls:'Nomen',ipa:'[byˈʁoː]',ex:'Ich arbeite in einem modernen Büro.',ex_vi:'Tôi làm việc ở một văn phòng hiện đại.'},
+{id:113,l:'A2',cat:'Công việc',art:'das',pl:'Gehälter',w:'Gehalt',vi:'Lương tháng',cls:'Nomen',ipa:'[ɡəˈhalt]',ex:'Das Gehalt ist gut.',ex_vi:'Mức lương tốt.'},
+{id:114,l:'A2',cat:'Công việc',art:'die',pl:'Firmen',w:'Firma',vi:'Công ty',cls:'Nomen',ipa:'[ˈfɪʁma]',ex:'Ich arbeite in einer großen Firma.',ex_vi:'Tôi làm việc ở một công ty lớn.'},
+{id:115,l:'A2',cat:'Công việc',art:'',pl:'',w:'arbeiten',vi:'Làm việc',cls:'Verb',ipa:'[ˈaʁbaɪ̯tn̩]',ex:'Ich arbeite 40 Stunden pro Woche.',ex_vi:'Tôi làm việc 40 tiếng mỗi tuần.',conj:{ich:'arbeite',du:'arbeitest',er:'arbeitet',wir:'arbeiten',ihr:'arbeitet',sie:'arbeiten'}},
+// ═══ A2 — MUA SẮM ═══
+{id:116,l:'A2',cat:'Mua sắm',art:'das',pl:'—',w:'Geld',vi:'Tiền',cls:'Nomen',ipa:'[ɡɛlt]',ex:'Ich habe nicht genug Geld.',ex_vi:'Tôi không có đủ tiền.'},
+{id:117,l:'A2',cat:'Mua sắm',art:'der',pl:'Preise',w:'Preis',vi:'Giá cả',cls:'Nomen',ipa:'[pʁaɪ̯s]',ex:'Was ist der Preis?',ex_vi:'Giá là bao nhiêu?'},
+{id:118,l:'A2',cat:'Mua sắm',art:'der',pl:'Läden',w:'Laden',vi:'Cửa hàng',cls:'Nomen',ipa:'[ˈlaːdn̩]',ex:'Der Laden öffnet um neun Uhr.',ex_vi:'Cửa hàng mở cửa lúc chín giờ.'},
+{id:119,l:'A2',cat:'Mua sắm',art:'die',pl:'Kassen',w:'Kasse',vi:'Quầy thu ngân',cls:'Nomen',ipa:'[ˈkasə]',ex:'Bitte zahlen Sie an der Kasse.',ex_vi:'Vui lòng thanh toán ở quầy thu ngân.'},
+{id:120,l:'A2',cat:'Mua sắm',art:'der',pl:'Rabatte',w:'Rabatt',vi:'Giảm giá',cls:'Nomen',ipa:'[ʁaˈbat]',ex:'Gibt es einen Rabatt für Studenten?',ex_vi:'Có giảm giá cho sinh viên không?'},
+{id:121,l:'A2',cat:'Mua sắm',art:'',pl:'',w:'bezahlen',vi:'Thanh toán',cls:'Verb',ipa:'[bəˈtsaːlən]',ex:'Kann ich mit Karte bezahlen?',ex_vi:'Tôi có thể trả bằng thẻ không?'},
+// ═══ A2 — SỨC KHỎE ═══
+{id:122,l:'A2',cat:'Sức khỏe',art:'die',pl:'—',w:'Gesundheit',vi:'Sức khỏe',cls:'Nomen',ipa:'[ɡəˈzʊnthaɪ̯t]',ex:'Gesundheit ist das Wichtigste.',ex_vi:'Sức khỏe là điều quan trọng nhất.'},
+{id:123,l:'A2',cat:'Sức khỏe',art:'das',pl:'Krankenhäuser',w:'Krankenhaus',vi:'Bệnh viện',cls:'Nomen',ipa:'[ˈkʁaŋkn̩haʊ̯s]',ex:'Er liegt im Krankenhaus.',ex_vi:'Anh ấy đang nằm viện.'},
+{id:124,l:'A2',cat:'Sức khỏe',art:'',pl:'',w:'krank',vi:'Bệnh, ốm',cls:'Adjektiv',ipa:'[kʁaŋk]',ex:'Ich bin krank und bleibe zu Hause.',ex_vi:'Tôi bị bệnh và ở nhà.'},
+{id:125,l:'A2',cat:'Sức khỏe',art:'',pl:'',w:'gesund',vi:'Khỏe mạnh',cls:'Adjektiv',ipa:'[ɡəˈzʊnt]',ex:'Sport ist gesund.',ex_vi:'Thể thao tốt cho sức khỏe.'},
+// ═══ A1/A2 — CẢM XÚC ═══
+{id:126,l:'A1',cat:'Cảm xúc',art:'',pl:'',w:'glücklich',vi:'Vui vẻ, hạnh phúc',cls:'Adjektiv',ipa:'[ˈɡlʏklɪç]',ex:'Ich bin sehr glücklich heute.',ex_vi:'Hôm nay tôi rất vui.'},
+{id:127,l:'A1',cat:'Cảm xúc',art:'',pl:'',w:'traurig',vi:'Buồn, u sầu',cls:'Adjektiv',ipa:'[ˈtʁaʊ̯ʁɪç]',ex:'Sie ist sehr traurig.',ex_vi:'Cô ấy rất buồn.'},
+{id:128,l:'A1',cat:'Cảm xúc',art:'',pl:'',w:'müde',vi:'Mệt mỏi, buồn ngủ',cls:'Adjektiv',ipa:'[ˈmyːdə]',ex:'Ich bin so müde nach der Arbeit.',ex_vi:'Sau giờ làm tôi mệt lắm.'},
+{id:129,l:'A2',cat:'Cảm xúc',art:'',pl:'',w:'aufgeregt',vi:'Hồi hộp, phấn khích',cls:'Adjektiv',ipa:'[ˈaʊ̯fɡəʁeːkt]',ex:'Die Kinder sind sehr aufgeregt.',ex_vi:'Bọn trẻ rất hồi hộp.'},
+{id:130,l:'A2',cat:'Cảm xúc',art:'',pl:'',w:'überrascht',vi:'Ngạc nhiên, bất ngờ',cls:'Adjektiv',ipa:'[yːbɐˈʁaʃt]',ex:'Ich bin total überrascht!',ex_vi:'Tôi hoàn toàn bất ngờ!'},
+{id:131,l:'A2',cat:'Cảm xúc',art:'',pl:'',w:'zufrieden',vi:'Hài lòng, thỏa mãn',cls:'Adjektiv',ipa:'[tsuˈfʁiːdn̩]',ex:'Ich bin zufrieden mit meiner Arbeit.',ex_vi:'Tôi hài lòng với công việc của mình.'},
+{id:132,l:'A2',cat:'Cảm xúc',art:'',pl:'',w:'nervös',vi:'Lo lắng, căng thẳng',cls:'Adjektiv',ipa:'[nɛʁˈvøːs]',ex:'Ich bin nervös vor dem Test.',ex_vi:'Tôi lo lắng trước bài kiểm tra.'},
+{id:133,l:'A2',cat:'Cảm xúc',art:'',pl:'',w:'ärgerlich',vi:'Tức giận, bực bội',cls:'Adjektiv',ipa:'[ˈɛʁɡɐlɪç]',ex:'Er ist sehr ärgerlich.',ex_vi:'Anh ấy rất tức giận.'},
+{id:134,l:'A2',cat:'Cảm xúc',art:'',pl:'',w:'langweilig',vi:'Nhàm chán',cls:'Adjektiv',ipa:'[ˈlaŋvaɪ̯lɪç]',ex:'Der Film ist langweilig.',ex_vi:'Bộ phim này nhàm chán.'},
+{id:135,l:'A2',cat:'Cảm xúc',art:'',pl:'',w:'interessant',vi:'Thú vị, hấp dẫn',cls:'Adjektiv',ipa:'[ɪntəʁɛˈsant]',ex:'Das Buch ist sehr interessant.',ex_vi:'Cuốn sách này rất thú vị.'},
+// ═══ A2 — ĐỘNG TỪ MỞ RỘNG ═══
+{id:136,l:'A2',cat:'Động từ',art:'',pl:'',w:'helfen',vi:'Giúp đỡ',cls:'Verb',ipa:'[ˈhɛlfn̩]',ex:'Kannst du mir helfen?',ex_vi:'Bạn có thể giúp tôi không?',conj:{ich:'helfe',du:'hilfst',er:'hilft',wir:'helfen',ihr:'helft',sie:'helfen'},note:'Đi với Dativ'},
+{id:137,l:'A2',cat:'Động từ',art:'',pl:'',w:'verstehen',vi:'Hiểu',cls:'Verb',ipa:'[fɛʁˈʃteːən]',ex:'Ich verstehe das nicht.',ex_vi:'Tôi không hiểu điều đó.',conj:{ich:'verstehe',du:'verstehst',er:'versteht',wir:'verstehen',ihr:'versteht',sie:'verstehen'}},
+{id:138,l:'A2',cat:'Động từ',art:'',pl:'',w:'brauchen',vi:'Cần',cls:'Verb',ipa:'[ˈbʁaʊ̯xn̩]',ex:'Ich brauche mehr Zeit.',ex_vi:'Tôi cần thêm thời gian.',conj:{ich:'brauche',du:'brauchst',er:'braucht',wir:'brauchen',ihr:'braucht',sie:'brauchen'}},
+{id:139,l:'A2',cat:'Động từ',art:'',pl:'',w:'fahren',vi:'Lái xe, đi bằng phương tiện',cls:'Verb',ipa:'[ˈfaːʁən]',ex:'Ich fahre jeden Tag mit dem Bus.',ex_vi:'Tôi đi xe buýt mỗi ngày.',conj:{ich:'fahre',du:'fährst',er:'fährt',wir:'fahren',ihr:'fahrt',sie:'fahren'}},
+{id:140,l:'A2',cat:'Động từ',art:'',pl:'',w:'kochen',vi:'Nấu ăn',cls:'Verb',ipa:'[ˈkɔxn̩]',ex:'Ich koche gern deutsche Gerichte.',ex_vi:'Tôi thích nấu món ăn Đức.',conj:{ich:'koche',du:'kochst',er:'kocht',wir:'kochen',ihr:'kocht',sie:'kochen'}},
+{id:141,l:'A2',cat:'Động từ',art:'',pl:'',w:'reisen',vi:'Du lịch',cls:'Verb',ipa:'[ˈʁaɪ̯zn̩]',ex:'Ich reise gern ins Ausland.',ex_vi:'Tôi thích đi du lịch nước ngoài.'},
+{id:142,l:'A2',cat:'Động từ',art:'',pl:'',w:'anrufen',vi:'Gọi điện',cls:'Verb',ipa:'[ˈanʁuːfn̩]',ex:'Ich rufe dich morgen an.',ex_vi:'Ngày mai tôi sẽ gọi cho bạn.',note:'Động từ tách: ruf-en an'},
+{id:143,l:'A2',cat:'Động từ',art:'',pl:'',w:'aufstehen',vi:'Dậy, thức dậy',cls:'Verb',ipa:'[ˈaʊ̯fʃteːən]',ex:'Ich stehe jeden Morgen früh auf.',ex_vi:'Mỗi sáng tôi dậy sớm.',note:'Động từ tách: steh-en auf'},
+{id:144,l:'A2',cat:'Động từ',art:'',pl:'',w:'besuchen',vi:'Thăm, ghé thăm',cls:'Verb',ipa:'[bəˈzuːxn̩]',ex:'Ich besuche meine Großeltern.',ex_vi:'Tôi đến thăm ông bà.',conj:{ich:'besuche',du:'besuchst',er:'besucht',wir:'besuchen',ihr:'besucht',sie:'besuchen'}},
+// ═══ A2 — THIÊN NHIÊN & THỜI TIẾT ═══
+{id:145,l:'A2',cat:'Thiên nhiên',art:'das',pl:'—',w:'Wetter',vi:'Thời tiết',cls:'Nomen',ipa:'[ˈvɛtɐ]',ex:'Das Wetter ist heute wunderschön.',ex_vi:'Thời tiết hôm nay tuyệt đẹp.'},
+{id:146,l:'A2',cat:'Thiên nhiên',art:'die',pl:'—',w:'Sonne',vi:'Mặt trời',cls:'Nomen',ipa:'[ˈzɔnə]',ex:'Die Sonne scheint heute.',ex_vi:'Mặt trời chiếu sáng hôm nay.'},
+{id:147,l:'A2',cat:'Thiên nhiên',art:'der',pl:'—',w:'Regen',vi:'Mưa',cls:'Nomen',ipa:'[ˈʁeːɡn̩]',ex:'Es gibt heute Regen.',ex_vi:'Hôm nay có mưa.'},
+{id:148,l:'A2',cat:'Thiên nhiên',art:'der',pl:'Berge',w:'Berg',vi:'Núi',cls:'Nomen',ipa:'[bɛʁk]',ex:'Ich wandere gern in den Bergen.',ex_vi:'Tôi thích đi bộ trên núi.'},
+{id:149,l:'A2',cat:'Thiên nhiên',art:'das',pl:'Meere',w:'Meer',vi:'Biển',cls:'Nomen',ipa:'[meːɐ̯]',ex:'Im Sommer fahre ich ans Meer.',ex_vi:'Mùa hè tôi đi biển.'},
+{id:150,l:'A2',cat:'Thiên nhiên',art:'',pl:'',w:'sonnig',vi:'Có nắng',cls:'Adjektiv',ipa:'[ˈzɔnɪç]',ex:'Heute ist es sonnig und warm.',ex_vi:'Hôm nay nắng và ấm.'},
+// ═══ A2 — LIÊN TỪ ═══
+{id:151,l:'A2',cat:'Liên từ',art:'',pl:'',w:'und',vi:'Và',cls:'Konjunktion',ipa:'[ʊnt]',ex:'Ich trinke Kaffee und esse Brot.',ex_vi:'Tôi uống cà phê và ăn bánh mì.'},
+{id:152,l:'A2',cat:'Liên từ',art:'',pl:'',w:'aber',vi:'Nhưng',cls:'Konjunktion',ipa:'[ˈaːbɐ]',ex:'Das ist teuer, aber schön.',ex_vi:'Cái đó đắt nhưng đẹp.'},
+{id:153,l:'A2',cat:'Liên từ',art:'',pl:'',w:'oder',vi:'Hoặc là',cls:'Konjunktion',ipa:'[ˈoːdɐ]',ex:'Möchtest du Tee oder Kaffee?',ex_vi:'Bạn muốn trà hay cà phê?'},
+{id:154,l:'A2',cat:'Liên từ',art:'',pl:'',w:'denn',vi:'Vì (giải thích)',cls:'Konjunktion',ipa:'[dɛn]',ex:'Ich bleibe zuhause, denn es regnet.',ex_vi:'Tôi ở nhà vì trời mưa.',note:'Sau denn không đảo ngữ'},
+{id:155,l:'A2',cat:'Liên từ',art:'',pl:'',w:'dann',vi:'Sau đó, rồi',cls:'Adverb',ipa:'[dan]',ex:'Erst frühstücke ich, dann gehe ich zur Arbeit.',ex_vi:'Trước tiên tôi ăn sáng, sau đó đi làm.'},
+// ═══ A2 — CÔNG NGHỆ ═══
+{id:156,l:'A2',cat:'Công nghệ',art:'das',pl:'Handys',w:'Handy',vi:'Điện thoại di động',cls:'Nomen',ipa:'[ˈhɛndi]',ex:'Mein Handy hat keinen Akku mehr.',ex_vi:'Điện thoại tôi hết pin rồi.'},
+{id:157,l:'A2',cat:'Công nghệ',art:'der',pl:'Computer',w:'Computer',vi:'Máy tính',cls:'Nomen',ipa:'[kɔmˈpjuːtɐ]',ex:'Ich arbeite täglich am Computer.',ex_vi:'Tôi làm việc với máy tính hàng ngày.'},
+{id:158,l:'A2',cat:'Công nghệ',art:'das',pl:'—',w:'Internet',vi:'Internet',cls:'Nomen',ipa:'[ˈɪntɐnɛt]',ex:'Das Internet ist hier sehr langsam.',ex_vi:'Internet ở đây rất chậm.'},
+{id:159,l:'A2',cat:'Công nghệ',art:'die',pl:'E-Mails',w:'E-Mail',vi:'Email',cls:'Nomen',ipa:'[ˈiːmeɪ̯l]',ex:'Ich habe eine E-Mail bekommen.',ex_vi:'Tôi nhận được một email.'},
+// ═══ A2 — SỞ THÍCH ═══
+{id:160,l:'A2',cat:'Sở thích',art:'die',pl:'—',w:'Musik',vi:'Âm nhạc',cls:'Nomen',ipa:'[muˈziːk]',ex:'Ich höre gern klassische Musik.',ex_vi:'Tôi thích nghe nhạc cổ điển.'},
+{id:161,l:'A2',cat:'Sở thích',art:'der',pl:'Filme',w:'Film',vi:'Phim',cls:'Nomen',ipa:'[fɪlm]',ex:'Wir sehen heute Abend einen Film.',ex_vi:'Tối nay chúng tôi xem phim.'},
+{id:162,l:'A2',cat:'Sở thích',art:'der',pl:'—',w:'Sport',vi:'Thể thao',cls:'Nomen',ipa:'[ʃpɔʁt]',ex:'Sport ist sehr wichtig für die Gesundheit.',ex_vi:'Thể thao rất quan trọng cho sức khỏe.'},
+{id:163,l:'A2',cat:'Sở thích',art:'',pl:'',w:'schwimmen',vi:'Bơi lội',cls:'Verb',ipa:'[ˈʃvɪmən]',ex:'Im Sommer schwimme ich jeden Tag.',ex_vi:'Mùa hè tôi bơi mỗi ngày.'},
+// ═══ A2 — DU LỊCH ═══
+{id:164,l:'A2',cat:'Du lịch',art:'das',pl:'Hotels',w:'Hotel',vi:'Khách sạn',cls:'Nomen',ipa:'[hoˈtɛl]',ex:'Das Hotel ist sehr komfortabel.',ex_vi:'Khách sạn rất thoải mái.'},
+{id:165,l:'A2',cat:'Du lịch',art:'das',pl:'—',w:'Gepäck',vi:'Hành lý',cls:'Nomen',ipa:'[ɡəˈpɛk]',ex:'Mein Gepäck ist sehr schwer.',ex_vi:'Hành lý của tôi rất nặng.'},
+{id:166,l:'A2',cat:'Du lịch',art:'der',pl:'Reisepässe',w:'Reisepass',vi:'Hộ chiếu',cls:'Nomen',ipa:'[ˈʁaɪ̯zəpas]',ex:'Vergiss deinen Reisepass nicht!',ex_vi:'Đừng quên hộ chiếu nhé!'},
+{id:167,l:'A2',cat:'Du lịch',art:'das',pl:'Tickets',w:'Ticket',vi:'Vé',cls:'Nomen',ipa:'[ˈtɪkɪt]',ex:'Ich kaufe ein Ticket für den Zug.',ex_vi:'Tôi mua vé tàu.'},
+// ═══ A2 — TÍNH TỪ THÊM ═══
+{id:168,l:'A2',cat:'Tính từ',art:'',pl:'',w:'schnell',vi:'Nhanh',cls:'Adjektiv',ipa:'[ʃnɛl]',ex:'Das Auto fährt sehr schnell.',ex_vi:'Xe hơi chạy rất nhanh.'},
+{id:169,l:'A2',cat:'Tính từ',art:'',pl:'',w:'langsam',vi:'Chậm',cls:'Adjektiv',ipa:'[ˈlaŋzaːm]',ex:'Bitte sprechen Sie langsamer.',ex_vi:'Làm ơn nói chậm hơn.'},
+{id:170,l:'A2',cat:'Tính từ',art:'',pl:'',w:'laut',vi:'Ồn ào, to',cls:'Adjektiv',ipa:'[laʊ̯t]',ex:'Die Musik ist zu laut.',ex_vi:'Nhạc quá to.'},
+{id:171,l:'A2',cat:'Tính từ',art:'',pl:'',w:'leise',vi:'Im lặng, nhỏ',cls:'Adjektiv',ipa:'[ˈlaɪ̯zə]',ex:'Bitte sprich leiser!',ex_vi:'Nói nhỏ lại đi!'},
+{id:172,l:'A2',cat:'Tính từ',art:'',pl:'',w:'voll',vi:'Đầy, chật',cls:'Adjektiv',ipa:'[fɔl]',ex:'Der Bus ist heute sehr voll.',ex_vi:'Xe buýt hôm nay rất chật.'},
+{id:173,l:'A2',cat:'Tính từ',art:'',pl:'',w:'leer',vi:'Trống, rỗng',cls:'Adjektiv',ipa:'[leːɐ̯]',ex:'Das Glas ist leer.',ex_vi:'Ly đã trống rỗng.'},
+{id:174,l:'A2',cat:'Tính từ',art:'',pl:'',w:'sauber',vi:'Sạch sẽ',cls:'Adjektiv',ipa:'[ˈzaʊ̯bɐ]',ex:'Das Zimmer ist sehr sauber.',ex_vi:'Căn phòng rất sạch sẽ.'},
+// ═══ B1 — ĐỘNG TỪ NÂNG CAO ═══
+{id:175,l:'B1',cat:'Động từ',art:'',pl:'',w:'erklären',vi:'Giải thích',cls:'Verb',ipa:'[ɛʁˈklɛːʁən]',ex:'Kannst du das noch einmal erklären?',ex_vi:'Bạn có thể giải thích lại không?',conj:{ich:'erkläre',du:'erklärst',er:'erklärt',wir:'erklären',ihr:'erklärt',sie:'erklären'}},
+{id:176,l:'B1',cat:'Động từ',art:'',pl:'',w:'entscheiden',vi:'Quyết định',cls:'Verb',ipa:'[ɛntˈʃaɪ̯dn̩]',ex:'Ich kann mich nicht entscheiden.',ex_vi:'Tôi không thể quyết định.',conj:{ich:'entscheide',du:'entscheidest',er:'entscheidet',wir:'entscheiden',ihr:'entscheidet',sie:'entscheiden'},note:'Reflexiv: sich entscheiden'},
+{id:177,l:'B1',cat:'Động từ',art:'',pl:'',w:'vergessen',vi:'Quên',cls:'Verb',ipa:'[fɛʁˈɡɛsn̩]',ex:'Ich habe meinen Schlüssel vergessen.',ex_vi:'Tôi đã quên chìa khóa.',conj:{ich:'vergesse',du:'vergisst',er:'vergisst',wir:'vergessen',ihr:'vergesst',sie:'vergessen'}},
+{id:178,l:'B1',cat:'Động từ',art:'',pl:'',w:'verbessern',vi:'Cải thiện, sửa',cls:'Verb',ipa:'[fɛʁˈbɛsɐn]',ex:'Ich möchte mein Deutsch verbessern.',ex_vi:'Tôi muốn cải thiện tiếng Đức.'},
+{id:179,l:'B1',cat:'Động từ',art:'',pl:'',w:'überzeugen',vi:'Thuyết phục',cls:'Verb',ipa:'[yːbɐˈtsɔɪ̯ɡn̩]',ex:'Er hat mich überzeugt.',ex_vi:'Anh ấy đã thuyết phục được tôi.'},
+{id:180,l:'B1',cat:'Động từ',art:'',pl:'',w:'vorschlagen',vi:'Đề xuất, gợi ý',cls:'Verb',ipa:'[ˈfoːɐ̯ʃlaːɡn̩]',ex:'Ich schlage vor, morgen zu treffen.',ex_vi:'Tôi gợi ý gặp nhau vào ngày mai.',note:'Động từ tách'},
+{id:181,l:'B1',cat:'Động từ',art:'',pl:'',w:'ablehnen',vi:'Từ chối, bác bỏ',cls:'Verb',ipa:'[ˈapleːnən]',ex:'Er hat das Angebot abgelehnt.',ex_vi:'Anh ấy đã từ chối lời đề nghị.',note:'Động từ tách'},
+{id:182,l:'B1',cat:'Động từ',art:'',pl:'',w:'sich erholen',vi:'Hồi phục, nghỉ ngơi',cls:'Verb',ipa:'[zɪç ɛʁˈhoːlən]',ex:'Ich brauche Zeit, um mich zu erholen.',ex_vi:'Tôi cần thời gian để hồi phục.'},
+// ═══ B1 — TÍNH TỪ NÂNG CAO ═══
+{id:183,l:'B1',cat:'Tính từ',art:'',pl:'',w:'wichtig',vi:'Quan trọng',cls:'Adjektiv',ipa:'[ˈvɪçtɪç]',ex:'Das ist eine wichtige Entscheidung.',ex_vi:'Đây là một quyết định quan trọng.'},
+{id:184,l:'B1',cat:'Tính từ',art:'',pl:'',w:'schwierig',vi:'Khó, phức tạp',cls:'Adjektiv',ipa:'[ˈʃviːʁɪç]',ex:'Deutsch ist schwierig, aber lernbar.',ex_vi:'Tiếng Đức khó nhưng học được.'},
+{id:185,l:'B1',cat:'Tính từ',art:'',pl:'',w:'einfach',vi:'Đơn giản, dễ',cls:'Adjektiv',ipa:'[ˈaɪ̯nfax]',ex:'Das ist nicht so einfach.',ex_vi:'Cái đó không đơn giản.'},
+{id:186,l:'B1',cat:'Tính từ',art:'',pl:'',w:'möglich',vi:'Có thể, khả thi',cls:'Adjektiv',ipa:'[ˈmøːklɪç]',ex:'Das ist nicht möglich.',ex_vi:'Điều đó không thể được.'},
+{id:187,l:'B1',cat:'Tính từ',art:'',pl:'',w:'wahrscheinlich',vi:'Có vẻ, chắc là',cls:'Adjektiv',ipa:'[vaːʁˈʃaɪ̯nlɪç]',ex:'Das ist wahrscheinlich richtig.',ex_vi:'Điều đó có vẻ đúng.'},
+{id:188,l:'B1',cat:'Tính từ',art:'',pl:'',w:'zuverlässig',vi:'Đáng tin cậy',cls:'Adjektiv',ipa:'[tsuːfɛʁˈlɛːsɪç]',ex:'Er ist ein zuverlässiger Mitarbeiter.',ex_vi:'Anh ấy là nhân viên đáng tin cậy.'},
+{id:189,l:'B1',cat:'Tính từ',art:'',pl:'',w:'erfolgreich',vi:'Thành công',cls:'Adjektiv',ipa:'[ɛʁˈfɔlkʁaɪ̯ç]',ex:'Sie hat eine erfolgreiche Karriere.',ex_vi:'Cô ấy có sự nghiệp thành công.'},
+{id:190,l:'B1',cat:'Tính từ',art:'',pl:'',w:'besorgt',vi:'Lo lắng, bận tâm',cls:'Adjektiv',ipa:'[bəˈzɔʁkt]',ex:'Ich bin besorgt um dich.',ex_vi:'Tôi lo lắng cho bạn.'},
+{id:191,l:'B1',cat:'Tính từ',art:'',pl:'',w:'enttäuscht',vi:'Thất vọng',cls:'Adjektiv',ipa:'[ɛntˈtɔɪ̯ʃt]',ex:'Ich bin sehr enttäuscht.',ex_vi:'Tôi rất thất vọng.'},
+{id:192,l:'B1',cat:'Tính từ',art:'',pl:'',w:'entspannt',vi:'Thư giãn, thả lỏng',cls:'Adjektiv',ipa:'[ɛntˈʃpant]',ex:'Am Wochenende bin ich entspannt.',ex_vi:'Cuối tuần tôi được thư giãn.'},
+// ═══ B1 — LIÊN TỪ NÂNG CAO ═══
+{id:193,l:'B1',cat:'Liên từ',art:'',pl:'',w:'obwohl',vi:'Mặc dù',cls:'Konjunktion',ipa:'[ˈɔpvoːl]',ex:'Obwohl es regnet, gehe ich spazieren.',ex_vi:'Mặc dù trời mưa, tôi vẫn đi dạo.',note:'Động từ ra cuối câu'},
+{id:194,l:'B1',cat:'Liên từ',art:'',pl:'',w:'weil',vi:'Vì, bởi vì',cls:'Konjunktion',ipa:'[vaɪ̯l]',ex:'Ich bleibe zu Hause, weil ich krank bin.',ex_vi:'Tôi ở nhà vì tôi bị bệnh.',note:'Động từ ra cuối câu'},
+{id:195,l:'B1',cat:'Liên từ',art:'',pl:'',w:'dass',vi:'Rằng (that)',cls:'Konjunktion',ipa:'[das]',ex:'Ich denke, dass das richtig ist.',ex_vi:'Tôi nghĩ rằng điều đó đúng.',note:'Động từ ra cuối câu'},
+{id:196,l:'B1',cat:'Liên từ',art:'',pl:'',w:'wenn',vi:'Nếu / Khi',cls:'Konjunktion',ipa:'[vɛn]',ex:'Wenn du Zeit hast, ruf mich an.',ex_vi:'Nếu bạn có thời gian, hãy gọi cho tôi.',note:'Động từ ra cuối câu'},
+{id:197,l:'B1',cat:'Liên từ',art:'',pl:'',w:'damit',vi:'Để (mục đích)',cls:'Konjunktion',ipa:'[daˈmɪt]',ex:'Ich lerne, damit ich Erfolg habe.',ex_vi:'Tôi học để thành công.',note:'Động từ ra cuối câu'},
+{id:198,l:'B1',cat:'Liên từ',art:'',pl:'',w:'außerdem',vi:'Ngoài ra',cls:'Adverb',ipa:'[ˈaʊ̯sɐdeːm]',ex:'Außerdem muss ich einkaufen gehen.',ex_vi:'Ngoài ra tôi còn phải đi mua sắm.'},
+{id:199,l:'B1',cat:'Liên từ',art:'',pl:'',w:'trotzdem',vi:'Dù vậy',cls:'Adverb',ipa:'[ˈtʁɔtsdeːm]',ex:'Es regnet, trotzdem gehe ich raus.',ex_vi:'Trời mưa nhưng tôi vẫn ra ngoài.'},
+{id:200,l:'B1',cat:'Liên từ',art:'',pl:'',w:'deshalb',vi:'Vì vậy, do đó',cls:'Adverb',ipa:'[ˈdɛshalb]',ex:'Ich bin krank, deshalb bleibe ich zuhause.',ex_vi:'Tôi bị bệnh, vì vậy ở nhà.'},
+// ═══ B1 — CÔNG VIỆC NÂNG CAO ═══
+{id:201,l:'B1',cat:'Công việc',art:'die',pl:'Besprechungen',w:'Besprechung',vi:'Cuộc họp',cls:'Nomen',ipa:'[bəˈʃpʁɛçʊŋ]',ex:'Die Besprechung beginnt um 9 Uhr.',ex_vi:'Cuộc họp bắt đầu lúc 9 giờ.'},
+{id:202,l:'B1',cat:'Công việc',art:'die',pl:'Bewerbungen',w:'Bewerbung',vi:'Đơn xin việc',cls:'Nomen',ipa:'[bəˈvɛʁbʊŋ]',ex:'Ich schicke meine Bewerbung morgen.',ex_vi:'Ngày mai tôi gửi đơn xin việc.'},
+{id:203,l:'B1',cat:'Công việc',art:'die',pl:'Erfahrungen',w:'Erfahrung',vi:'Kinh nghiệm',cls:'Nomen',ipa:'[ɛʁˈfaːʁʊŋ]',ex:'Ich habe 5 Jahre Erfahrung.',ex_vi:'Tôi có 5 năm kinh nghiệm.'},
+{id:204,l:'B1',cat:'Công việc',art:'die',pl:'—',w:'Verantwortung',vi:'Trách nhiệm',cls:'Nomen',ipa:'[fɛʁˈantvɔʁtʊŋ]',ex:'Ich übernehme die Verantwortung.',ex_vi:'Tôi chịu trách nhiệm.'},
+// ═══ B1 — XÃ HỘI ═══
+{id:205,l:'B1',cat:'Xã hội',art:'die',pl:'—',w:'Gesellschaft',vi:'Xã hội',cls:'Nomen',ipa:'[ɡəˈzɛlʃaft]',ex:'Die Gesellschaft verändert sich.',ex_vi:'Xã hội đang thay đổi.'},
+{id:206,l:'B1',cat:'Xã hội',art:'die',pl:'—',w:'Umwelt',vi:'Môi trường',cls:'Nomen',ipa:'[ˈʊmvɛlt]',ex:'Wir müssen die Umwelt schützen.',ex_vi:'Chúng ta phải bảo vệ môi trường.'},
+{id:207,l:'B1',cat:'Xã hội',art:'die',pl:'Möglichkeiten',w:'Möglichkeit',vi:'Khả năng, cơ hội',cls:'Nomen',ipa:'[ˈmøːklɪçkaɪ̯t]',ex:'Es gibt immer eine Möglichkeit.',ex_vi:'Luôn có một cơ hội.'},
+{id:208,l:'B1',cat:'Xã hội',art:'die',pl:'Herausforderungen',w:'Herausforderung',vi:'Thách thức',cls:'Nomen',ipa:'[hɛˈʁaʊ̯sfɔʁdəʁʊŋ]',ex:'Das ist eine große Herausforderung.',ex_vi:'Đây là một thách thức lớn.'},
+{id:209,l:'B1',cat:'Xã hội',art:'die',pl:'Meinungen',w:'Meinung',vi:'Ý kiến, quan điểm',cls:'Nomen',ipa:'[ˈmaɪ̯nʊŋ]',ex:'Meiner Meinung nach ist das falsch.',ex_vi:'Theo ý kiến của tôi thì sai.'},
+{id:210,l:'B1',cat:'Xã hội',art:'der',pl:'Vorteile',w:'Vorteil',vi:'Ưu điểm',cls:'Nomen',ipa:'[ˈfoːɐ̯taɪ̯l]',ex:'Das hat viele Vorteile.',ex_vi:'Điều đó có nhiều ưu điểm.'},
+{id:211,l:'B1',cat:'Xã hội',art:'der',pl:'Nachteile',w:'Nachteil',vi:'Nhược điểm',cls:'Nomen',ipa:'[ˈnaːxtaɪ̯l]',ex:'Es gibt auch Nachteile.',ex_vi:'Cũng có những nhược điểm.'},
+// ═══ CỤM TỪ ═══
+{id:212,l:'A1',cat:'Cụm từ',art:'',pl:'',w:'Ich verstehe nicht.',vi:'Tôi không hiểu.',cls:'Phrase',ipa:'[ɪç fɛʁˈʃteːə nɪçt]',ex:'Entschuldigung, ich verstehe nicht.',ex_vi:'Xin lỗi, tôi không hiểu.'},
+{id:213,l:'A2',cat:'Cụm từ',art:'',pl:'',w:'Es tut mir leid.',vi:'Tôi rất tiếc / Xin lỗi.',cls:'Phrase',ipa:'[ɛs tuːt miːɐ̯ laɪ̯t]',ex:'Es tut mir leid, das war mein Fehler.',ex_vi:'Tôi rất tiếc, đó là lỗi của tôi.'},
+{id:214,l:'A2',cat:'Cụm từ',art:'',pl:'',w:'Ich hätte gern…',vi:'Tôi muốn… (đặt đồ)',cls:'Phrase',ipa:'[ɪç ˈhɛtə ɡɛʁn]',ex:'Ich hätte gern einen Kaffee, bitte.',ex_vi:'Cho tôi một ly cà phê.'},
+{id:215,l:'A2',cat:'Cụm từ',art:'',pl:'',w:'Wie viel kostet das?',vi:'Cái này giá bao nhiêu?',cls:'Phrase',ipa:'[viː fiːl ˈkɔstət das]',ex:'Entschuldigung, wie viel kostet das?',ex_vi:'Xin lỗi, cái này giá bao nhiêu?'},
+{id:216,l:'B1',cat:'Cụm từ',art:'',pl:'',w:'Meiner Meinung nach…',vi:'Theo ý kiến của tôi…',cls:'Phrase',ipa:'[ˈmaɪ̯nɐ ˈmaɪ̯nʊŋ nax]',ex:'Meiner Meinung nach ist das richtig.',ex_vi:'Theo tôi, điều đó đúng.'},
+{id:217,l:'B1',cat:'Cụm từ',art:'',pl:'',w:'Das kommt darauf an.',vi:'Còn tùy.',cls:'Phrase',ipa:'[das ˈkɔmt daˈʁaʊ̯f an]',ex:'Kommt er? – Das kommt darauf an.',ex_vi:'Anh ấy đến không? – Còn tùy.'},
+// ═══ B1 — TÍNH CÁCH ═══
+{id:218,l:'B1',cat:'Tính cách',art:'',pl:'',w:'freundlich',vi:'Thân thiện, dễ mến',cls:'Adjektiv',ipa:'[ˈfʁɔɪ̯ntlɪç]',ex:'Sie ist immer freundlich.',ex_vi:'Cô ấy luôn thân thiện.'},
+{id:219,l:'B1',cat:'Tính cách',art:'',pl:'',w:'geduldig',vi:'Kiên nhẫn',cls:'Adjektiv',ipa:'[ɡəˈdʊldɪç]',ex:'Sei geduldig!',ex_vi:'Hãy kiên nhẫn!'},
+{id:220,l:'B1',cat:'Tính cách',art:'',pl:'',w:'fleißig',vi:'Chăm chỉ, siêng năng',cls:'Adjektiv',ipa:'[ˈflaɪ̯sɪç]',ex:'Sie ist sehr fleißig.',ex_vi:'Cô ấy rất chăm chỉ.'},
+{id:221,l:'B1',cat:'Tính cách',art:'',pl:'',w:'kreativ',vi:'Sáng tạo',cls:'Adjektiv',ipa:'[kʁeaˈtiːf]',ex:'Er ist sehr kreativ.',ex_vi:'Anh ấy rất sáng tạo.'},
+{id:222,l:'B1',cat:'Tính cách',art:'',pl:'',w:'ehrlich',vi:'Trung thực',cls:'Adjektiv',ipa:'[ˈʔeːɐ̯lɪç]',ex:'Sei ehrlich zu mir!',ex_vi:'Hãy thành thật với tôi!'},
+{id:223,l:'B1',cat:'Tính cách',art:'',pl:'',w:'selbstständig',vi:'Độc lập, tự chủ',cls:'Adjektiv',ipa:'[ˈzɛlpstʃtɛndɪç]',ex:'Er arbeitet sehr selbstständig.',ex_vi:'Anh ấy làm việc rất độc lập.'},
+// ═══ B1 — TỪ VỰNG HỮU ÍCH ═══
+{id:224,l:'B1',cat:'Từ vựng hữu ích',art:'',pl:'',w:'eigentlich',vi:'Thực ra, thật sự',cls:'Adverb',ipa:'[ˈaɪ̯ɡn̩tlɪç]',ex:'Eigentlich mag ich das nicht.',ex_vi:'Thực ra tôi không thích điều đó.'},
+{id:225,l:'B1',cat:'Từ vựng hữu ích',art:'',pl:'',w:'schließlich',vi:'Cuối cùng, rốt cuộc',cls:'Adverb',ipa:'[ˈʃliːslɪç]',ex:'Schließlich hat er es verstanden.',ex_vi:'Cuối cùng anh ấy đã hiểu.'},
+{id:226,l:'B1',cat:'Từ vựng hữu ích',art:'',pl:'',w:'allerdings',vi:'Tuy nhiên, quả thật',cls:'Adverb',ipa:'[ˈalɐdɪŋs]',ex:'Das ist gut, allerdings sehr teuer.',ex_vi:'Cái đó tốt, tuy nhiên rất đắt.'},
+{id:227,l:'B1',cat:'Từ vựng hữu ích',art:'',pl:'',w:'übrigens',vi:'Nhân tiện',cls:'Adverb',ipa:'[ˈyːbʁɪɡn̩s]',ex:'Übrigens, wann kommst du?',ex_vi:'Nhân tiện, khi nào bạn đến?'},
+{id:228,l:'B1',cat:'Từ vựng hữu ích',art:'',pl:'',w:'bereits',vi:'Đã, rồi (already)',cls:'Adverb',ipa:'[bəˈʁaɪ̯ts]',ex:'Ich habe das bereits gewusst.',ex_vi:'Tôi đã biết điều đó rồi.'},
+{id:229,l:'B1',cat:'Từ vựng hữu ích',art:'',pl:'',w:'insgesamt',vi:'Tổng cộng, nhìn chung',cls:'Adverb',ipa:'[ɪnsɡəˈzamt]',ex:'Insgesamt war es gut.',ex_vi:'Nhìn chung là tốt.'},
+{id:230,l:'B1',cat:'Từ vựng hữu ích',art:'die',pl:'Fortschritte',w:'Fortschritt',vi:'Tiến bộ',cls:'Nomen',ipa:'[ˈfɔʁtʃʁɪt]',ex:'Ich mache gute Fortschritte.',ex_vi:'Tôi đang tiến bộ tốt.'},
+{id:231,l:'B1',cat:'Từ vựng hữu ích',art:'die',pl:'Gewohnheiten',w:'Gewohnheit',vi:'Thói quen',cls:'Nomen',ipa:'[ɡəˈvoːnhaɪ̯t]',ex:'Sport ist eine gute Gewohnheit.',ex_vi:'Thể thao là một thói quen tốt.'},
+{id:232,l:'B1',cat:'Từ vựng hữu ích',art:'die',pl:'Möglichkeiten',w:'Möglichkeit',vi:'Khả năng, cơ hội',cls:'Nomen',ipa:'[ˈmøːklɪçkaɪ̯t]',ex:'Es gibt immer eine Möglichkeit.',ex_vi:'Luôn có một cơ hội.'},
+{id:233,l:'B1',cat:'Từ vựng hữu ích',art:'die',pl:'Lösungen',w:'Lösung',vi:'Giải pháp, đáp án',cls:'Nomen',ipa:'[ˈløːzʊŋ]',ex:'Wir suchen eine Lösung.',ex_vi:'Chúng tôi đang tìm giải pháp.'},
+{id:234,l:'B1',cat:'Từ vựng hữu ích',art:'die',pl:'Erfahrungen',w:'Erfahrung',vi:'Kinh nghiệm',cls:'Nomen',ipa:'[ɛʁˈfaːʁʊŋ]',ex:'Ich habe viel Erfahrung.',ex_vi:'Tôi có nhiều kinh nghiệm.'},
+{id:235,l:'B2',cat:'Từ vựng hữu ích',art:'die',pl:'Herausforderungen',w:'Herausforderung',vi:'Thách thức',cls:'Nomen',ipa:'[hɛˈʁaʊ̯sfɔʁdəʁʊŋ]',ex:'Das ist eine große Herausforderung.',ex_vi:'Đây là một thách thức lớn.'},
+{id:236,l:'C1',cat:'Từ vựng hữu ích',art:'die',pl:'Schlussfolgerungen',w:'Schlussfolgerung',vi:'Kết luận',cls:'Nomen',ipa:'[ˈʃlʊsfɔlɡəʁʊŋ]',ex:'Was ist die Schlussfolgerung?',ex_vi:'Kết luận là gì?'},
+{id:237,l:'C2',cat:'Từ vựng hữu ích',art:'',pl:'',w:'unumgänglich',vi:'Không thể tránh khỏi',cls:'Adjektiv',ipa:'[ˌʊnʔʊmˈɡɛŋlɪç]',ex:'Eine Entscheidung ist unumgänglich.',ex_vi:'Một quyết định là không thể tránh khỏi.'},
 ];
 
 /* Grammar data */
@@ -2389,6 +2479,7 @@ function toggleMNav(){$('mnav').classList.toggle('open');}
 
 const LVLS_LIST=['Tất cả','A1','A2','B1','B2','C1','C2'];
 const CATS_LIST=['Tất cả',...new Set(VOCAB.map(v=>v.cat))];
+// Vocab state moved to vState object (see vocab system below)
 
 /* ════════════════════════════════════════════════════════
    NAVIGATION
@@ -2451,7 +2542,7 @@ function startNew(){setMode('new');goPage('flashcard');}
 /* ════════════════════════════════════════════════════════
    VOCABULARY
 ════════════════════════════════════════════════════════ */
-let vLvl='Tất cả',vCat='Tất cả',vSt='all';
+/* ── FLASHCARD STATE ── */
 
 function buildPills(id,items,cur,cb,cls='tab-pill'){
   const c=$(id);if(!c)return;c.innerHTML='';
@@ -2460,45 +2551,6 @@ function buildPills(id,items,cur,cb,cls='tab-pill'){
     b.onclick=()=>{cb(item);buildPills(id,items,item,cb,cls);};c.appendChild(b);
   });
 }
-function renderVocabPage(){
-  buildPills('vLevelPills',LVLS_LIST,vLvl,v=>{vLvl=v;renderVocab()});
-  buildPills('vCatPills',CATS_LIST,vCat,v=>{vCat=v;renderVocab()},'cat-pill');
-  renderVocab();
-}
-function setVSt(f){
-  vSt=f;
-  ['all','new','learning','mastered'].forEach(s=>{
-    const el=$('sp-'+s);if(el)el.className='status-pill'+(s===f?' s-active-'+f:'');
-  });
-  renderVocab();
-}
-function getVSt(id){const c=S.srs[id];if(!c||!c.reps)return 'new';if(c.interval>=21)return 'mastered';return 'learning';}
-function renderVocab(){
-  const q=($('vSearch')?.value||'').toLowerCase();
-  let list=VOCAB;
-  if(vLvl!=='Tất cả')list=list.filter(v=>v.l===vLvl);
-  if(vCat!=='Tất cả')list=list.filter(v=>v.cat===vCat);
-  if(q)list=list.filter(v=>v.w.toLowerCase().includes(q)||v.vi.toLowerCase().includes(q)||v.cat.toLowerCase().includes(q));
-  if(vSt!=='all')list=list.filter(v=>getVSt(v.id)===vSt);
-  const g=$('vocabGrid');if(!g)return;
-  if(!list.length){g.innerHTML='<div class="empty"><div class="empty-icon">🌸</div><p>Không tìm thấy từ nào phù hợp</p></div>';return;}
-  g.innerHTML='';
-  list.forEach(v=>{
-    const st=getVSt(v.id);
-    const stI={new:'🆕',learning:'📖',mastered:'✅'}[st];
-    const card=document.createElement('div');card.className=`vcard s-${st}`;
-    card.innerHTML=`<div class="vcard-top"><div class="vcard-badges"><span class="badge-lvl">${v.l}</span><span class="badge-cat">${v.cat}</span></div><div class="vcard-st-dot">${stI}</div></div><div class="vcard-article">${v.art?v.art+' · ':''}${v.cls}</div><div class="vcard-word">${v.w}</div><div class="vcard-ipa">${v.ipa}</div><div class="vcard-vi">${v.vi}</div><div class="vcard-ex">${v.ex}</div><button class="vcard-audio" onclick="event.stopPropagation();speak('${v.w.replace(/'/g,"\\'")}')">🔊</button>`;
-    card.onclick=()=>{
-      if(!S.srs[v.id])S.srs[v.id]={interval:1,ef:2.5,reps:1,due:Date.now()+86400000};
-      else if(S.srs[v.id].reps>0){S.srs[v.id].reps=0;S.srs[v.id].due=null;}
-      else{S.srs[v.id].reps=1;S.srs[v.id].due=Date.now()+86400000;}
-      saveS();renderVocab();updateDash();
-      toast(getVSt(v.id)==='new'?'↩ Bỏ đánh dấu':'✨ Đánh dấu học!');
-    };
-    g.appendChild(card);
-  });
-}
-
 /* ════════════════════════════════════════════════════════
    FLASHCARD
 ════════════════════════════════════════════════════════ */
@@ -3381,12 +3433,339 @@ document.addEventListener('click', (e) => {
 });
 // Close focus overlay on Escape
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    closeFocusMode();
-    closeWordPopup();
-  }
+  if (e.key === 'Escape') { closeFocusMode(); closeWordPopup(); }
 });
-</script>
+
+/* ════════════════════════════════════════════════════════
+   VOCAB SYSTEM v2 — Full Functions
+════════════════════════════════════════════════════════ */
+
+// Derived constants from VOCAB
+const ALL_CATS  = ['Tất cả', ...new Set(VOCAB.map(v=>v.cat))];
+const ALL_TYPES = ['Tất cả', ...new Set(VOCAB.map(v=>v.cls))];
+const LEVELS_V  = ['Tất cả','A1','A2','B1','B2','C1','C2'];
+
+// Vocab state
+let vState = {
+  level: 'Tất cả',
+  cat:   'Tất cả',
+  type:  'Tất cả',
+  status:'all',
+  view:  'grid',
+  favs:  new Set(),
+  currentModal: null,
+};
+
+function vLoadState() {
+  try {
+    const d = JSON.parse(localStorage.getItem('vs_v2')||'{}');
+    vState.favs = new Set(d.favs||[]);
+  } catch(e) {}
+}
+function vSaveState() {
+  try { localStorage.setItem('vs_v2', JSON.stringify({favs:[...vState.favs]})); } catch(e){}
+}
+
+// Render full vocab page
+function renderVocabPage() {
+  vLoadState();
+  renderVovStats();
+  buildPills('vLevelPills', LEVELS_V, vState.level, lv=>{vState.level=lv; renderVocab();});
+  buildPills('vTypePills',  ['Tất cả','Nomen','Verb','Adjektiv','Adverb','Konjunktion','Phrase','Interjektion','Numerale'],
+    vState.type, tp=>{vState.type=tp; renderVocab();}, 'cat-pill');
+  buildPills('vCatPills',   ALL_CATS, vState.cat,   ct=>{vState.cat=ct;  renderVocab();}, 'cat-pill');
+  updateStatusCounts();
+  renderVocab();
+}
+
+// Overview stats
+function renderVovStats() {
+  const total    = VOCAB.length;
+  const learned  = VOCAB.filter(v=>getVSt(v.id)==='mastered').length;
+  const learning = VOCAB.filter(v=>getVSt(v.id)==='learning').length;
+  const newW     = VOCAB.filter(v=>getVSt(v.id)==='new').length;
+
+  const el = document.getElementById('vocabOverviewStats');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="vov-stat">
+      <div class="vov-stat-val">${total}</div>
+      <div class="vov-stat-bar"><div class="vov-stat-bar-fill total" style="width:100%"></div></div>
+      <div class="vov-stat-lbl">📚 Tổng từ</div>
+    </div>
+    <div class="vov-stat">
+      <div class="vov-stat-val">${newW}</div>
+      <div class="vov-stat-bar"><div class="vov-stat-bar-fill new" style="width:${Math.round(newW/total*100)}%"></div></div>
+      <div class="vov-stat-lbl">🆕 Chưa học</div>
+    </div>
+    <div class="vov-stat">
+      <div class="vov-stat-val">${learning}</div>
+      <div class="vov-stat-bar"><div class="vov-stat-bar-fill learning" style="width:${Math.round(learning/total*100)}%"></div></div>
+      <div class="vov-stat-lbl">📖 Đang học</div>
+    </div>
+    <div class="vov-stat">
+      <div class="vov-stat-val">${learned}</div>
+      <div class="vov-stat-bar"><div class="vov-stat-bar-fill mastered" style="width:${Math.round(learned/total*100)}%"></div></div>
+      <div class="vov-stat-lbl">✅ Thuộc lòng</div>
+    </div>`;
+}
+
+function updateStatusCounts() {
+  const all  = VOCAB.length;
+  const nw   = VOCAB.filter(v=>getVSt(v.id)==='new').length;
+  const lrn  = VOCAB.filter(v=>getVSt(v.id)==='learning').length;
+  const mst  = VOCAB.filter(v=>getVSt(v.id)==='mastered').length;
+  const fav  = VOCAB.filter(v=>vState.favs.has(v.id)).length;
+  setText('spCntAll', all);
+  setText('spCntNew', nw);
+  setText('spCntLrn', lrn);
+  setText('spCntMst', mst);
+  setText('spCntFav', fav);
+}
+
+function setVSt(f) {
+  vState.status = f;
+  ['all','new','learning','mastered','fav'].forEach(s => {
+    const el = document.getElementById('sp-'+s);
+    if (!el) return;
+    el.className = 'status-pill' + (s===f ? ' s-active-'+f : '');
+  });
+  renderVocab();
+}
+
+function setVView(v) {
+  vState.view = v;
+  document.getElementById('vViewGrid').classList.toggle('active', v==='grid');
+  document.getElementById('vViewList').classList.toggle('active', v==='list');
+  const grid = document.getElementById('vocabGrid');
+  if (grid) grid.classList.toggle('list-view', v==='list');
+}
+
+function getVSt(id) {
+  const c = S.srs[id];
+  if (!c || !c.reps) return 'new';
+  if (c.interval >= 21)  return 'mastered';
+  return 'learning';
+}
+
+function renderVocab() {
+  const q = ($('vSearch')?.value||'').toLowerCase();
+  let list = VOCAB;
+
+  // Level filter
+  if (vState.level !== 'Tất cả') list = list.filter(v=>v.l===vState.level);
+  // Category filter
+  if (vState.cat   !== 'Tất cả') list = list.filter(v=>v.cat===vState.cat);
+  // Type filter
+  if (vState.type  !== 'Tất cả') list = list.filter(v=>v.cls===vState.type);
+  // Status filter
+  if (vState.status === 'fav')       list = list.filter(v=>vState.favs.has(v.id));
+  else if (vState.status !== 'all')  list = list.filter(v=>getVSt(v.id)===vState.status);
+  // Search
+  if (q) list = list.filter(v =>
+    v.w.toLowerCase().includes(q) ||
+    v.vi.toLowerCase().includes(q) ||
+    v.cat.toLowerCase().includes(q) ||
+    (v.ex && v.ex.toLowerCase().includes(q))
+  );
+
+  // Count
+  const countEl = document.getElementById('vocabCount');
+  if (countEl) countEl.textContent = list.length + ' từ';
+
+  const grid = document.getElementById('vocabGrid');
+  if (!grid) return;
+  if (vState.view==='list') grid.classList.add('list-view');
+  else grid.classList.remove('list-view');
+
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty"><div class="empty-icon">🌸</div><p>Không tìm thấy từ nào phù hợp</p></div>';
+    return;
+  }
+
+  grid.innerHTML = '';
+  list.forEach(v => {
+    const st   = getVSt(v.id);
+    const isFav = vState.favs.has(v.id);
+    const artClass = v.art ? 'art-'+v.art : '';
+    const stLabel = {new:'🆕 Mới', learning:'📖 Đang học', mastered:'✅ Thuộc'}[st] || '';
+
+    const card = document.createElement('div');
+    card.className = `vcard-v2 s-${st} ${artClass}`;
+    card.innerHTML = `
+      <div class="vcard-v2-top-bar"></div>
+      <div class="vcard-v2-body">
+        <div class="vcard-v2-head">
+          <div class="vcard-v2-badges">
+            <span class="badge-lvl badge-lvl-${v.l.toLowerCase()}">${v.l}</span>
+            <span class="badge-cat">${v.cat}</span>
+          </div>
+          <div class="vcard-v2-icons">
+            <button class="vcard-v2-icon-btn ${isFav?'fav-on':''}"
+              title="${isFav?'Bỏ yêu thích':'Yêu thích'}"
+              onclick="event.stopPropagation();toggleFav(${v.id},this)">⭐</button>
+            <button class="vcard-v2-icon-btn ${st==='mastered'||st==='learning'?'learn-on':''}"
+              title="Đánh dấu học"
+              onclick="event.stopPropagation();toggleLearn(${v.id},this)">✓</button>
+          </div>
+        </div>
+        <div class="vcard-v2-art-row">
+          ${v.art ? `<span class="vcard-v2-art">${v.art}</span>` : ''}
+          <span class="vcard-v2-cls">${v.cls}</span>
+        </div>
+        <div class="vcard-v2-word">${v.w}</div>
+        ${v.pl ? `<div class="vcard-v2-plural">Số nhiều: ${v.pl}</div>` : ''}
+        <div class="vcard-v2-ipa">${v.ipa}</div>
+        <div class="vcard-v2-vi">${v.vi}</div>
+        <div class="vcard-v2-ex">${v.ex}</div>
+        ${v.ex_vi ? `<div class="vcard-v2-ex-vi">${v.ex_vi}</div>` : ''}
+      </div>
+      <div class="vcard-v2-footer">
+        <div style="display:flex;align-items:center">
+          <div class="vcard-v2-status-dot"></div>
+          <span class="vcard-v2-status-lbl">${stLabel}</span>
+        </div>
+        <div class="vcard-v2-footer-right">
+          <button class="vcard-v2-audio" onclick="event.stopPropagation();speak('${v.w.replace(/'/g,"\\'")}')">🔊 Nghe</button>
+        </div>
+      </div>`;
+    card.onclick = () => openVmodal(v.id);
+    grid.appendChild(card);
+  });
+
+  updateStatusCounts();
+  renderVovStats();
+}
+
+function toggleFav(id, btn) {
+  if (vState.favs.has(id)) { vState.favs.delete(id); toast('↩ Bỏ yêu thích'); }
+  else { vState.favs.add(id); toast('⭐ Đã thêm vào yêu thích!'); }
+  if (btn) btn.classList.toggle('fav-on', vState.favs.has(id));
+  vSaveState();
+  if (vState.status === 'fav') renderVocab();
+}
+
+function toggleLearn(id, btn) {
+  if (!S.srs[id]) S.srs[id] = {interval:1, ef:2.5, reps:1, due:Date.now()+86400000};
+  else if (S.srs[id].reps > 0) { S.srs[id].reps = 0; S.srs[id].due = null; }
+  else { S.srs[id].reps = 1; S.srs[id].due = Date.now()+86400000; }
+  saveS();
+  const st = getVSt(id);
+  if (btn) btn.classList.toggle('learn-on', st!=='new');
+  toast(st==='new' ? '↩ Bỏ đánh dấu' : '✨ Đánh dấu học!');
+  renderVocab(); updateDash();
+}
+
+// Random vocab
+function vocabRandom() {
+  const lvList = vState.level==='Tất cả' ? VOCAB : VOCAB.filter(v=>v.l===vState.level);
+  if (!lvList.length) return;
+  const pick = lvList[Math.floor(Math.random()*lvList.length)];
+  openVmodal(pick.id);
+}
+
+// Review difficult (low EF)
+function vocabReviewDifficult() {
+  vState.status = 'learning';
+  vState.level  = 'Tất cả';
+  vState.cat    = 'Tất cả';
+  vState.type   = 'Tất cả';
+  // Re-render pills
+  buildPills('vLevelPills', LEVELS_V, 'Tất cả', lv=>{vState.level=lv; renderVocab();});
+  buildPills('vCatPills', ALL_CATS, 'Tất cả', ct=>{vState.cat=ct; renderVocab();}, 'cat-pill');
+  setVSt('learning');
+  toast('📖 Hiển thị từ đang học');
+}
+
+/* ── WORD DETAIL MODAL ── */
+function openVmodal(id) {
+  const v = VOCAB.find(x=>x.id===id);
+  if (!v) return;
+  vState.currentModal = id;
+
+  const artClass = v.art ? `art-${v.art}` : '';
+  const st = getVSt(id);
+  const isFav = vState.favs.has(id);
+
+  setText('vmodArt',  v.art ? `${v.art} · ${v.cls}` : v.cls);
+  setText('vmodWord', v.w);
+  setText('vmodPlural', v.pl ? `Số nhiều: ${v.pl}` : '');
+  setText('vmodIpa',  v.ipa);
+  setText('vmodVi',   v.vi);
+  setText('vmodEx',   v.ex || '');
+  setText('vmodExVi', v.ex_vi || '');
+
+  // Tags
+  const tagsEl = document.getElementById('vmodTags');
+  if (tagsEl) tagsEl.innerHTML = `
+    <span class="vmod-tag lvl">${v.l}</span>
+    <span class="vmod-tag cls">${v.cls}</span>
+    <span class="vmod-tag cat">${v.cat}</span>
+    ${v.note ? `<span class="vmod-tag" style="background:var(--info-bg);color:var(--info)">💡 ${v.note}</span>` : ''}`;
+
+  // Conjugation (if verb with conj data)
+  const conjEl = document.getElementById('vmodConj');
+  if (conjEl) {
+    if (v.conj && v.cls === 'Verb') {
+      conjEl.style.display = 'block';
+      conjEl.innerHTML = `<div class="vmod-conj-title">Chia động từ hiện tại</div>
+        <div class="vmod-conj-grid">
+          ${Object.entries(v.conj).map(([pr,form])=>`<div class="vmod-conj-item"><span>${pr}</span> ${form}</div>`).join('')}
+        </div>`;
+    } else {
+      conjEl.style.display = 'none';
+    }
+  }
+
+  // Extra note
+  const extraEl = document.getElementById('vmodExtra');
+  if (extraEl) {
+    extraEl.textContent = '';
+    if (v.note && !v.conj) extraEl.innerHTML = `<strong>💡 Lưu ý:</strong> ${v.note}`;
+  }
+
+  // Button states
+  const favBtn   = document.getElementById('vmodFav');
+  const learnBtn = document.getElementById('vmodLearn');
+  if (favBtn)   { favBtn.classList.toggle('fav-on',   isFav);     favBtn.textContent   = isFav   ? '⭐ Đã yêu thích' : '⭐ Yêu thích'; }
+  if (learnBtn) { learnBtn.classList.toggle('learn-on', st!=='new'); learnBtn.textContent = st!=='new' ? '✅ Đã học' : '✅ Đánh dấu học'; }
+
+  // Show modal
+  document.getElementById('vmodOverlay').classList.add('show');
+  document.getElementById('vmodal').classList.add('show');
+}
+
+function closeVmod() {
+  document.getElementById('vmodOverlay').classList.remove('show');
+  document.getElementById('vmodal').classList.remove('show');
+  vState.currentModal = null;
+}
+function vmodSpeak() {
+  const v = VOCAB.find(x=>x.id===vState.currentModal);
+  if (v) speak(v.w);
+}
+function vmodToggleFav() {
+  if (vState.currentModal === null) return;
+  const btn = document.getElementById('vmodFav');
+  toggleFav(vState.currentModal, null);
+  const isFav = vState.favs.has(vState.currentModal);
+  if (btn) { btn.classList.toggle('fav-on',isFav); btn.textContent = isFav?'⭐ Đã yêu thích':'⭐ Yêu thích'; }
+}
+function vmodToggleLearn() {
+  if (vState.currentModal === null) return;
+  toggleLearn(vState.currentModal, null);
+  const st  = getVSt(vState.currentModal);
+  const btn = document.getElementById('vmodLearn');
+  if (btn) { btn.classList.toggle('learn-on',st!=='new'); btn.textContent = st!=='new'?'✅ Đã học':'✅ Đánh dấu học'; }
+}
+
+// Close modal on overlay click or Escape
+document.getElementById('vmodOverlay')?.addEventListener('click', closeVmod);
+document.addEventListener('keydown', e => { if (e.key==='Escape') { closeVmod(); closeFocusMode(); closeWordPopup(); } });
+
+/* ════════════════════════════════════════════════════════
+   KEYBOARD SHORTCUTS
+════════════════════════════════════════════════════════ */
 document.addEventListener('keydown',e=>{
   if(e.target.tagName==='INPUT')return;
   const p=document.querySelector('.page.active')?.id;
@@ -3401,8 +3780,8 @@ document.addEventListener('keydown',e=>{
    INIT
 ════════════════════════════════════════════════════════ */
 loadS();
+vLoadState();
 rdLoadState();
-// Apply saved font size
 setFontSize(currentFS);
 renderDash();
 setTimeout(()=>$('loader').classList.add('out'),1000);
