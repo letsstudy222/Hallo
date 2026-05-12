@@ -1183,6 +1183,194 @@ main { flex:1; padding:32px var(--sp6); max-width:1160px; margin:0 auto; width:1
 
 /* Info tooltip on word type */
 .vov-type-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: var(--sp3); }
+
+/* ════════════════════════════════════════════════════════
+   FIXES & REFINEMENTS — Priority 1-7
+════════════════════════════════════════════════════════ */
+
+/* Info color fix (missing variable) */
+:root {
+  --info:    #3878b8;
+  --info-bg: #f0f5fd;
+  --blush:   var(--rose-pale);
+}
+
+/* ── Smoother global feel ── */
+* { -webkit-tap-highlight-color: transparent; }
+button { outline: none; }
+button:focus-visible { outline: 2px solid var(--rose-light); outline-offset: 2px; }
+
+/* ── Vocab Page Layout ── */
+.vocab-page-wrap { display: flex; flex-direction: column; gap: 0; }
+
+/* ── vcard-v2 refined ── */
+.vcard-v2 {
+  border-radius: var(--r5);
+  border-color: var(--border2);
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease), border-color .2s;
+  user-select: none;
+}
+.vcard-v2:hover { transform: translateY(-3px); border-color: var(--rose-light); box-shadow: 0 6px 24px rgba(168,86,112,.1); }
+.vcard-v2:active { transform: translateY(-1px); }
+
+/* ── Word card z-shortcut flash ── */
+@keyframes learnFlash {
+  0%   { box-shadow: 0 0 0 0 rgba(61,158,106,.5); }
+  50%  { box-shadow: 0 0 0 12px rgba(61,158,106,0); background: #f0faf4; }
+  100% { box-shadow: 0 0 0 0 rgba(61,158,106,0); }
+}
+.vcard-v2.learn-flash { animation: learnFlash .5s ease; }
+
+@keyframes fadeOutCard {
+  0%   { opacity:1; transform:translateY(0) scale(1); }
+  100% { opacity:0; transform:translateY(-8px) scale(.97); }
+}
+.vcard-v2.fading-out {
+  animation: fadeOutCard .3s ease forwards;
+  pointer-events: none;
+}
+
+/* ── Selected card (keyboard nav) ── */
+.vcard-v2.kbd-selected {
+  border-color: var(--rose-mid) !important;
+  box-shadow: 0 0 0 3px rgba(196,115,138,.15), 0 6px 20px rgba(168,86,112,.12) !important;
+}
+
+/* ── Vocab word modal v2 ── */
+.vmod {
+  border-radius: var(--r6);
+  box-shadow: 0 24px 80px rgba(0,0,0,.18);
+  border: none;
+  max-height: 90vh;
+}
+.vmod-header-bar {
+  height: 5px; margin: -var(--sp6) -var(--sp6) var(--sp5); width: calc(100% + 2*var(--sp6));
+  border-radius: var(--r6) var(--r6) 0 0;
+  background: linear-gradient(90deg, var(--rose-light), var(--rose-deep));
+}
+.vmod-art {
+  font-size: .68rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--rose-deep); margin-bottom: 4px;
+  display: flex; align-items: center; gap: 8px;
+}
+.vmod-art-pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 36px; padding: 3px 10px; border-radius: var(--rf);
+  font-family: var(--font-reading); font-size: .75rem; font-weight: 700;
+}
+.vmod-art-pill.der { background: #eeeeff; color: #4040a0; }
+.vmod-art-pill.die { background: var(--rose-pale); color: var(--rose-deep); }
+.vmod-art-pill.das { background: #e8f5ed; color: #1e6040; }
+.vmod-word {
+  font-size: 2.6rem; line-height: 1;
+  margin-bottom: 6px; letter-spacing: -.01em;
+}
+.vmod-ipa {
+  font-size: var(--fs-base); color: var(--text-muted);
+  margin-bottom: 14px; font-style: italic;
+  background: var(--surface3); display: inline-block;
+  padding: 3px 12px; border-radius: var(--rf);
+}
+.vmod-vi { font-size: 1.35rem; }
+.vmod-divider { height: 1px; background: var(--border2); margin: var(--sp4) 0; }
+.vmod-ex {
+  padding: var(--sp3) var(--sp4);
+  background: var(--rose-faint);
+  border-left: 3px solid var(--rose-light);
+  border-radius: 0 var(--r2) var(--r2) 0;
+  font-size: var(--fs-base);
+  margin-bottom: 5px;
+}
+.vmod-ex-vi {
+  font-size: var(--fs-sm); color: var(--text-muted);
+  font-style: italic; margin-bottom: var(--sp4);
+  padding-left: var(--sp3);
+}
+/* Z shortcut hint in modal */
+.vmod-z-hint {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: var(--fs-xs); color: var(--text-faint);
+  margin-top: var(--sp3);
+}
+.vmod-z-hint kbd {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 5px;
+  background: var(--surface3); border: 1px solid var(--border);
+  font-family: var(--font-ui); font-size: .75rem; font-weight: 700;
+  color: var(--text3); box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+
+/* ── Vocab header ── */
+.vocab-header-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: var(--sp5); flex-wrap: wrap; gap: var(--sp3);
+}
+.vocab-keyboard-hint {
+  font-size: var(--fs-xs); color: var(--text-faint);
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+}
+.vocab-keyboard-hint kbd {
+  background: var(--surface3); border: 1px solid var(--border);
+  border-radius: 4px; padding: 2px 7px;
+  font-family: var(--font-ui); font-size: .72rem; font-weight: 700;
+  color: var(--text3); box-shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+
+/* ── Vocab state tabs (Unknown/Learned/Fav/Hard) ── */
+.vocab-state-tabs {
+  display: flex; gap: 6px; margin-bottom: var(--sp4); flex-wrap: wrap;
+}
+.vst-tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 18px; border-radius: var(--rf);
+  border: 1.5px solid var(--border2); background: var(--surface);
+  font-size: var(--fs-sm); font-weight: 600; color: var(--text3);
+  cursor: pointer; transition: all .2s; position: relative;
+}
+.vst-tab:hover { border-color: var(--rose-light); color: var(--rose-deep); }
+.vst-tab.active { background: var(--rose-deep); color: #fff; border-color: transparent; box-shadow: 0 3px 12px rgba(168,86,112,.25); }
+.vst-tab .vst-count {
+  background: rgba(255,255,255,.25); border-radius: var(--rf);
+  padding: 0 7px; font-size: .68rem; font-weight: 800; min-width: 20px; text-align: center;
+}
+.vst-tab:not(.active) .vst-count { background: var(--gray-100); color: var(--text-muted); }
+
+/* ── Search bar improvements ── */
+.search-input:focus { border-color: var(--rose-mid); box-shadow: 0 0 0 3px rgba(196,115,138,.12); background: var(--surface); }
+
+/* ── Filter section labels ── */
+.filter-section-label {
+  font-size: .65rem; font-weight: 700; color: var(--text-faint);
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-bottom: 6px; margin-top: var(--sp3);
+}
+.filter-section-label:first-child { margin-top: 0; }
+
+/* ── Vcard icon buttons always visible for selected ── */
+.vcard-v2.kbd-selected .vcard-v2-icon-btn { opacity: 1 !important; }
+
+/* ── Modal overlay ── */
+.vmod-overlay { backdrop-filter: blur(4px); background: rgba(28,22,18,.6); }
+
+/* ── Smooth grid transition ── */
+.vocab-grid { transition: opacity .15s ease; }
+.vocab-grid.updating { opacity: .5; pointer-events: none; }
+
+/* ── Reading section small fixes ── */
+.rd-toolbar { gap: 8px; }
+.rd-tb-btn { font-size: var(--fs-xs); padding: 5px 12px; }
+
+/* ── Dashboard hero softer ── */
+.dash-hero { border-radius: var(--r6); }
+
+/* ── Mobile fixes ── */
+@media(max-width:640px) {
+  .vov-stats { grid-template-columns: repeat(2,1fr); }
+  .vocab-state-tabs { gap: 4px; }
+  .vst-tab { padding: 7px 12px; font-size: var(--fs-xs); }
+  .vmod-word { font-size: 2rem; }
+}
+
 </style>
 
 /* ── Level selector grid ── */
@@ -1794,85 +1982,105 @@ main { flex:1; padding:32px var(--sp6); max-width:1160px; margin:0 auto; width:1
 
 <!-- ════ VOCAB ════ -->
 <div id="page-vocab" class="page">
-  <!-- Header + Stats -->
-  <div class="sec-hd">
-    <div class="sec-title">📚 Từ vựng <em>tiếng Đức</em></div>
-    <div class="sec-sub">300+ từ vựng A1–B1 có phân loại · Nhấn thẻ đánh dấu học · 🔊 Nghe phát âm</div>
+  <div class="vocab-header-row">
+    <div class="sec-hd" style="margin-bottom:0">
+      <div class="sec-title">📚 Từ vựng <em>tiếng Đức</em></div>
+      <div class="sec-sub">237 từ A1–C2 · Nhấn thẻ để xem chi tiết · Phím Z = đánh dấu học</div>
+    </div>
+    <div class="vocab-keyboard-hint">
+      <kbd>Z</kbd> Học xong
+      <kbd>F</kbd> Yêu thích
+      <kbd>←</kbd><kbd>→</kbd> Di chuyển
+      <kbd>Enter</kbd> Mở chi tiết
+    </div>
   </div>
 
   <!-- Vocab overview stats -->
   <div class="vov-stats" id="vocabOverviewStats"></div>
 
+  <!-- Main state tabs (Unknown/Learned/Fav) -->
+  <div class="vocab-state-tabs" id="vocabStateTabs">
+    <button class="vst-tab active" id="vst-unknown" onclick="setVocabState('unknown')">
+      🆕 Chưa học <span class="vst-count" id="vstCntUnknown">0</span>
+    </button>
+    <button class="vst-tab" id="vst-learning" onclick="setVocabState('learning')">
+      📖 Đang học <span class="vst-count" id="vstCntLearning">0</span>
+    </button>
+    <button class="vst-tab" id="vst-learned" onclick="setVocabState('learned')">
+      ✅ Đã học <span class="vst-count" id="vstCntLearned">0</span>
+    </button>
+    <button class="vst-tab" id="vst-fav" onclick="setVocabState('fav')">
+      ⭐ Yêu thích <span class="vst-count" id="vstCntFav">0</span>
+    </button>
+    <button class="vst-tab" id="vst-all" onclick="setVocabState('all')">
+      📋 Tất cả <span class="vst-count" id="vstCntAll">0</span>
+    </button>
+  </div>
+
   <!-- Search -->
-  <div class="vocab-controls">
+  <div class="vocab-controls" style="margin-bottom:var(--sp3)">
     <div class="search-wrap" style="flex:1">
       <span class="search-icon">🔍</span>
-      <input class="search-input" id="vSearch" placeholder="Tìm từ tiếng Đức hoặc tiếng Việt…" oninput="renderVocab()">
+      <input class="search-input" id="vSearch" placeholder="Tìm tiếng Đức hoặc tiếng Việt…" oninput="vocabSearch()">
     </div>
-    <button class="vov-random-btn" onclick="vocabRandom()" title="Từ ngẫu nhiên">🎲 Ngẫu nhiên</button>
-    <button class="vov-random-btn" onclick="vocabReviewDifficult()" title="Từ khó">⚠️ Từ khó</button>
+    <button class="vov-random-btn" onclick="vocabRandom()" title="Từ ngẫu nhiên">🎲</button>
   </div>
 
-  <!-- Level filter -->
-  <div style="margin-bottom:8px;font-size:var(--fs-xs);color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px">Cấp độ</div>
-  <div class="filter-row" id="vLevelPills"></div>
-
-  <!-- Word type filter -->
-  <div style="margin-bottom:8px;font-size:var(--fs-xs);color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px">Từ loại</div>
-  <div class="filter-row" id="vTypePills"></div>
-
-  <!-- Category filter -->
-  <div style="margin-bottom:8px;font-size:var(--fs-xs);color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:1px">Chủ đề</div>
-  <div class="filter-row" id="vCatPills"></div>
-
-  <!-- Status filter -->
-  <div class="status-bar">
-    <button class="status-pill s-active-all" id="sp-all"      onclick="setVSt('all')">Tất cả <span id="spCntAll"></span></button>
-    <button class="status-pill"              id="sp-new"      onclick="setVSt('new')">🆕 Mới <span id="spCntNew"></span></button>
-    <button class="status-pill"              id="sp-learning" onclick="setVSt('learning')">📖 Đang học <span id="spCntLrn"></span></button>
-    <button class="status-pill"              id="sp-mastered" onclick="setVSt('mastered')">✅ Thuộc <span id="spCntMst"></span></button>
-    <button class="status-pill"             id="sp-fav"      onclick="setVSt('fav')">⭐ Yêu thích <span id="spCntFav"></span></button>
+  <!-- Filters row (compact) -->
+  <div style="display:flex;flex-wrap:wrap;gap:var(--sp2);margin-bottom:var(--sp4);align-items:flex-start">
+    <div>
+      <div class="filter-section-label">Cấp độ</div>
+      <div class="filter-row" id="vLevelPills" style="margin-bottom:0"></div>
+    </div>
+    <div>
+      <div class="filter-section-label">Từ loại</div>
+      <div class="filter-row" id="vTypePills" style="margin-bottom:0"></div>
+    </div>
+    <div>
+      <div class="filter-section-label">Chủ đề</div>
+      <div class="filter-row" id="vCatPills" style="margin-bottom:0"></div>
+    </div>
   </div>
 
-  <!-- Article legend -->
-  <div class="art-legend">
-    <span>Màu đầu thẻ:</span>
-    <span><span class="art-dot der"></span> der (Maskulin)</span>
-    <span><span class="art-dot die"></span> die (Feminin)</span>
-    <span><span class="art-dot das"></span> das (Neutrum)</span>
-  </div>
-
-  <!-- Result count + view toggle -->
+  <!-- Article legend + count + view toggle -->
   <div class="vov-toolbar">
-    <span class="vov-count" id="vocabCount">— từ</span>
+    <div class="art-legend" style="margin-bottom:0">
+      <span style="font-size:var(--fs-xs);color:var(--text-faint)">Mạo từ:</span>
+      <span><span class="art-dot der"></span> der</span>
+      <span><span class="art-dot die"></span> die</span>
+      <span><span class="art-dot das"></span> das</span>
+    </div>
     <div style="display:flex;gap:6px;align-items:center">
+      <span class="vov-count" id="vocabCount">—</span>
       <button class="vov-view-btn active" id="vViewGrid" onclick="setVView('grid')" title="Lưới">⊞</button>
-      <button class="vov-view-btn"        id="vViewList" onclick="setVView('list')" title="Danh sách">≡</button>
+      <button class="vov-view-btn" id="vViewList" onclick="setVView('list')" title="Danh sách">≡</button>
     </div>
   </div>
 
-  <!-- Vocab grid/list -->
+  <!-- Vocab grid -->
   <div class="vocab-grid" id="vocabGrid"></div>
 
   <!-- Word detail modal -->
-  <div class="vmod-overlay" id="vmodOverlay" onclick="closeVmod()"></div>
+  <div class="vmod-overlay" id="vmodOverlay"></div>
   <div class="vmod" id="vmodal">
-    <button class="vmod-close" onclick="closeVmod()">×</button>
+    <button class="vmod-close" onclick="closeVmod()" title="Đóng (Esc)">×</button>
+    <div class="vmod-header-bar" id="vmodHeaderBar"></div>
     <div class="vmod-art" id="vmodArt"></div>
     <div class="vmod-word" id="vmodWord">—</div>
-    <div class="vmod-plural" id="vmodPlural"></div>
     <div class="vmod-ipa" id="vmodIpa"></div>
     <div class="vmod-vi" id="vmodVi">—</div>
     <div class="vmod-tags" id="vmodTags"></div>
+    <div class="vmod-divider"></div>
     <div class="vmod-ex" id="vmodEx"></div>
     <div class="vmod-ex-vi" id="vmodExVi"></div>
     <div class="vmod-conj" id="vmodConj" style="display:none"></div>
     <div class="vmod-extra" id="vmodExtra"></div>
     <div class="vmod-actions">
-      <button class="vmod-btn audio" id="vmodAudio" onclick="vmodSpeak()">🔊 Nghe phát âm</button>
+      <button class="vmod-btn audio" id="vmodAudio" onclick="vmodSpeak()">🔊 Nghe</button>
       <button class="vmod-btn fav"   id="vmodFav"   onclick="vmodToggleFav()">⭐ Yêu thích</button>
-      <button class="vmod-btn learn" id="vmodLearn" onclick="vmodToggleLearn()">✅ Đánh dấu học</button>
+      <button class="vmod-btn learn" id="vmodLearn" onclick="vmodToggleLearnBtn()">✅ Đã học</button>
     </div>
+    <div class="vmod-z-hint"><kbd>Z</kbd> Đánh dấu đã học · <kbd>F</kbd> Yêu thích · <kbd>Esc</kbd> Đóng</div>
   </div>
 </div>
 
@@ -2522,6 +2730,7 @@ function updateDash(){
   const fill=$('goalFill');if(fill)fill.style.strokeDashoffset=circ-(pct/100)*circ;
   updateHeader();
 }
+// (vocab updates handled in renderVocabFiltered)
 function updateHeader(){
   setText('hStreakNum',S.streak);setText('hXpNum',S.xp);
   const bar=$('hXpBar');if(bar)bar.style.width=getLvlPct(S.xp)+'%';
@@ -3437,161 +3646,269 @@ document.addEventListener('keydown', (e) => {
 });
 
 /* ════════════════════════════════════════════════════════
-   VOCAB SYSTEM v2 — Full Functions
+   VOCAB SYSTEM v3 — Fixed, Polished, Z-shortcut, Instant filter
 ════════════════════════════════════════════════════════ */
 
-// Derived constants from VOCAB
-const ALL_CATS  = ['Tất cả', ...new Set(VOCAB.map(v=>v.cat))];
-const ALL_TYPES = ['Tất cả', ...new Set(VOCAB.map(v=>v.cls))];
-const LEVELS_V  = ['Tất cả','A1','A2','B1','B2','C1','C2'];
+/* ── Constants ── */
+const V_LEVELS = ['Tất cả','A1','A2','B1','B2','C1','C2'];
+const V_TYPES  = ['Tất cả','Nomen','Verb','Adjektiv','Adverb','Konjunktion','Phrase','Interjektion'];
+const V_CATS   = ['Tất cả', ...new Set(VOCAB.map(v=>v.cat))];
 
-// Vocab state
-let vState = {
-  level: 'Tất cả',
-  cat:   'Tất cả',
-  type:  'Tất cả',
-  status:'all',
-  view:  'grid',
-  favs:  new Set(),
-  currentModal: null,
+/* ── Vocab UI State ── */
+const VS = {
+  state:   'unknown',   // 'unknown'|'learning'|'learned'|'fav'|'all'
+  level:   'Tất cả',
+  type:    'Tất cả',
+  cat:     'Tất cả',
+  view:    'grid',
+  q:       '',
+  selected: -1,         // currently keyboard-selected card index
+  visibleIds: [],       // ids currently rendered (for keyboard nav)
+  favs:    new Set(),
+  modalId: null,        // id of word in modal
 };
 
-function vLoadState() {
+/* ── Persist favs ── */
+function vsLoad() {
   try {
-    const d = JSON.parse(localStorage.getItem('vs_v2')||'{}');
-    vState.favs = new Set(d.favs||[]);
+    const d = JSON.parse(localStorage.getItem('vs3')||'{}');
+    VS.favs = new Set(d.favs||[]);
+    VS.state = d.state || 'unknown';
   } catch(e) {}
 }
-function vSaveState() {
-  try { localStorage.setItem('vs_v2', JSON.stringify({favs:[...vState.favs]})); } catch(e){}
+function vsSave() {
+  try { localStorage.setItem('vs3', JSON.stringify({favs:[...VS.favs], state:VS.state})); } catch(e){}
 }
 
-// Render full vocab page
+/* ── Word status helpers ── */
+function getWordStatus(id) {
+  // Uses SRS data from main S object
+  const c = S.srs[id];
+  if (!c || !c.reps) return 'unknown';
+  if (c.interval >= 21) return 'learned';
+  return 'learning';
+}
+function isLearned(id)  { return getWordStatus(id) === 'learned';  }
+function isLearning(id) { return getWordStatus(id) === 'learning'; }
+function isUnknown(id)  { return getWordStatus(id) === 'unknown';  }
+function isFav(id)      { return VS.favs.has(id); }
+
+/* ── Mark word as learned (main action for Z) ── */
+function markLearned(id, fromModal=false) {
+  const wasDone = !isUnknown(id);
+  if (wasDone) {
+    // Toggle off (undo learn)
+    if (S.srs[id]) { S.srs[id].reps = 0; S.srs[id].due = null; }
+    saveS(); updateDash();
+    toast('↩ Đã bỏ đánh dấu học');
+    if (fromModal) {
+      const btn = document.getElementById('vmodLearn');
+      if (btn) { btn.classList.remove('learn-on'); btn.textContent = '✅ Đánh dấu học'; }
+    }
+    renderVocabFiltered();
+    return;
+  }
+  // Mark as learned (SRS interval 21 = mature)
+  S.srs[id] = { interval: 21, ef: 2.5, reps: 3, due: Date.now() + 21*86400000 };
+  saveS();
+  addXP(3, document.getElementById('vmodal') || document.body);
+  recordStudy(1);
+  updateDash();
+
+  if (fromModal) {
+    const btn = document.getElementById('vmodLearn');
+    if (btn) { btn.classList.add('learn-on'); btn.textContent = '✅ Đã học'; }
+    toast('✨ Đã đánh dấu học! +3 XP');
+    // If in 'unknown' state, close modal after brief delay so user sees confirmation
+    if (VS.state === 'unknown' || VS.state === 'learning') {
+      setTimeout(() => { closeVmod(); renderVocabFiltered(); }, 400);
+    } else {
+      renderVocabFiltered();
+    }
+    return;
+  }
+
+  // From keyboard shortcut — flash card then fade out if in unknown/learning state
+  const cardEl = document.querySelector(`.vcard-v2[data-id="${id}"]`);
+  if (cardEl) {
+    cardEl.classList.add('learn-flash');
+    toast('✨ Đã học! +3 XP');
+    if (VS.state === 'unknown' || VS.state === 'learning') {
+      setTimeout(() => {
+        cardEl.classList.add('fading-out');
+        setTimeout(() => renderVocabFiltered(), 320);
+      }, 500);
+    } else {
+      setTimeout(() => renderVocabFiltered(), 600);
+    }
+  }
+}
+
+/* ── Toggle favorite ── */
+function toggleFav(id, fromModal=false) {
+  if (VS.favs.has(id)) { VS.favs.delete(id); toast('↩ Bỏ yêu thích'); }
+  else { VS.favs.add(id); toast('⭐ Đã thêm yêu thích!'); }
+  vsSave();
+  if (fromModal) {
+    const btn = document.getElementById('vmodFav');
+    if (btn) {
+      const now = VS.favs.has(id);
+      btn.classList.toggle('fav-on', now);
+      btn.textContent = now ? '⭐ Đã yêu thích' : '⭐ Yêu thích';
+    }
+  }
+  if (VS.state === 'fav') renderVocabFiltered();
+  else updateVocabCounts();
+}
+
+/* ── State tab selection ── */
+function setVocabState(state) {
+  VS.state = state;
+  VS.selected = -1;
+  vsSave();
+  // Update tab UI
+  ['unknown','learning','learned','fav','all'].forEach(s => {
+    const el = document.getElementById('vst-'+s);
+    if (el) el.classList.toggle('active', s===state);
+  });
+  renderVocabFiltered();
+}
+
+/* ── Render vocab page (called on page nav) ── */
 function renderVocabPage() {
-  vLoadState();
+  vsLoad();
   renderVovStats();
-  buildPills('vLevelPills', LEVELS_V, vState.level, lv=>{vState.level=lv; renderVocab();});
-  buildPills('vTypePills',  ['Tất cả','Nomen','Verb','Adjektiv','Adverb','Konjunktion','Phrase','Interjektion','Numerale'],
-    vState.type, tp=>{vState.type=tp; renderVocab();}, 'cat-pill');
-  buildPills('vCatPills',   ALL_CATS, vState.cat,   ct=>{vState.cat=ct;  renderVocab();}, 'cat-pill');
-  updateStatusCounts();
-  renderVocab();
+  buildPills('vLevelPills', V_LEVELS, VS.level, lv => { VS.level=lv; renderVocabFiltered(); });
+  buildPills('vTypePills',  V_TYPES,  VS.type,  tp => { VS.type=tp;  renderVocabFiltered(); }, 'cat-pill');
+  buildPills('vCatPills',   V_CATS,   VS.cat,   ct => { VS.cat=ct;   renderVocabFiltered(); }, 'cat-pill');
+  setVocabState(VS.state);
 }
 
-// Overview stats
-function renderVovStats() {
-  const total    = VOCAB.length;
-  const learned  = VOCAB.filter(v=>getVSt(v.id)==='mastered').length;
-  const learning = VOCAB.filter(v=>getVSt(v.id)==='learning').length;
-  const newW     = VOCAB.filter(v=>getVSt(v.id)==='new').length;
+/* ── Search ── */
+function vocabSearch() {
+  VS.q = (document.getElementById('vSearch')?.value || '').toLowerCase().trim();
+  VS.selected = -1;
+  renderVocabFiltered();
+}
 
+/* ── View toggle ── */
+function setVView(v) {
+  VS.view = v;
+  document.getElementById('vViewGrid').classList.toggle('active', v==='grid');
+  document.getElementById('vViewList').classList.toggle('active', v==='list');
+  const g = document.getElementById('vocabGrid');
+  if (g) g.classList.toggle('list-view', v==='list');
+}
+
+/* ── Get filtered list ── */
+function getFilteredVocab() {
+  let list = VOCAB;
+  // State filter
+  if (VS.state === 'unknown')  list = list.filter(v => isUnknown(v.id));
+  if (VS.state === 'learning') list = list.filter(v => isLearning(v.id));
+  if (VS.state === 'learned')  list = list.filter(v => isLearned(v.id));
+  if (VS.state === 'fav')      list = list.filter(v => isFav(v.id));
+  // Level
+  if (VS.level !== 'Tất cả') list = list.filter(v => v.l === VS.level);
+  // Type
+  if (VS.type  !== 'Tất cả') list = list.filter(v => v.cls === VS.type);
+  // Cat
+  if (VS.cat   !== 'Tất cả') list = list.filter(v => v.cat === VS.cat);
+  // Search
+  if (VS.q) list = list.filter(v =>
+    v.w.toLowerCase().includes(VS.q) ||
+    v.vi.toLowerCase().includes(VS.q) ||
+    v.cat.toLowerCase().includes(VS.q) ||
+    (v.ex && v.ex.toLowerCase().includes(VS.q))
+  );
+  return list;
+}
+
+/* ── Update counts ── */
+function updateVocabCounts() {
+  const all  = VOCAB.length;
+  const unk  = VOCAB.filter(v => isUnknown(v.id)).length;
+  const lrn  = VOCAB.filter(v => isLearning(v.id)).length;
+  const lrd  = VOCAB.filter(v => isLearned(v.id)).length;
+  const fav  = VOCAB.filter(v => isFav(v.id)).length;
+  setText('vstCntAll',      all);
+  setText('vstCntUnknown',  unk);
+  setText('vstCntLearning', lrn);
+  setText('vstCntLearned',  lrd);
+  setText('vstCntFav',      fav);
+}
+
+/* ── Render vocab stats bar ── */
+function renderVovStats() {
+  const total = VOCAB.length;
+  const lrd   = VOCAB.filter(v => isLearned(v.id)).length;
+  const lrn   = VOCAB.filter(v => isLearning(v.id)).length;
+  const unk   = total - lrd - lrn;
   const el = document.getElementById('vocabOverviewStats');
   if (!el) return;
+  const pct = n => Math.round(n/total*100);
   el.innerHTML = `
-    <div class="vov-stat">
-      <div class="vov-stat-val">${total}</div>
-      <div class="vov-stat-bar"><div class="vov-stat-bar-fill total" style="width:100%"></div></div>
-      <div class="vov-stat-lbl">📚 Tổng từ</div>
-    </div>
-    <div class="vov-stat">
-      <div class="vov-stat-val">${newW}</div>
-      <div class="vov-stat-bar"><div class="vov-stat-bar-fill new" style="width:${Math.round(newW/total*100)}%"></div></div>
+    <div class="vov-stat" onclick="setVocabState('unknown')" style="cursor:pointer">
+      <div class="vov-stat-val" style="color:var(--success)">${unk}</div>
+      <div class="vov-stat-bar"><div class="vov-stat-bar-fill new" style="width:${pct(unk)}%"></div></div>
       <div class="vov-stat-lbl">🆕 Chưa học</div>
     </div>
-    <div class="vov-stat">
-      <div class="vov-stat-val">${learning}</div>
-      <div class="vov-stat-bar"><div class="vov-stat-bar-fill learning" style="width:${Math.round(learning/total*100)}%"></div></div>
+    <div class="vov-stat" onclick="setVocabState('learning')" style="cursor:pointer">
+      <div class="vov-stat-val" style="color:var(--warning)">${lrn}</div>
+      <div class="vov-stat-bar"><div class="vov-stat-bar-fill learning" style="width:${pct(lrn)}%"></div></div>
       <div class="vov-stat-lbl">📖 Đang học</div>
     </div>
-    <div class="vov-stat">
-      <div class="vov-stat-val">${learned}</div>
-      <div class="vov-stat-bar"><div class="vov-stat-bar-fill mastered" style="width:${Math.round(learned/total*100)}%"></div></div>
-      <div class="vov-stat-lbl">✅ Thuộc lòng</div>
+    <div class="vov-stat" onclick="setVocabState('learned')" style="cursor:pointer">
+      <div class="vov-stat-val" style="color:var(--rose-deep)">${lrd}</div>
+      <div class="vov-stat-bar"><div class="vov-stat-bar-fill mastered" style="width:${pct(lrd)}%"></div></div>
+      <div class="vov-stat-lbl">✅ Đã học</div>
+    </div>
+    <div class="vov-stat" onclick="setVocabState('all')" style="cursor:pointer">
+      <div class="vov-stat-val">${total}</div>
+      <div class="vov-stat-bar"><div class="vov-stat-bar-fill total" style="width:100%"></div></div>
+      <div class="vov-stat-lbl">📚 Tổng số từ</div>
     </div>`;
 }
 
-function updateStatusCounts() {
-  const all  = VOCAB.length;
-  const nw   = VOCAB.filter(v=>getVSt(v.id)==='new').length;
-  const lrn  = VOCAB.filter(v=>getVSt(v.id)==='learning').length;
-  const mst  = VOCAB.filter(v=>getVSt(v.id)==='mastered').length;
-  const fav  = VOCAB.filter(v=>vState.favs.has(v.id)).length;
-  setText('spCntAll', all);
-  setText('spCntNew', nw);
-  setText('spCntLrn', lrn);
-  setText('spCntMst', mst);
-  setText('spCntFav', fav);
-}
+/* ── MAIN RENDER ── */
+function renderVocabFiltered() {
+  const list = getFilteredVocab();
+  VS.visibleIds = list.map(v => v.id);
+  updateVocabCounts();
+  renderVovStats();
 
-function setVSt(f) {
-  vState.status = f;
-  ['all','new','learning','mastered','fav'].forEach(s => {
-    const el = document.getElementById('sp-'+s);
-    if (!el) return;
-    el.className = 'status-pill' + (s===f ? ' s-active-'+f : '');
-  });
-  renderVocab();
-}
-
-function setVView(v) {
-  vState.view = v;
-  document.getElementById('vViewGrid').classList.toggle('active', v==='grid');
-  document.getElementById('vViewList').classList.toggle('active', v==='list');
-  const grid = document.getElementById('vocabGrid');
-  if (grid) grid.classList.toggle('list-view', v==='list');
-}
-
-function getVSt(id) {
-  const c = S.srs[id];
-  if (!c || !c.reps) return 'new';
-  if (c.interval >= 21)  return 'mastered';
-  return 'learning';
-}
-
-function renderVocab() {
-  const q = ($('vSearch')?.value||'').toLowerCase();
-  let list = VOCAB;
-
-  // Level filter
-  if (vState.level !== 'Tất cả') list = list.filter(v=>v.l===vState.level);
-  // Category filter
-  if (vState.cat   !== 'Tất cả') list = list.filter(v=>v.cat===vState.cat);
-  // Type filter
-  if (vState.type  !== 'Tất cả') list = list.filter(v=>v.cls===vState.type);
-  // Status filter
-  if (vState.status === 'fav')       list = list.filter(v=>vState.favs.has(v.id));
-  else if (vState.status !== 'all')  list = list.filter(v=>getVSt(v.id)===vState.status);
-  // Search
-  if (q) list = list.filter(v =>
-    v.w.toLowerCase().includes(q) ||
-    v.vi.toLowerCase().includes(q) ||
-    v.cat.toLowerCase().includes(q) ||
-    (v.ex && v.ex.toLowerCase().includes(q))
-  );
-
-  // Count
   const countEl = document.getElementById('vocabCount');
   if (countEl) countEl.textContent = list.length + ' từ';
 
   const grid = document.getElementById('vocabGrid');
   if (!grid) return;
-  if (vState.view==='list') grid.classList.add('list-view');
-  else grid.classList.remove('list-view');
+  grid.classList.toggle('list-view', VS.view==='list');
 
   if (!list.length) {
-    grid.innerHTML = '<div class="empty"><div class="empty-icon">🌸</div><p>Không tìm thấy từ nào phù hợp</p></div>';
+    const msg = VS.state==='unknown' ? '🎉 Tuyệt vời! Bạn đã học hết từ vựng trong mục này!' :
+                VS.state==='learned' ? '📚 Chưa có từ nào được đánh dấu học.' :
+                VS.state==='fav'     ? '⭐ Chưa có từ yêu thích nào.' :
+                '🌸 Không tìm thấy từ nào phù hợp.';
+    grid.innerHTML = `<div class="empty"><div class="empty-icon">🌸</div><p>${msg}</p></div>`;
     return;
   }
 
   grid.innerHTML = '';
-  list.forEach(v => {
-    const st   = getVSt(v.id);
-    const isFav = vState.favs.has(v.id);
-    const artClass = v.art ? 'art-'+v.art : '';
-    const stLabel = {new:'🆕 Mới', learning:'📖 Đang học', mastered:'✅ Thuộc'}[st] || '';
+  list.forEach((v, idx) => {
+    const st     = getWordStatus(v.id);
+    const favd   = isFav(v.id);
+    const artCls = v.art ? 'art-'+v.art : '';
+    const isKbd  = (VS.selected === idx);
 
     const card = document.createElement('div');
-    card.className = `vcard-v2 s-${st} ${artClass}`;
+    card.className = `vcard-v2 s-${st} ${artCls}${isKbd?' kbd-selected':''}`;
+    card.setAttribute('data-id', v.id);
+    card.setAttribute('data-idx', idx);
+    card.tabIndex = 0;
+
+    const stLabel = {unknown:'🆕 Chưa học', learning:'📖 Đang học', learned:'✅ Đã học'}[st] || '';
+    const stDotColor = {unknown:'var(--success)', learning:'var(--warning)', learned:'var(--rose-deep)'}[st] || 'var(--gray-300)';
+
     card.innerHTML = `
       <div class="vcard-v2-top-bar"></div>
       <div class="vcard-v2-body">
@@ -3601,12 +3918,12 @@ function renderVocab() {
             <span class="badge-cat">${v.cat}</span>
           </div>
           <div class="vcard-v2-icons">
-            <button class="vcard-v2-icon-btn ${isFav?'fav-on':''}"
-              title="${isFav?'Bỏ yêu thích':'Yêu thích'}"
-              onclick="event.stopPropagation();toggleFav(${v.id},this)">⭐</button>
-            <button class="vcard-v2-icon-btn ${st==='mastered'||st==='learning'?'learn-on':''}"
-              title="Đánh dấu học"
-              onclick="event.stopPropagation();toggleLearn(${v.id},this)">✓</button>
+            <button class="vcard-v2-icon-btn${favd?' fav-on':''}"
+              title="${favd?'Bỏ yêu thích (F)':'Yêu thích (F)'}"
+              onclick="event.stopPropagation();toggleFav(${v.id})">⭐</button>
+            <button class="vcard-v2-icon-btn${st!=='unknown'?' learn-on':''}"
+              title="Đánh dấu đã học (Z)"
+              onclick="event.stopPropagation();markLearned(${v.id})">✓</button>
           </div>
         </div>
         <div class="vcard-v2-art-row">
@@ -3614,86 +3931,92 @@ function renderVocab() {
           <span class="vcard-v2-cls">${v.cls}</span>
         </div>
         <div class="vcard-v2-word">${v.w}</div>
-        ${v.pl ? `<div class="vcard-v2-plural">Số nhiều: ${v.pl}</div>` : ''}
+        ${v.pl && v.pl!=='—' ? `<div class="vcard-v2-plural">Số nhiều: ${v.pl}</div>` : ''}
         <div class="vcard-v2-ipa">${v.ipa}</div>
         <div class="vcard-v2-vi">${v.vi}</div>
-        <div class="vcard-v2-ex">${v.ex}</div>
-        ${v.ex_vi ? `<div class="vcard-v2-ex-vi">${v.ex_vi}</div>` : ''}
+        ${v.ex ? `<div class="vcard-v2-ex">${v.ex}</div>` : ''}
       </div>
       <div class="vcard-v2-footer">
-        <div style="display:flex;align-items:center">
-          <div class="vcard-v2-status-dot"></div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <div class="vcard-v2-status-dot" style="background:${stDotColor}"></div>
           <span class="vcard-v2-status-lbl">${stLabel}</span>
         </div>
-        <div class="vcard-v2-footer-right">
-          <button class="vcard-v2-audio" onclick="event.stopPropagation();speak('${v.w.replace(/'/g,"\\'")}')">🔊 Nghe</button>
-        </div>
+        <button class="vcard-v2-audio" onclick="event.stopPropagation();speak('${v.w.replace(/'/g,"\'")}')">🔊 Nghe</button>
       </div>`;
-    card.onclick = () => openVmodal(v.id);
+
+    card.onclick = () => {
+      VS.selected = idx;
+      openVmodal(v.id);
+    };
+    card.onkeydown = (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); VS.selected=idx; openVmodal(v.id); }
+      if (e.key === 'z' || e.key === 'Z') { e.preventDefault(); VS.selected=idx; markLearned(v.id); }
+      if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFav(v.id); }
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const next = grid.querySelector(`[data-idx="${idx+1}"]`);
+        if (next) { VS.selected=idx+1; next.focus(); updateKbdHighlight(); }
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = grid.querySelector(`[data-idx="${idx-1}"]`);
+        if (prev) { VS.selected=idx-1; prev.focus(); updateKbdHighlight(); }
+      }
+    };
     grid.appendChild(card);
   });
 
-  updateStatusCounts();
-  renderVovStats();
+// Alias for backward compat
+const renderVocab = renderVocabFiltered;
+
+// Alias for old code
+const getVSt = getWordStatus;
 }
 
-function toggleFav(id, btn) {
-  if (vState.favs.has(id)) { vState.favs.delete(id); toast('↩ Bỏ yêu thích'); }
-  else { vState.favs.add(id); toast('⭐ Đã thêm vào yêu thích!'); }
-  if (btn) btn.classList.toggle('fav-on', vState.favs.has(id));
-  vSaveState();
-  if (vState.status === 'fav') renderVocab();
+function updateKbdHighlight() {
+  document.querySelectorAll('.vcard-v2.kbd-selected').forEach(el => el.classList.remove('kbd-selected'));
+  const el = document.querySelector(`.vcard-v2[data-idx="${VS.selected}"]`);
+  if (el) el.classList.add('kbd-selected');
 }
 
-function toggleLearn(id, btn) {
-  if (!S.srs[id]) S.srs[id] = {interval:1, ef:2.5, reps:1, due:Date.now()+86400000};
-  else if (S.srs[id].reps > 0) { S.srs[id].reps = 0; S.srs[id].due = null; }
-  else { S.srs[id].reps = 1; S.srs[id].due = Date.now()+86400000; }
-  saveS();
-  const st = getVSt(id);
-  if (btn) btn.classList.toggle('learn-on', st!=='new');
-  toast(st==='new' ? '↩ Bỏ đánh dấu' : '✨ Đánh dấu học!');
-  renderVocab(); updateDash();
-}
-
-// Random vocab
+/* ── Random vocab ── */
 function vocabRandom() {
-  const lvList = vState.level==='Tất cả' ? VOCAB : VOCAB.filter(v=>v.l===vState.level);
-  if (!lvList.length) return;
-  const pick = lvList[Math.floor(Math.random()*lvList.length)];
+  const pool = VS.level==='Tất cả' ? VOCAB : VOCAB.filter(v=>v.l===VS.level);
+  if (!pool.length) return;
+  const pick = pool[Math.floor(Math.random()*pool.length)];
   openVmodal(pick.id);
-}
-
-// Review difficult (low EF)
-function vocabReviewDifficult() {
-  vState.status = 'learning';
-  vState.level  = 'Tất cả';
-  vState.cat    = 'Tất cả';
-  vState.type   = 'Tất cả';
-  // Re-render pills
-  buildPills('vLevelPills', LEVELS_V, 'Tất cả', lv=>{vState.level=lv; renderVocab();});
-  buildPills('vCatPills', ALL_CATS, 'Tất cả', ct=>{vState.cat=ct; renderVocab();}, 'cat-pill');
-  setVSt('learning');
-  toast('📖 Hiển thị từ đang học');
 }
 
 /* ── WORD DETAIL MODAL ── */
 function openVmodal(id) {
-  const v = VOCAB.find(x=>x.id===id);
+  const v = VOCAB.find(x => x.id===id);
   if (!v) return;
-  vState.currentModal = id;
+  VS.modalId = id;
 
-  const artClass = v.art ? `art-${v.art}` : '';
-  const st = getVSt(id);
-  const isFav = vState.favs.has(id);
+  // Header bar color by article
+  const headerBar = document.getElementById('vmodHeaderBar');
+  if (headerBar) {
+    const barColors = {der:'linear-gradient(90deg,#c0c0e8,#6060b0)', die:`linear-gradient(90deg,var(--rose-light),var(--rose-deep))`, das:'linear-gradient(90deg,#90d0a8,#2e7050)'};
+    headerBar.style.background = barColors[v.art] || 'linear-gradient(90deg,var(--rose-light),var(--rose-deep))';
+  }
 
-  setText('vmodArt',  v.art ? `${v.art} · ${v.cls}` : v.cls);
+  // Article + type
+  const artEl = document.getElementById('vmodArt');
+  if (artEl) {
+    artEl.innerHTML = v.art
+      ? `<span class="vmod-art-pill ${v.art}">${v.art}</span> ${v.cls}`
+      : v.cls;
+  }
+
   setText('vmodWord', v.w);
-  setText('vmodPlural', v.pl ? `Số nhiều: ${v.pl}` : '');
-  setText('vmodIpa',  v.ipa);
+  setText('vmodIpa',  v.ipa || '');
   setText('vmodVi',   v.vi);
-  setText('vmodEx',   v.ex || '');
-  setText('vmodExVi', v.ex_vi || '');
+
+  // Example
+  const exEl = document.getElementById('vmodEx');
+  if (exEl) exEl.textContent = v.ex || '';
+  const exViEl = document.getElementById('vmodExVi');
+  if (exViEl) exViEl.textContent = v.ex_vi || '';
 
   // Tags
   const tagsEl = document.getElementById('vmodTags');
@@ -3701,86 +4024,156 @@ function openVmodal(id) {
     <span class="vmod-tag lvl">${v.l}</span>
     <span class="vmod-tag cls">${v.cls}</span>
     <span class="vmod-tag cat">${v.cat}</span>
+    ${v.pl && v.pl!=='—' ? `<span class="vmod-tag" style="background:var(--bg2);color:var(--text3)">Pl: ${v.pl}</span>` : ''}
     ${v.note ? `<span class="vmod-tag" style="background:var(--info-bg);color:var(--info)">💡 ${v.note}</span>` : ''}`;
 
-  // Conjugation (if verb with conj data)
+  // Conjugation
   const conjEl = document.getElementById('vmodConj');
   if (conjEl) {
-    if (v.conj && v.cls === 'Verb') {
+    if (v.conj && Object.keys(v.conj).length) {
       conjEl.style.display = 'block';
-      conjEl.innerHTML = `<div class="vmod-conj-title">Chia động từ hiện tại</div>
-        <div class="vmod-conj-grid">
-          ${Object.entries(v.conj).map(([pr,form])=>`<div class="vmod-conj-item"><span>${pr}</span> ${form}</div>`).join('')}
-        </div>`;
-    } else {
-      conjEl.style.display = 'none';
-    }
+      conjEl.innerHTML = `<div class="vmod-conj-title">Chia động từ (Präsens)</div>
+        <div class="vmod-conj-grid">${Object.entries(v.conj).map(([pr,form])=>`<div class="vmod-conj-item"><span>${pr}</span> ${form}</div>`).join('')}</div>`;
+    } else { conjEl.style.display = 'none'; }
   }
 
   // Extra note
   const extraEl = document.getElementById('vmodExtra');
-  if (extraEl) {
-    extraEl.textContent = '';
-    if (v.note && !v.conj) extraEl.innerHTML = `<strong>💡 Lưu ý:</strong> ${v.note}`;
-  }
+  if (extraEl) extraEl.innerHTML = '';
 
   // Button states
+  const st  = getWordStatus(id);
+  const fvd = isFav(id);
   const favBtn   = document.getElementById('vmodFav');
   const learnBtn = document.getElementById('vmodLearn');
-  if (favBtn)   { favBtn.classList.toggle('fav-on',   isFav);     favBtn.textContent   = isFav   ? '⭐ Đã yêu thích' : '⭐ Yêu thích'; }
-  if (learnBtn) { learnBtn.classList.toggle('learn-on', st!=='new'); learnBtn.textContent = st!=='new' ? '✅ Đã học' : '✅ Đánh dấu học'; }
+  if (favBtn)   { favBtn.classList.toggle('fav-on', fvd);   favBtn.textContent   = fvd   ? '⭐ Đã yêu thích' : '⭐ Yêu thích'; }
+  if (learnBtn) { learnBtn.classList.toggle('learn-on', st!=='unknown'); learnBtn.textContent = st!=='unknown' ? '✅ Đã học' : '✅ Đánh dấu học'; }
 
   // Show modal
   document.getElementById('vmodOverlay').classList.add('show');
   document.getElementById('vmodal').classList.add('show');
+
+  // Auto-speak
+  setTimeout(() => speak(v.w), 200);
 }
 
 function closeVmod() {
   document.getElementById('vmodOverlay').classList.remove('show');
   document.getElementById('vmodal').classList.remove('show');
-  vState.currentModal = null;
+  VS.modalId = null;
 }
+
 function vmodSpeak() {
-  const v = VOCAB.find(x=>x.id===vState.currentModal);
+  const v = VOCAB.find(x => x.id === VS.modalId);
   if (v) speak(v.w);
 }
 function vmodToggleFav() {
-  if (vState.currentModal === null) return;
-  const btn = document.getElementById('vmodFav');
-  toggleFav(vState.currentModal, null);
-  const isFav = vState.favs.has(vState.currentModal);
-  if (btn) { btn.classList.toggle('fav-on',isFav); btn.textContent = isFav?'⭐ Đã yêu thích':'⭐ Yêu thích'; }
+  if (VS.modalId === null) return;
+  toggleFav(VS.modalId, true);
 }
-function vmodToggleLearn() {
-  if (vState.currentModal === null) return;
-  toggleLearn(vState.currentModal, null);
-  const st  = getVSt(vState.currentModal);
-  const btn = document.getElementById('vmodLearn');
-  if (btn) { btn.classList.toggle('learn-on',st!=='new'); btn.textContent = st!=='new'?'✅ Đã học':'✅ Đánh dấu học'; }
+function vmodToggleLearnBtn() {
+  if (VS.modalId === null) return;
+  markLearned(VS.modalId, true);
 }
 
-// Close modal on overlay click or Escape
+// Close modal on overlay click
 document.getElementById('vmodOverlay')?.addEventListener('click', closeVmod);
-document.addEventListener('keydown', e => { if (e.key==='Escape') { closeVmod(); closeFocusMode(); closeWordPopup(); } });
 
 /* ════════════════════════════════════════════════════════
-   KEYBOARD SHORTCUTS
+   KEYBOARD SHORTCUTS — Global
 ════════════════════════════════════════════════════════ */
-document.addEventListener('keydown',e=>{
-  if(e.target.tagName==='INPUT')return;
-  const p=document.querySelector('.page.active')?.id;
-  if(p==='page-flashcard'){
-    if(e.key===' '){e.preventDefault();flipCard();}
-    if(e.key==='1')rate(0);if(e.key==='2')rate(1);if(e.key==='3')rate(2);if(e.key==='4')rate(3);
-    if(e.key==='ArrowLeft')fcPrev();if(e.key==='ArrowRight')fcNext();
+document.addEventListener('keydown', e => {
+  // Don't intercept when typing in inputs
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+  const p = document.querySelector('.page.active')?.id;
+
+  /* ── Flashcard shortcuts ── */
+  if (p === 'page-flashcard') {
+    if (e.key === ' ')          { e.preventDefault(); flipCard(); }
+    if (e.key === '1')          { e.preventDefault(); rate(0); }
+    if (e.key === '2')          { e.preventDefault(); rate(1); }
+    if (e.key === '3')          { e.preventDefault(); rate(2); }
+    if (e.key === '4')          { e.preventDefault(); rate(3); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); fcPrev(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); fcNext(); }
+  }
+
+  /* ── Vocab page shortcuts ── */
+  if (p === 'page-vocab') {
+    const modalOpen = document.getElementById('vmodal')?.classList.contains('show');
+
+    if (e.key === 'Escape') {
+      if (modalOpen) closeVmod();
+      return;
+    }
+
+    // Z — mark current word as learned (works on modal or selected card)
+    if (e.key === 'z' || e.key === 'Z') {
+      e.preventDefault();
+      if (modalOpen && VS.modalId !== null) {
+        markLearned(VS.modalId, true);
+      } else if (VS.selected >= 0 && VS.visibleIds[VS.selected]) {
+        markLearned(VS.visibleIds[VS.selected]);
+      } else if (VS.visibleIds.length > 0) {
+        // select first and mark
+        VS.selected = 0;
+        markLearned(VS.visibleIds[0]);
+      }
+      return;
+    }
+
+    // F — toggle favorite
+    if ((e.key === 'f' || e.key === 'F') && !modalOpen) {
+      e.preventDefault();
+      if (VS.selected >= 0 && VS.visibleIds[VS.selected]) {
+        toggleFav(VS.visibleIds[VS.selected]);
+      }
+      return;
+    }
+
+    // Arrow navigation (when modal not open)
+    if (!modalOpen) {
+      const total = VS.visibleIds.length;
+      if (total === 0) return;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        VS.selected = Math.min(VS.selected+1, total-1);
+        const card = document.querySelector(`.vcard-v2[data-idx="${VS.selected}"]`);
+        if (card) { updateKbdHighlight(); card.focus(); card.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        VS.selected = Math.max(VS.selected-1, 0);
+        const card = document.querySelector(`.vcard-v2[data-idx="${VS.selected}"]`);
+        if (card) { updateKbdHighlight(); card.focus(); card.scrollIntoView({block:'nearest',behavior:'smooth'}); }
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (VS.selected >= 0 && VS.visibleIds[VS.selected]) openVmodal(VS.visibleIds[VS.selected]);
+      }
+    }
+  }
+
+  /* ── Reading shortcuts ── */
+  if (p === 'page-reading') {
+    if (e.key === 'Escape') { closeFocusMode(); closeWordPopup(); }
+  }
+
+  /* ── Global Escape ── */
+  if (e.key === 'Escape') {
+    closeVmod();
+    closeFocusMode();
+    closeWordPopup();
   }
 });
+
 
 /* ════════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════════ */
 loadS();
-vLoadState();
+vsLoad();
 rdLoadState();
 setFontSize(currentFS);
 renderDash();
