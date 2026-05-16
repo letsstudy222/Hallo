@@ -1212,32 +1212,34 @@ main{flex:1;padding:var(--sp6);max-width:1160px;margin:0 auto;width:100%}
       <button class="btn btn-primary" onclick="restartFC()">▶ Học tiếp</button>
     </div>
 
-    <div id="fcCard">
+    <div id="fcMain">
       <div class="fc-scene" onclick="flipCard()" id="fcScene">
-        <div class="fc-inner" id="fcInner">
+        <div class="fc-inner" id="fcCard">
           <div class="fc-face front">
             <div class="fc-lbl">🇩🇪 TIẾNG ĐỨC</div>
             <div class="fc-art" id="fcArt"></div>
             <div class="fc-word" id="fcWord">—</div>
             <div class="fc-ipa" id="fcIpa"></div>
             <div class="fc-tap">👆 Bấm để lật</div>
-            <div class="fc-hint">Space = lật</div>
+            <div style="font-size:.65rem;color:var(--text-faint);margin-top:8px">Space = lật</div>
+            <div class="fc-due-tag" id="fcDueTag" style="display:none;margin-top:8px;font-size:.7rem;background:var(--brand-pale);color:var(--brand);padding:3px 10px;border-radius:var(--rf)">📅 Đến hạn ôn</div>
           </div>
           <div class="fc-face back">
             <div class="fc-lbl">🇻🇳 TIẾNG VIỆT</div>
-            <div class="fc-vi" id="fcVi">—</div>
+            <div class="fc-vi" id="fcMean">—</div>
             <div class="fc-ex" id="fcEx"></div>
-            <div class="fc-hint">1=Quên · 2=Khó · 3=Ổn · 4=Dễ</div>
+            <div style="font-size:.75rem;color:var(--text-muted);margin-top:10px" id="fcCls"></div>
+            <div style="font-size:.65rem;color:var(--text-faint);margin-top:8px">1=Quên · 2=Khó · 3=Ổn · 4=Dễ</div>
           </div>
         </div>
       </div>
-      <div class="fc-rate-row" id="rateRow" style="display:none">
+      <div class="fc-rate-row" id="fcRating" style="display:none">
         <button class="rate-btn again" onclick="rate(0)">😵 1<br><small>Quên</small></button>
         <button class="rate-btn hard"  onclick="rate(1)">😓 2<br><small>Khó</small></button>
         <button class="rate-btn good"  onclick="rate(2)">😊 3<br><small>Ổn</small></button>
         <button class="rate-btn easy"  onclick="rate(3)">😄 4<br><small>Dễ</small></button>
       </div>
-      <div class="fc-nav">
+      <div class="fc-nav" id="fcNav">
         <button class="nav-btn" onclick="fcPrev()">← Trước</button>
         <button class="nav-btn" onclick="flipCard()">↕ Lật</button>
         <button class="nav-btn" onclick="fcNext()">Tiếp →</button>
@@ -1255,16 +1257,23 @@ main{flex:1;padding:var(--sp6);max-width:1160px;margin:0 auto;width:100%}
   <div class="quiz-wrap">
     <div class="quiz-hd">
       <div><div class="qmeta-lbl">Câu số</div><div class="qmeta-val" id="qNum">1</div></div>
-      <div><div class="qmeta-lbl">Điểm</div><div class="qmeta-val" id="qScore">0</div></div>
-      <div><div class="qmeta-lbl">Chuỗi đúng</div><div class="qmeta-val" id="qStreak">0</div></div>
+      <div><div class="qmeta-lbl">Điểm</div><div class="qmeta-val" id="qScore">0/0</div></div>
+      <div><div class="qmeta-lbl">Độ chính xác</div><div class="qmeta-val" id="qAcc">—</div></div>
       <div><div class="qmeta-lbl">XP</div><div class="qmeta-val qmeta-xp" id="qXP">0</div></div>
     </div>
+    <div class="filter-row" id="qLevels"></div>
     <div class="quiz-type-row">
-      <button class="qtype-btn active" id="qt-mcq"     onclick="setQType('mcq')">🔤 Chọn nghĩa</button>
-      <button class="qtype-btn"        id="qt-article"  onclick="setQType('article')">🏷️ Mạo từ</button>
-      <button class="qtype-btn"        id="qt-fill"     onclick="setQType('fill')">✍️ Điền từ</button>
+      <button class="qtype-btn active" id="qt-mcq"    onclick="setQType('mcq')">🔤 Chọn nghĩa</button>
+      <button class="qtype-btn"        id="qt-article" onclick="setQType('article')">🏷️ Mạo từ</button>
+      <button class="qtype-btn"        id="qt-fill"    onclick="setQType('fill')">✍️ Điền từ</button>
     </div>
-    <div id="quizArea"></div>
+    <div class="quiz-q-box">
+      <span class="quiz-q-lbl" id="qLbl">Câu hỏi</span>
+      <div class="quiz-q-word" id="qWord">—</div>
+      <div class="quiz-q-sub" id="qSub"></div>
+    </div>
+    <div id="qArea"></div>
+    <div class="quiz-fb" id="qFB" style="display:none"></div>
     <button class="quiz-next" id="qNext" onclick="nextQ()" style="display:none">Câu tiếp theo →</button>
   </div>
 </div>
@@ -1275,22 +1284,39 @@ main{flex:1;padding:var(--sp6);max-width:1160px;margin:0 auto;width:100%}
     <div class="sec-title">📖 <em>Ngữ pháp</em></div>
     <div class="sec-sub">Bấm vào từng thẻ để xem bảng chi tiết và ví dụ</div>
   </div>
-  <div class="filter-row" id="gLevPills"></div>
+  <div class="filter-row" id="gLevels"></div>
   <div class="grammar-grid" id="grammarGrid"></div>
 </div>
 
 <!-- ═══ READING ═══ -->
 <div id="page-reading" class="page">
-  <div id="rdListView">
+  <!-- LIST VIEW -->
+  <div id="rdTextList">
     <div class="sec-hd">
       <div class="sec-title">📰 <em>Đọc hiểu</em></div>
-      <div class="sec-sub">Bấm vào từng từ trong bài để xem nghĩa và lưu vào từ vựng</div>
+      <div class="sec-sub">Bấm vào từng từ trong bài để xem nghĩa · Luyện đọc từng cấp độ</div>
     </div>
-    <div class="rd-level-grid" id="rdLvGrid"></div>
-    <div class="rd-list" id="rdList"></div>
+    <!-- Stats bar -->
+    <div style="display:flex;gap:var(--sp3);margin-bottom:var(--sp4);flex-wrap:wrap">
+      <div class="stat-card" style="flex:1;min-width:120px">
+        <div class="stat-val" id="rdStatDone">0</div>
+        <div class="stat-lbl">Bài đã đọc</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:120px">
+        <div class="stat-val" id="rdStatSent">0</div>
+        <div class="stat-lbl">Câu đã học</div>
+      </div>
+      <div class="stat-card" style="flex:1;min-width:120px">
+        <div class="stat-val" id="rdStatWords">0</div>
+        <div class="stat-lbl">Từ tra cứu</div>
+      </div>
+    </div>
+    <!-- Level filter -->
+    <div class="filter-row" id="rdLevelTabs"></div>
   </div>
 
-  <div class="rd-reader-wrap" id="rdReaderWrap">
+  <!-- READER VIEW -->
+  <div id="rdReader" style="display:none">
     <button class="rd-back" onclick="closeReader()">← Quay lại danh sách</button>
     <div class="rd-progress-bar"><div class="rd-progress-fill" id="rdProgFill" style="width:0%"></div></div>
     <div class="rd-reader-head">
