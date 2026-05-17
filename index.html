@@ -2493,6 +2493,289 @@ button:focus-visible { outline: 2px solid var(--rose-light); outline-offset: 2px
   .theme-menu { right: -8px; min-width: 180px; }
 }
 
+
+/* ════════════════════════════════════════════════════════════
+   GRAMMAR — Friendly Card Layout
+═══════════════════════════════════════════════════════════════ */
+.g-card-v2 {
+  background: var(--surface);
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--r5);
+  padding: 0;
+  margin-bottom: var(--sp4);
+  overflow: hidden;
+  box-shadow: var(--s1);
+  transition: all var(--t2);
+  position: relative;
+}
+.g-card-v2:hover {
+  border-color: var(--rose-mid);
+  box-shadow: 0 6px 20px rgba(160,32,80,.10);
+}
+
+/* Color strip on left by level */
+.g-card-v2::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+}
+.g-card-v2.g-lv-a1::before { background: linear-gradient(180deg, #4ec79a, #1e7848); }
+.g-card-v2.g-lv-a2::before { background: linear-gradient(180deg, #5ab8f0, #1e5a98); }
+.g-card-v2.g-lv-b1::before { background: linear-gradient(180deg, #f0a850, #b04818); }
+
+/* Card head */
+.g-card-head {
+  padding: 20px 24px 16px 28px;
+}
+.g-badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+.g-lvl-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: var(--rf);
+  letter-spacing: 0.5px;
+}
+.g-lvl-badge.g-lvl-a1 { background: #d8f0e2; color: #1a5a30; border: 1px solid #98c8a8; }
+.g-lvl-badge.g-lvl-a2 { background: #d8e8f4; color: #1a4870; border: 1px solid #a0c0e0; }
+.g-lvl-badge.g-lvl-b1 { background: #fde4c0; color: #6a3818; border: 1px solid #e8b878; }
+
+.g-tag-v2 {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: var(--rf);
+  background: var(--rose-pale);
+  color: var(--rose-deep);
+  border: 1px solid var(--rose-light);
+}
+
+.g-title {
+  font-family: var(--font-reading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  line-height: 1.3;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.g-desc {
+  font-size: var(--fs-base);
+  color: var(--text2);
+  line-height: var(--lh-base);
+  font-weight: 500;
+}
+
+/* Rule block — eye-catching */
+.g-rule {
+  margin: 0 24px 16px 28px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, var(--rose-faint), var(--rose-pale));
+  border: 1px solid var(--rose-light);
+  border-left: 4px solid var(--rose-deep);
+  border-radius: var(--r3);
+}
+.g-rule-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--rose-deep);
+  letter-spacing: 1.5px;
+  margin-bottom: 6px;
+}
+.g-rule-text {
+  font-family: var(--font-reading);
+  font-size: 1rem;
+  color: var(--gray-900);
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Expand button */
+.g-expand-btn {
+  margin: 0 24px 20px 28px;
+  padding: 12px 18px;
+  background: var(--surface2);
+  border: 1.5px dashed var(--rose-light);
+  border-radius: var(--r3);
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--rose-deep);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  transition: all var(--t2);
+  user-select: none;
+}
+.g-expand-btn:hover {
+  background: var(--rose-pale);
+  border-color: var(--rose-mid);
+  border-style: solid;
+}
+.g-expand-btn.open {
+  background: var(--rose-pale);
+  border-style: solid;
+}
+.g-expand-icon {
+  font-size: 0.7rem;
+  transition: transform var(--t2);
+}
+.g-expand-btn.open .g-expand-icon { transform: rotate(0); }
+
+/* Body sections */
+.g-body {
+  display: none;
+  padding: 0 24px 24px 28px;
+  animation: gBodyIn 0.25s var(--ease);
+}
+.g-body.open { display: block; }
+@keyframes gBodyIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.g-section {
+  margin-bottom: 18px;
+}
+.g-section:last-child { margin-bottom: 0; }
+.g-section-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* Table — responsive */
+.g-tbl-wrap {
+  border-radius: var(--r3);
+  border: 1px solid var(--gray-200);
+  overflow-x: auto;
+  background: var(--surface);
+}
+.g-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+.g-tbl thead { background: var(--rose-pale); }
+.g-tbl th {
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 800;
+  color: var(--rose-deep);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid var(--rose-light);
+  white-space: nowrap;
+}
+.g-tbl td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--gray-100);
+  color: var(--text);
+  vertical-align: top;
+}
+.g-tbl tr:last-child td { border-bottom: none; }
+.g-tbl tr:hover td { background: var(--rose-faint); }
+.g-tbl-first {
+  font-weight: 700;
+  color: var(--rose-deep);
+  background: var(--surface2);
+}
+
+/* Example v2 — clickable to speak */
+.g-ex-v2 {
+  background: var(--surface2);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--r3);
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  transition: all var(--t2);
+}
+.g-ex-v2:hover {
+  border-color: var(--rose-light);
+  background: var(--rose-faint);
+}
+.g-ex-de {
+  font-family: var(--font-reading);
+  font-size: 1.02rem;
+  color: var(--gray-900);
+  font-weight: 600;
+  line-height: 1.5;
+  margin-bottom: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.g-ex-de:hover { color: var(--rose-deep); }
+.g-ex-vi {
+  font-size: var(--fs-sm);
+  color: var(--text3);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.g-ex-flag {
+  font-size: 0.85rem;
+  opacity: 0.9;
+  flex-shrink: 0;
+}
+.g-ex-listen {
+  margin-left: auto;
+  font-size: 0.85rem;
+  opacity: 0.5;
+  transition: opacity var(--t2);
+}
+.g-ex-de:hover .g-ex-listen { opacity: 1; }
+
+/* Tip box */
+.g-tip {
+  margin-top: 14px;
+  padding: 12px 16px;
+  background: var(--xp-bg);
+  border: 1px solid var(--warning-bd);
+  border-left: 4px solid var(--warning);
+  border-radius: var(--r3);
+  font-size: var(--fs-sm);
+  color: var(--gray-900);
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .g-card-head     { padding: 16px 16px 14px 22px; }
+  .g-rule          { margin: 0 16px 14px 22px; padding: 12px 14px; }
+  .g-expand-btn    { margin: 0 16px 16px 22px; }
+  .g-body          { padding: 0 16px 18px 22px; }
+  .g-title         { font-size: 1.15rem; }
+  .g-tbl th, .g-tbl td { padding: 7px 9px; font-size: 0.8rem; }
+}
+
+/* Dark theme adjustments */
+[data-theme="dark"] .g-rule {
+  background: linear-gradient(135deg, rgba(255,80,128,.08), rgba(255,80,128,.12));
+  border-color: rgba(255,80,128,.2);
+  border-left-color: var(--rose-deep);
+}
+[data-theme="dark"] .g-tbl-wrap { background: var(--surface2); }
+[data-theme="dark"] .g-tbl thead { background: var(--surface3); }
+[data-theme="dark"] .g-ex-v2 { background: var(--surface2); }
+[data-theme="dark"] .g-tip {
+  background: rgba(245,200,66,.08);
+  border-color: rgba(245,200,66,.2);
+}
+
 </style>
 </head>
 <body>
@@ -3577,16 +3860,89 @@ const VOCAB = [
 
 /* Grammar data */
 const GRAMMAR=[
-  {lv:'A1',tag:'Artikel',title:'Mạo từ xác định (der, die, das)',desc:'Mỗi danh từ tiếng Đức có giới tính riêng — buộc phải học thuộc mạo từ cùng với từ.',table:{h:['Kasus','Maskulin','Feminin','Neutrum','Plural'],r:[['Nominativ','der','die','das','die'],['Akkusativ','den','die','das','die'],['Dativ','dem','der','dem','den'],['Genitiv','des','der','des','der']]},ex:[{d:'Der Mann liest ein Buch.',v:'Người đàn ông đang đọc sách.'},{d:'Ich sehe den Mann.',v:'Tôi nhìn thấy người đàn ông.'}]},
-  {lv:'A1',tag:'Artikel',title:'Mạo từ không xác định (ein, eine)',desc:'Tương đương "một" trong tiếng Việt. Chia theo cách (Kasus) và giới tính.',table:{h:['Kasus','Maskulin','Feminin','Neutrum'],r:[['Nominativ','ein','eine','ein'],['Akkusativ','einen','eine','ein'],['Dativ','einem','einer','einem'],['Genitiv','eines','einer','eines']]},ex:[{d:'Ein Kind spielt auf der Straße.',v:'Một đứa trẻ đang chơi trên phố.'},{d:'Er hilft einem Freund.',v:'Anh ấy giúp một người bạn.'}]},
-  {lv:'A1',tag:'Verb',title:'Chia động từ hiện tại (Präsens)',desc:'Động từ chia theo ngôi. "sein" (là) và "haben" (có) là hai động từ không đều quan trọng nhất.',table:{h:['Ngôi','machen','sein','haben'],r:[['ich','mache','bin','habe'],['du','machst','bist','hast'],['er/sie/es','macht','ist','hat'],['wir','machen','sind','haben'],['ihr','macht','seid','habt'],['sie/Sie','machen','sind','haben']]},ex:[{d:'Ich mache meine Hausaufgaben.',v:'Tôi đang làm bài tập.'},{d:'Er ist sehr müde.',v:'Anh ấy rất mệt.'}]},
-  {lv:'A1',tag:'Satzbau',title:'Vị trí động từ (Wortstellung)',desc:'Quy tắc vàng: động từ luôn đứng vị trí thứ 2 trong câu khẳng định. Sau liên từ phụ → động từ ra cuối.',table:null,ex:[{d:'Heute gehe ich ins Kino.',v:'Hôm nay tôi đi xem phim. (Heute = vị trí 1)'},{d:'Ich gehe nicht, weil ich müde bin.',v:'Tôi không đi vì tôi mệt. (bin cuối câu)'},{d:'Er sagt, dass er morgen kommt.',v:'Anh ấy nói rằng anh ấy đến ngày mai.'}]},
-  {lv:'A2',tag:'Kasus',title:'4 Cách trong tiếng Đức',desc:'Mỗi danh từ thay đổi dạng tùy vai trò trong câu. Đây là nền tảng ngữ pháp tiếng Đức.',table:{h:['Kasus','Vai trò','Câu hỏi','Ví dụ'],r:[['Nominativ','Chủ ngữ','Wer?','Der Hund bellt.'],['Akkusativ','Tân ngữ trực tiếp','Wen/Was?','Ich sehe den Hund.'],['Dativ','Tân ngữ gián tiếp','Wem?','Ich gebe dem Hund Futter.'],['Genitiv','Sở hữu','Wessen?','Das Haus des Mannes.']]},ex:[{d:'Der Mann gibt der Frau das Buch.',v:'Người đàn ông đưa sách cho người phụ nữ.'},{d:'Ich helfe meiner Mutter.',v:'Tôi giúp mẹ. (Dativ)'}]},
-  {lv:'A2',tag:'Verb',title:'Quá khứ hoàn thành (Perfekt)',desc:'haben hoặc sein + Partizip II. Phổ biến trong hội thoại. Động từ chuyển vị trí → dùng "sein".',table:{h:['Loại','Trợ động từ','Ví dụ'],r:[['Hầu hết ĐT','haben','Ich habe gegessen.'],['Chuyển vị trí','sein','Ich bin gegangen.'],['Thay đổi trạng thái','sein','Er ist eingeschlafen.']]},ex:[{d:'Ich habe das Buch gelesen.',v:'Tôi đã đọc cuốn sách.'},{d:'Sie ist nach Hause gegangen.',v:'Cô ấy đã về nhà.'}]},
-  {lv:'A2',tag:'Modalverb',title:'Động từ khuyết thiếu (Modalverben)',desc:'können, müssen, wollen, dürfen, sollen, mögen — đứng vị trí 2, động từ chính ra cuối ở dạng nguyên thể.',table:{h:['Verb','Nghĩa','ich','du','er/sie/es'],r:[['können','có thể','kann','kannst','kann'],['müssen','phải','muss','musst','muss'],['wollen','muốn','will','willst','will'],['dürfen','được phép','darf','darfst','darf'],['sollen','nên','soll','sollst','soll'],['mögen','thích','mag','magst','mag']]},ex:[{d:'Ich kann Deutsch sprechen.',v:'Tôi có thể nói tiếng Đức.'},{d:'Du musst jetzt schlafen gehen.',v:'Bây giờ bạn phải đi ngủ.'}]},
-  {lv:'A2',tag:'Präposition',title:'Giới từ và Cách đi kèm',desc:'Mỗi giới từ quy định cách của danh từ theo sau. Học thuộc từng nhóm là bắt buộc.',table:{h:['Cách','Giới từ'],r:[['Dativ (luôn)','aus, bei, mit, nach, seit, von, zu'],['Akkusativ (luôn)','durch, für, gegen, ohne, um'],['Dativ / Akkusativ','in, an, auf, über, unter, vor, hinter'],['Genitiv','wegen, trotz, während, außerhalb']]},ex:[{d:'Ich bin in der Schule. (Dativ – vị trí)',v:'Tôi đang ở trong trường.'},{d:'Ich gehe in die Schule. (Akkusativ – hướng)',v:'Tôi đi vào trong trường.'}]},
-  {lv:'B1',tag:'Verb',title:'Konjunktiv II — Điều kiện giả định',desc:'Dùng để diễn đạt điều kiện giả định, lịch sự, ước muốn. "würde + Infinitiv" phổ biến nhất.',table:{h:['Verb','Konjunktiv II'],r:[['sein','wäre'],['haben','hätte'],['können','könnte'],['müssen','müsste'],['werden','würde']]},ex:[{d:'Ich würde gern reisen.',v:'Tôi muốn đi du lịch.'},{d:'Könnten Sie mir helfen?',v:'Bạn có thể giúp tôi không? (lịch sự)'}]},
-  {lv:'B1',tag:'Satzbau',title:'Câu quan hệ (Relativsatz)',desc:'Mệnh đề quan hệ bổ nghĩa cho danh từ. Đại từ quan hệ phụ thuộc giới tính và cách. Động từ ra cuối.',table:{h:['Kasus','Mask.','Fem.','Neutr.','Plural'],r:[['Nominativ','der','die','das','die'],['Akkusativ','den','die','das','die'],['Dativ','dem','der','dem','denen']]},ex:[{d:'Der Mann, der Deutsch spricht, ist mein Lehrer.',v:'Người đàn ông nói tiếng Đức là giáo viên của tôi.'},{d:'Das Buch, das ich lese, ist interessant.',v:'Cuốn sách tôi đang đọc rất thú vị.'}]},
+  // ════════════════════════════════════════════════
+  // A1 GRAMMAR — Nền tảng
+  // ════════════════════════════════════════════════
+
+  {lv:'A1',tag:'Mạo từ',title:'Mạo từ xác định (der, die, das)',desc:'Mỗi danh từ tiếng Đức có giới tính riêng — buộc phải học thuộc mạo từ cùng với từ. Mạo từ xác định dùng cho danh từ đã biết (như "the" trong tiếng Anh).',rule:'der + giống đực · die + giống cái · das + giống trung · die + số nhiều',table:{h:['Kasus','Maskulin','Feminin','Neutrum','Plural'],r:[['Nominativ (chủ ngữ)','der','die','das','die'],['Akkusativ (tân ngữ trực tiếp)','den','die','das','die'],['Dativ (tân ngữ gián tiếp)','dem','der','dem','den'],['Genitiv (sở hữu)','des','der','des','der']]},ex:[{d:'Der Mann liest ein Buch.',v:'Người đàn ông đang đọc sách. (chủ ngữ)'},{d:'Ich sehe den Mann.',v:'Tôi nhìn thấy người đàn ông. (Akk)'},{d:'Ich helfe dem Mann.',v:'Tôi giúp người đàn ông đó. (Dat)'}],tip:'💡 Mẹo: học mạo từ NGAY khi học từ mới, đừng học từ rời.'},
+
+  {lv:'A1',tag:'Mạo từ',title:'Mạo từ không xác định (ein, eine)',desc:'Tương đương "một/a/an" — dùng khi danh từ là mới, chưa rõ. Không có dạng số nhiều.',rule:'ein + đực/trung · eine + cái · (không có số nhiều)',table:{h:['Kasus','Maskulin','Feminin','Neutrum'],r:[['Nominativ','ein','eine','ein'],['Akkusativ','einen','eine','ein'],['Dativ','einem','einer','einem'],['Genitiv','eines','einer','eines']]},ex:[{d:'Das ist ein Buch.',v:'Đây là một cuốn sách.'},{d:'Ich habe eine Schwester.',v:'Tôi có một người chị/em gái.'},{d:'Ich kaufe einen Apfel.',v:'Tôi mua một quả táo. (Akk đực → einen)'}],tip:'⚠️ Maskulin Akk: ein → einen — sai phổ biến nhất!'},
+
+  {lv:'A1',tag:'Mạo từ',title:'Mạo từ phủ định (kein, keine)',desc:'Phủ định danh từ có mạo từ "ein" hoặc không có mạo từ. Chia y hệt "ein" + có dạng số nhiều "keine".',rule:'kein + ein-danh từ · nicht + danh từ có "der/die/das"',table:{h:['Kasus','Mask','Fem','Neut','Plural'],r:[['Nom','kein','keine','kein','keine'],['Akk','keinen','keine','kein','keine'],['Dat','keinem','keiner','keinem','keinen']]},ex:[{d:'Ich habe kein Auto.',v:'Tôi không có xe hơi.'},{d:'Sie hat keine Zeit.',v:'Cô ấy không có thời gian.'},{d:'Das ist kein Problem!',v:'Không có vấn đề gì!'}],tip:'💡 "kein" thay cho "ein", "nicht" cho mọi trường hợp khác.'},
+
+  {lv:'A1',tag:'Mạo từ',title:'Mạo từ sở hữu (mein, dein, sein...)',desc:'Diễn đạt "của tôi, của bạn..." — chia y hệt như "ein/eine".',rule:'mein (tôi) · dein (bạn) · sein (anh ấy/nó) · ihr (cô ấy/họ) · unser (chúng tôi) · euer (các bạn) · Ihr (Ngài)',table:{h:['Người','Mask/Neut','Fem/Plural'],r:[['ich (tôi)','mein','meine'],['du (bạn)','dein','deine'],['er/es (anh ấy/nó)','sein','seine'],['sie (cô ấy)','ihr','ihre'],['wir (chúng tôi)','unser','unsere'],['ihr (các bạn)','euer','eure'],['sie/Sie (họ/Ngài)','ihr/Ihr','ihre/Ihre']]},ex:[{d:'Mein Vater ist Lehrer.',v:'Bố tôi là giáo viên.'},{d:'Wo ist deine Tasche?',v:'Túi của bạn đâu?'},{d:'Ihr Hund ist süß.',v:'Con chó của cô ấy dễ thương.'}]},
+
+  {lv:'A1',tag:'Động từ',title:'Đại từ nhân xưng (Personalpronomen)',desc:'7 đại từ cơ bản — phải nhớ để chia động từ.',rule:'ich, du, er/sie/es, wir, ihr, sie, Sie (lịch sự)',table:{h:['Số','Đại từ','Nghĩa'],r:[['Số ít','ich','tôi'],['','du','bạn (thân mật)'],['','er / sie / es','anh ấy / cô ấy / nó'],['Số nhiều','wir','chúng ta/tôi'],['','ihr','các bạn'],['','sie','họ'],['Lịch sự','Sie','Ngài/Quý vị (luôn viết hoa)']]},ex:[{d:'Ich bin Student.',v:'Tôi là sinh viên.'},{d:'Wie heißen Sie?',v:'Quý vị tên gì? (lịch sự)'},{d:'Wir lernen Deutsch.',v:'Chúng tôi học tiếng Đức.'}],tip:'💡 "Sie" lịch sự LUÔN viết hoa, dùng khi gặp người lạ/khách hàng.'},
+
+  {lv:'A1',tag:'Động từ',title:'Chia động từ hiện tại (Präsens) — Đều',desc:'Phần lớn động từ chia theo quy tắc: bỏ đuôi -en, thêm đuôi tương ứng chủ ngữ.',rule:'Stamm + -e/-st/-t/-en/-t/-en',table:{h:['Đại từ','Đuôi','Ví dụ: lernen'],r:[['ich','-e','lerne'],['du','-st','lernst'],['er/sie/es','-t','lernt'],['wir','-en','lernen'],['ihr','-t','lernt'],['sie/Sie','-en','lernen']]},ex:[{d:'Ich lerne Deutsch.',v:'Tôi học tiếng Đức.'},{d:'Du wohnst in Berlin.',v:'Bạn sống ở Berlin.'},{d:'Wir spielen Fußball.',v:'Chúng tôi chơi bóng đá.'}],tip:'💡 Stamm = động từ nguyên mẫu bỏ -en (lernen → lern-).'},
+
+  {lv:'A1',tag:'Động từ',title:'Động từ bất quy tắc: sein, haben, werden',desc:'3 động từ quan trọng nhất — KHÔNG theo quy tắc, phải học thuộc lòng.',rule:'sein (là/ở) · haben (có) · werden (trở thành)',table:{h:['Đại từ','sein','haben','werden'],r:[['ich','bin','habe','werde'],['du','bist','hast','wirst'],['er/sie/es','ist','hat','wird'],['wir','sind','haben','werden'],['ihr','seid','habt','werdet'],['sie/Sie','sind','haben','werden']]},ex:[{d:'Ich bin müde.',v:'Tôi mệt.'},{d:'Du hast Zeit.',v:'Bạn có thời gian.'},{d:'Er wird Arzt.',v:'Anh ấy sẽ thành bác sĩ.'}],tip:'⚠️ Học thuộc 3 cột này — dùng MỖI NGÀY!'},
+
+  {lv:'A1',tag:'Động từ',title:'Động từ đổi gốc (Stammvokal-Wechsel)',desc:'Ở ngôi du và er/sie/es, một số động từ đổi nguyên âm gốc: a→ä, e→i, e→ie.',rule:'a→ä: fahren, schlafen · e→i: sprechen, helfen · e→ie: sehen, lesen',table:{h:['Đại từ','fahren','sprechen','sehen'],r:[['ich','fahre','spreche','sehe'],['du','fährst','sprichst','siehst'],['er/sie/es','fährt','spricht','sieht'],['wir','fahren','sprechen','sehen'],['ihr','fahrt','sprecht','seht'],['sie/Sie','fahren','sprechen','sehen']]},ex:[{d:'Du fährst nach Berlin.',v:'Bạn đi (xe) Berlin.'},{d:'Er spricht Deutsch.',v:'Anh ấy nói tiếng Đức.'},{d:'Sie liest ein Buch.',v:'Cô ấy đọc sách.'}],tip:'💡 Chỉ đổi ở "du" và "er/sie/es" — các ngôi khác giữ nguyên!'},
+
+  {lv:'A1',tag:'Câu',title:'Trật tự từ trong câu (Wortstellung)',desc:'Động từ chia LUÔN ở vị trí 2 trong câu khẳng định, kể cả khi có trạng ngữ đứng đầu.',rule:'Vị trí 1 (gì cũng được) + Vị trí 2 (động từ chia) + phần còn lại',table:{h:['Vị trí 1','VỊ TRÍ 2 (Verb)','Còn lại'],r:[['Ich','lerne','heute Deutsch.'],['Heute','lerne','ich Deutsch.'],['Deutsch','lerne','ich heute.']]},ex:[{d:'Ich gehe morgen ins Kino.',v:'Mai tôi đi xem phim.'},{d:'Morgen gehe ich ins Kino.',v:'Mai tôi đi xem phim. (trạng ngữ đầu — chủ ngữ chuyển ra sau verb)'},{d:'Ins Kino gehe ich morgen.',v:'Tôi đi xem phim vào ngày mai.'}],tip:'⚠️ Khác tiếng Anh! Khi đảo, verb VẪN ở vị trí 2.'},
+
+  {lv:'A1',tag:'Câu',title:'Câu hỏi (W-Fragen & Ja/Nein-Fragen)',desc:'Hai loại câu hỏi cơ bản: hỏi từ-W (như who/what) và hỏi có/không.',rule:'W-Fragen: từ W + verb + chủ ngữ · Ja/Nein: verb + chủ ngữ',table:{h:['Từ W','Nghĩa','Ví dụ'],r:[['Wer','Ai','Wer ist das?'],['Was','Cái gì','Was machst du?'],['Wo','Ở đâu','Wo wohnst du?'],['Woher','Từ đâu','Woher kommst du?'],['Wohin','Đi đâu','Wohin gehst du?'],['Wann','Khi nào','Wann kommst du?'],['Warum','Tại sao','Warum lernst du Deutsch?'],['Wie','Như thế nào','Wie geht es dir?']]},ex:[{d:'Wo wohnst du?',v:'Bạn sống ở đâu?'},{d:'Trinkst du Kaffee?',v:'Bạn có uống cà phê không?'},{d:'Hast du Zeit?',v:'Bạn có thời gian không?'}]},
+
+  {lv:'A1',tag:'Câu',title:'Phủ định: nicht vs kein',desc:'Hai cách phủ định khác nhau — dùng SAI là lỗi điển hình.',rule:'kein → phủ định danh từ có "ein" hoặc không mạo từ · nicht → phủ định mọi trường hợp khác',table:{h:['Trường hợp','Phủ định','Ví dụ'],r:[['Danh từ có "ein"','kein','Ich habe kein Auto. (không có xe)'],['Danh từ không mạo từ','kein','Ich trinke keinen Kaffee.'],['Danh từ có "der/die/das"','nicht','Das Auto ist nicht neu.'],['Động từ','nicht','Ich arbeite nicht.'],['Tính từ','nicht','Das ist nicht gut.'],['Trạng ngữ','nicht','Er kommt nicht heute.']]},ex:[{d:'Ich habe keine Zeit.',v:'Tôi không có thời gian. (Zeit không mạo từ)'},{d:'Ich verstehe das nicht.',v:'Tôi không hiểu điều đó.'}],tip:'💡 Quy tắc nhanh: thấy "ein/eine" → đổi "kein/keine". Còn lại → "nicht".'},
+
+  {lv:'A1',tag:'Số đếm',title:'Cách đọc số (Zahlen)',desc:'Số trong tiếng Đức ĐỌC NGƯỢC: đơn vị TRƯỚC chục, nối bằng "und".',rule:'số có 2 chữ số: einer + und + zehner',table:{h:['Số','Cách viết','Cách đọc'],r:[['21','einundzwanzig','một-và-hai-mươi'],['35','fünfunddreißig','năm-và-ba-mươi'],['47','siebenundvierzig','bảy-và-bốn-mươi'],['99','neunundneunzig','chín-và-chín-mươi']]},ex:[{d:'Ich bin vierundzwanzig Jahre alt.',v:'Tôi 24 tuổi. (4-và-20)'},{d:'Das kostet sechsundsechzig Euro.',v:'Cái đó 66 euro. (6-và-60)'}],tip:'⚠️ Ngược tiếng Việt/Anh! 21 đọc "1-và-20" không phải "20-1".'},
+
+  {lv:'A1',tag:'Giới từ',title:'Giới từ + Akkusativ (đi với cách 4)',desc:'7 giới từ này LUÔN đi kèm Akkusativ — học thuộc danh sách.',rule:'durch, für, gegen, ohne, um, bis, entlang',table:{h:['Giới từ','Nghĩa','Ví dụ'],r:[['durch','qua, xuyên qua','durch den Park'],['für','cho, vì','für mich'],['gegen','chống lại, khoảng','gegen den Tisch'],['ohne','không có','ohne dich'],['um','quanh, lúc','um 8 Uhr'],['bis','đến tận','bis morgen'],['entlang','dọc theo','die Straße entlang']]},ex:[{d:'Das Geschenk ist für dich.',v:'Quà này cho bạn.'},{d:'Ich gehe durch den Park.',v:'Tôi đi qua công viên.'}],tip:'💡 Học thuộc: "Đường ơi, vì có 7 cô gái xinh!"'},
+
+  // ════════════════════════════════════════════════
+  // A2 GRAMMAR — Phát triển
+  // ════════════════════════════════════════════════
+
+  {lv:'A2',tag:'Mạo từ',title:'4 Cách (Kasus) trong tiếng Đức',desc:'Đây là kiến thức XƯƠNG SỐNG của ngữ pháp Đức. Hiểu được 4 cách = hiểu được câu.',rule:'Nominativ = AI/CÁI GÌ làm gì · Akkusativ = AI/CÁI GÌ bị tác động · Dativ = CHO AI/Ở ĐÂU · Genitiv = CỦA AI',table:{h:['Kasus','Câu hỏi','Vai trò','Ví dụ'],r:[['Nominativ','Wer? Was?','Chủ ngữ','Der Mann liest.'],['Akkusativ','Wen? Was?','Bị động trực tiếp','Ich sehe den Mann.'],['Dativ','Wem?','Gián tiếp / hưởng lợi','Ich helfe dem Mann.'],['Genitiv','Wessen?','Sở hữu','das Buch des Mannes']]},ex:[{d:'Der Vater (Nom) gibt dem Sohn (Dat) das Buch (Akk).',v:'Bố đưa cuốn sách (Akk) cho con trai (Dat).'},{d:'Ich kaufe das Auto meines Freundes.',v:'Tôi mua xe của bạn tôi (Genitiv).'}],tip:'⚠️ Khác hoàn toàn tiếng Anh/Việt — phải tập luyện nhiều!'},
+
+  {lv:'A2',tag:'Mạo từ',title:'Tính từ chia (Adjektivdeklination)',desc:'Tính từ đứng trước danh từ PHẢI đổi đuôi theo: giới tính + cách + có/không mạo từ.',rule:'Sau "der/die/das" → đuôi yếu (-e/-en) · Sau "ein/kein/mein" → đuôi hỗn hợp · Không mạo từ → đuôi mạnh',table:{h:['Có "der" + Adj','Mask','Fem','Neut','Plural'],r:[['Nominativ','der gute Mann','die gute Frau','das gute Kind','die guten Kinder'],['Akkusativ','den guten Mann','die gute Frau','das gute Kind','die guten Kinder'],['Dativ','dem guten Mann','der guten Frau','dem guten Kind','den guten Kindern']]},ex:[{d:'Der neue Lehrer ist nett.',v:'Giáo viên mới (rất) tốt.'},{d:'Ich habe ein altes Auto.',v:'Tôi có một chiếc xe cũ.'},{d:'Sie trinkt heißen Kaffee.',v:'Cô ấy uống cà phê nóng. (không mạo từ → đuôi mạnh)'}],tip:'💡 Mẹo: nhìn mạo từ đã thể hiện thông tin → tính từ thêm -e/-en. Mạo từ thiếu thông tin → tính từ "gánh" đuôi mạnh.'},
+
+  {lv:'A2',tag:'Giới từ',title:'Giới từ + Dativ (đi với cách 3)',desc:'9 giới từ này LUÔN đi kèm Dativ.',rule:'aus, bei, mit, nach, seit, von, zu, gegenüber, außer',table:{h:['Giới từ','Nghĩa','Ví dụ'],r:[['aus','từ (xuất xứ)','Ich komme aus Vietnam.'],['bei','tại, ở chỗ','bei meinem Freund'],['mit','với, bằng','mit dem Auto'],['nach','đến (địa danh), sau','nach Berlin, nach der Arbeit'],['seit','từ khi','seit drei Jahren'],['von','từ, của','das Buch von Anna'],['zu','đến (người, sự kiện)','zu dem Arzt'],['gegenüber','đối diện','dem Park gegenüber'],['außer','ngoài (trừ)','außer dir']]},ex:[{d:'Ich fahre mit dem Bus.',v:'Tôi đi xe buýt.'},{d:'Sie wohnt bei ihren Eltern.',v:'Cô ấy sống với bố mẹ.'}],tip:'💡 Mẹo "Aus bei mit nach seit von zu" — hát theo nhịp!'},
+
+  {lv:'A2',tag:'Giới từ',title:'Wechselpräpositionen (Giới từ 2 cách)',desc:'9 giới từ "biên giới" — Akkusativ nếu DI CHUYỂN ĐẾN, Dativ nếu Ở YÊN.',rule:'an, auf, hinter, in, neben, über, unter, vor, zwischen',table:{h:['Giới từ','Nghĩa','Akkusativ (động)','Dativ (tĩnh)'],r:[['in','trong','in den Park (vào)','im Park (đang ở)'],['auf','trên (mặt)','auf den Tisch (lên)','auf dem Tisch (đang trên)'],['an','tại, ở','an die Tafel (đến)','an der Tafel (đang ở)'],['unter','dưới','unter den Stuhl','unter dem Stuhl'],['vor','trước','vor das Haus','vor dem Haus']]},ex:[{d:'Ich gehe in die Schule.',v:'Tôi ĐI VÀO trường. (di chuyển → Akk)'},{d:'Ich bin in der Schule.',v:'Tôi ĐANG Ở trong trường. (ở yên → Dat)'},{d:'Das Bild hängt an der Wand.',v:'Bức tranh treo trên tường. (tĩnh → Dat)'}],tip:'💡 Hỏi "Wohin?" → Akkusativ. Hỏi "Wo?" → Dativ.'},
+
+  {lv:'A2',tag:'Động từ',title:'Perfekt — Quá khứ hoàn thành',desc:'Dạng quá khứ thông dụng nhất trong nói chuyện hàng ngày. Cấu trúc: haben/sein + Partizip II.',rule:'haben + PII (đa số) · sein + PII (động từ di chuyển hoặc đổi trạng thái)',table:{h:['Loại','Trợ động từ','Ví dụ'],r:[['Đa số động từ','haben','Ich habe gegessen.'],['Di chuyển (gehen, fahren, kommen)','sein','Ich bin gegangen.'],['Đổi trạng thái (werden, sterben)','sein','Er ist gestorben.'],['Đặc biệt: sein, bleiben','sein','Ich bin gewesen.']]},ex:[{d:'Ich habe Deutsch gelernt.',v:'Tôi đã học tiếng Đức.'},{d:'Wir sind nach Berlin gefahren.',v:'Chúng tôi đã đi Berlin.'},{d:'Sie ist krank geworden.',v:'Cô ấy đã bị bệnh.'}],tip:'⚠️ Partizip II của động từ thường: ge-Stamm-t (gelernt, gemacht). Bất quy tắc: ge...en (gegessen, gesehen).'},
+
+  {lv:'A2',tag:'Động từ',title:'Präteritum — Quá khứ đơn (viết)',desc:'Dạng quá khứ dùng trong văn bản, sách báo, kể chuyện. Trong nói thường dùng Perfekt.',rule:'sein → war · haben → hatte · động từ khuyết thiếu → dạng riêng',table:{h:['Đại từ','sein','haben','können','wollen'],r:[['ich','war','hatte','konnte','wollte'],['du','warst','hattest','konntest','wolltest'],['er/sie/es','war','hatte','konnte','wollte'],['wir','waren','hatten','konnten','wollten'],['ihr','wart','hattet','konntet','wolltet'],['sie/Sie','waren','hatten','konnten','wollten']]},ex:[{d:'Gestern war ich müde.',v:'Hôm qua tôi mệt.'},{d:'Ich hatte keine Zeit.',v:'Tôi đã không có thời gian.'},{d:'Wir konnten nicht kommen.',v:'Chúng tôi đã không thể đến.'}],tip:'💡 Trong nói chuyện, dùng Perfekt cho hành động và Präteritum cho sein/haben/Modalverben.'},
+
+  {lv:'A2',tag:'Động từ',title:'Modalverben — Động từ khuyết thiếu',desc:'6 động từ "đặc biệt" diễn tả khả năng, ý muốn, sự cần thiết... LUÔN đi với động từ chính ở nguyên mẫu cuối câu.',rule:'können (có thể) · müssen (phải) · wollen (muốn) · sollen (nên) · dürfen (được phép) · mögen/möchten (thích/muốn)',table:{h:['Đại từ','können','müssen','wollen','dürfen','sollen','möchten'],r:[['ich','kann','muss','will','darf','soll','möchte'],['du','kannst','musst','willst','darfst','sollst','möchtest'],['er/sie/es','kann','muss','will','darf','soll','möchte'],['wir','können','müssen','wollen','dürfen','sollen','möchten']]},ex:[{d:'Ich kann Deutsch sprechen.',v:'Tôi có thể nói tiếng Đức.'},{d:'Du musst lernen.',v:'Bạn phải học.'},{d:'Ich möchte einen Kaffee, bitte.',v:'Tôi muốn một cà phê, làm ơn.'}],tip:'⚠️ Động từ chính ở NGUYÊN MẪU và đứng CUỐI CÂU!'},
+
+  {lv:'A2',tag:'Động từ',title:'Trennbare Verben — Động từ tách',desc:'Động từ có tiền tố TÁCH RỜI khi chia. Tiền tố tách ra và đứng cuối câu.',rule:'Tiền tố hay tách: an-, auf-, aus-, ein-, mit-, nach-, vor-, zu-, ab-, weg-',table:{h:['Nguyên mẫu','Nghĩa','Câu chia'],r:[['aufstehen','dậy, đứng lên','Ich stehe um 7 Uhr auf.'],['anrufen','gọi điện','Sie ruft mich an.'],['einkaufen','đi mua sắm','Wir kaufen ein.'],['mitkommen','đi cùng','Kommst du mit?'],['fernsehen','xem TV','Er sieht fern.']]},ex:[{d:'Ich rufe dich morgen an.',v:'Mai tôi gọi cho bạn.'},{d:'Räum dein Zimmer auf!',v:'Dọn phòng đi!'}],tip:'⚠️ Trong Perfekt: ge nằm GIỮA tiền tố và gốc. aufstehen → aufgestanden!'},
+
+  {lv:'A2',tag:'Câu',title:'Câu phức với "weil", "dass"',desc:'Liên từ phụ thuộc khiến động từ chia phải ĐI XUỐNG CUỐI câu phụ.',rule:'weil (vì) · dass (rằng) · wenn (nếu/khi) · obwohl (mặc dù) · damit (để) — verb ra cuối',table:{h:['Liên từ','Nghĩa','Ví dụ'],r:[['weil','vì','Ich lerne Deutsch, weil ich in Deutschland arbeiten will.'],['dass','rằng','Ich denke, dass es regnet.'],['wenn','nếu / khi','Wenn ich Zeit habe, komme ich.'],['obwohl','mặc dù','Er kommt, obwohl er krank ist.'],['damit','để','Ich lerne, damit ich die Prüfung bestehe.']]},ex:[{d:'Ich bleibe zu Hause, weil es regnet.',v:'Tôi ở nhà vì trời mưa.'},{d:'Ich weiß, dass du müde bist.',v:'Tôi biết bạn mệt.'}],tip:'⚠️ Dấu phẩy TRƯỚC liên từ. Verb chia ở CUỐI VẾ PHỤ.'},
+
+  {lv:'A2',tag:'Câu',title:'So sánh tính từ (Komparation)',desc:'3 bậc: nguyên cấp · so sánh hơn · so sánh nhất. Một số dạng bất quy tắc cần thuộc.',rule:'Adj + -er + als = hơn · am Adj-sten = nhất',table:{h:['Nguyên cấp','Hơn (-er)','Nhất (-sten)','Nghĩa'],r:[['schnell','schneller','am schnellsten','nhanh'],['groß','größer','am größten','to'],['gut','besser','am besten','tốt'],['viel','mehr','am meisten','nhiều'],['gern','lieber','am liebsten','thích'],['hoch','höher','am höchsten','cao']]},ex:[{d:'Berlin ist größer als Hamburg.',v:'Berlin lớn hơn Hamburg.'},{d:'Sie spricht am besten Deutsch.',v:'Cô ấy nói tiếng Đức giỏi nhất.'},{d:'Ich trinke lieber Tee als Kaffee.',v:'Tôi thích trà hơn cà phê.'}],tip:'⚠️ "gut → besser → am besten" và "gern → lieber → am liebsten" — bất quy tắc, học thuộc!'},
+
+  {lv:'A2',tag:'Câu',title:'Câu mệnh lệnh (Imperativ)',desc:'Có 3 dạng tùy ngôi: du, ihr, Sie.',rule:'du: bỏ -st · ihr: dùng dạng chia · Sie: verb + Sie',table:{h:['Người','Cấu trúc','Ví dụ (lernen)','Ví dụ (sein)'],r:[['du','Stamm','Lern(e)!','Sei ruhig!'],['ihr','Stamm + -t','Lernt!','Seid ruhig!'],['Sie','Infinitiv + Sie','Lernen Sie!','Seien Sie ruhig!']]},ex:[{d:'Komm her!',v:'Lại đây! (du)'},{d:'Macht die Tür zu!',v:'Đóng cửa lại! (ihr)'},{d:'Sprechen Sie bitte langsamer!',v:'Vui lòng nói chậm hơn! (Sie)'}],tip:'💡 Lịch sự: thêm "bitte" — "Komm bitte her!"'},
+
+  {lv:'A2',tag:'Động từ',title:'Reflexive Verben — Động từ phản thân',desc:'Hành động "chủ ngữ tự làm với bản thân". Cần thêm đại từ phản thân: mich, dich, sich...',rule:'sich freuen · sich waschen · sich erinnern · sich treffen · sich anziehen',table:{h:['Đại từ','Reflexivpronomen (Akk)','Ví dụ: sich freuen'],r:[['ich','mich','ich freue mich'],['du','dich','du freust dich'],['er/sie/es','sich','er freut sich'],['wir','uns','wir freuen uns'],['ihr','euch','ihr freut euch'],['sie/Sie','sich','sie freuen sich']]},ex:[{d:'Ich freue mich auf den Urlaub.',v:'Tôi háo hức về kỳ nghỉ.'},{d:'Wir treffen uns um 7.',v:'Chúng tôi gặp nhau lúc 7 giờ.'},{d:'Wäsch dir die Hände!',v:'Rửa tay đi! (Dat: dir, vì "die Hände" là Akk)'}],tip:'💡 Phần lớn dùng Akkusativ. Nếu có thêm danh từ Akk khác, đại từ phản thân chuyển sang Dativ.'},
+
+  // ════════════════════════════════════════════════
+  // B1 GRAMMAR — Nâng cao
+  // ════════════════════════════════════════════════
+
+  {lv:'B1',tag:'Động từ',title:'Konjunktiv II — Điều kiện giả định',desc:'Dùng để nói về điều KHÔNG có thật, mong ước, đề xuất lịch sự.',rule:'würde + Infinitiv (đa số) · hätte / wäre / könnte / möchte (động từ phổ biến)',table:{h:['Động từ','Dạng K2','Ví dụ'],r:[['sein → wäre','wäre','Wenn ich reich wäre,...'],['haben → hätte','hätte','Ich hätte gerne...'],['werden → würde','würde','Ich würde gehen.'],['können → könnte','könnte','Könnten Sie helfen?'],['möchten','möchte','Ich möchte einen Kaffee.']]},ex:[{d:'Wenn ich Zeit hätte, würde ich kommen.',v:'Nếu tôi có thời gian, tôi sẽ đến.'},{d:'Ich hätte gerne ein Bier, bitte.',v:'Tôi muốn một cốc bia, làm ơn. (lịch sự)'},{d:'Könnten Sie mir helfen?',v:'Quý vị có thể giúp tôi không? (lịch sự nhất)'}],tip:'💡 Khi đặt hàng/yêu cầu lịch sự — DÙNG K2: ich hätte, ich möchte, könnten Sie...'},
+
+  {lv:'B1',tag:'Câu',title:'Relativsatz — Câu quan hệ',desc:'Câu phụ giải thích thêm cho danh từ. Đại từ quan hệ chia theo giới tính + cách của vai trò trong câu phụ.',rule:'der/die/das (giống danh từ chính) + chia theo cách trong câu phụ',table:{h:['Kasus','Mask','Fem','Neut','Plural'],r:[['Nom','der','die','das','die'],['Akk','den','die','das','die'],['Dat','dem','der','dem','denen'],['Gen','dessen','deren','dessen','deren']]},ex:[{d:'Der Mann, der dort steht, ist mein Vater.',v:'Người đàn ông đang đứng kia là bố tôi.'},{d:'Das Buch, das ich lese, ist interessant.',v:'Cuốn sách tôi đang đọc rất hay.'},{d:'Die Frau, mit der ich sprach, ist Lehrerin.',v:'Người phụ nữ tôi vừa nói chuyện là giáo viên.'}],tip:'⚠️ Verb của câu quan hệ luôn ở CUỐI vế phụ. Có dấu phẩy hai bên.'},
+
+  {lv:'B1',tag:'Động từ',title:'Passiv — Câu bị động',desc:'Nhấn mạnh HÀNH ĐỘNG hơn là người làm. Cấu trúc: werden + Partizip II.',rule:'Aktiv: Subj + Verb + Obj → Passiv: Obj + werden + (von Subj) + PII',table:{h:['Thì','Cấu trúc Passiv','Ví dụ'],r:[['Präsens','wird + PII','Das Haus wird gebaut.'],['Präteritum','wurde + PII','Das Haus wurde gebaut.'],['Perfekt','ist + PII + worden','Das Haus ist gebaut worden.'],['Mit Modalverb','muss/kann + PII + werden','Das Haus muss gebaut werden.']]},ex:[{d:'Das Auto wird repariert.',v:'Chiếc xe đang được sửa.'},{d:'Der Brief wurde gestern geschickt.',v:'Lá thư đã được gửi hôm qua.'},{d:'Hier darf nicht geraucht werden.',v:'Ở đây không được phép hút thuốc.'}],tip:'💡 Passiv mà có Modalverb: dùng "werden" thay vì PII của werden.'},
+
+  {lv:'B1',tag:'Động từ',title:'Genitiv — Cách sở hữu',desc:'Diễn tả "của ai/cái gì". Trong nói thường được thay bằng "von + Dativ".',rule:'des + -es/-s (đực/trung) · der (cái/số nhiều)',table:{h:['Kasus','Mask','Fem','Neut','Plural'],r:[['Genitiv','des Mannes','der Frau','des Kindes','der Kinder'],['ein/kein','eines Mannes','einer Frau','eines Kindes','keiner Kinder']]},ex:[{d:'Das ist das Auto meines Vaters.',v:'Đây là xe của bố tôi.'},{d:'Wegen des Regens bleibe ich zu Hause.',v:'Vì mưa nên tôi ở nhà.'},{d:'Während der Pause esse ich.',v:'Trong giờ giải lao tôi ăn.'}],tip:'⚠️ Giới từ + Genitiv: während, wegen, trotz, statt — quan trọng cho viết!'},
+
+  {lv:'B1',tag:'Giới từ',title:'Giới từ + Genitiv',desc:'Một nhóm giới từ trang trọng, dùng nhiều trong văn viết.',rule:'während, wegen, trotz, statt, anstatt, innerhalb, außerhalb, aufgrund',table:{h:['Giới từ','Nghĩa','Ví dụ'],r:[['während','trong khi','während des Tages'],['wegen','vì','wegen des Wetters'],['trotz','mặc dù','trotz des Regens'],['statt / anstatt','thay vì','statt eines Buches'],['innerhalb','trong vòng','innerhalb einer Woche'],['außerhalb','ngoài, bên ngoài','außerhalb der Stadt'],['aufgrund','dựa trên, vì','aufgrund der Pandemie']]},ex:[{d:'Wegen des Staus kam ich zu spät.',v:'Vì kẹt xe nên tôi đến trễ.'},{d:'Trotz des Regens spielten sie Fußball.',v:'Mặc dù trời mưa họ vẫn chơi bóng.'}],tip:'💡 Văn nói: "wegen dem Stau" cũng nghe được nhưng văn viết PHẢI Genitiv.'},
+
+  {lv:'B1',tag:'Câu',title:'Liên từ 2 phần (zweiteilige Konnektoren)',desc:'Các cặp liên từ nối 2 ý — thường gặp trong bài thi Goethe.',rule:'sowohl...als auch · entweder...oder · weder...noch · nicht nur...sondern auch · zwar...aber',table:{h:['Liên từ','Nghĩa','Ví dụ'],r:[['sowohl A als auch B','cả A lẫn B','sowohl Deutsch als auch Englisch'],['entweder A oder B','hoặc A hoặc B','entweder heute oder morgen'],['weder A noch B','không A cũng không B','weder Bier noch Wein'],['nicht nur A, sondern auch B','không chỉ A mà còn B','nicht nur klug, sondern auch nett'],['zwar A, aber B','tuy A nhưng B','zwar müde, aber glücklich']]},ex:[{d:'Ich spreche sowohl Deutsch als auch Englisch.',v:'Tôi nói cả tiếng Đức lẫn tiếng Anh.'},{d:'Er ist nicht nur klug, sondern auch fleißig.',v:'Anh ấy không chỉ thông minh mà còn chăm chỉ.'}]},
+
+  {lv:'B1',tag:'Câu',title:'Indirekte Rede — Lời nói gián tiếp',desc:'Tường thuật lại lời người khác. Dùng Konjunktiv I trong văn viết trang trọng.',rule:'Nói: ich gehe → Tường thuật: Er sagt, dass er gehe / gehen würde',table:{h:['Lời gốc','Lời gián tiếp (K I)','Lời gián tiếp (würde)'],r:[['Ich bin müde.','Er sagt, er sei müde.','Er sagt, dass er müde wäre.'],['Ich gehe nach Hause.','Er sagt, er gehe nach Hause.','Er sagt, dass er nach Hause gehen würde.'],['Ich habe Zeit.','Er sagt, er habe Zeit.','Er sagt, dass er Zeit hätte.']]},ex:[{d:'Sie sagte, sie komme später.',v:'Cô ấy nói cô ấy sẽ đến sau.'},{d:'Er meinte, das Buch sei interessant.',v:'Anh ấy bảo cuốn sách hay.'}],tip:'💡 Trong nói chuyện, dùng "dass" + Indikativ là OK. K I chủ yếu cho văn báo chí.'},
+
+  {lv:'B1',tag:'Động từ',title:'Verben mit festen Präpositionen',desc:'Nhiều động từ luôn đi với một giới từ cố định — phải học thuộc CẢ CỤM.',rule:'sprechen über (Akk) · warten auf (Akk) · denken an (Akk) · sich freuen über (Akk) / auf (Akk)',table:{h:['Động từ','Giới từ','Cách','Ví dụ'],r:[['warten','auf','Akk','Ich warte auf den Bus.'],['denken','an','Akk','Ich denke an dich.'],['sprechen','über','Akk','Wir sprechen über das Wetter.'],['sich freuen über','über','Akk','Ich freue mich über das Geschenk. (đã có)'],['sich freuen auf','auf','Akk','Ich freue mich auf den Urlaub. (sắp có)'],['Angst haben','vor','Dat','Ich habe Angst vor Hunden.'],['helfen','bei','Dat','Sie hilft mir bei der Arbeit.']]},ex:[{d:'Ich warte schon eine Stunde auf dich!',v:'Tôi đã đợi bạn cả tiếng rồi!'},{d:'Worüber sprecht ihr?',v:'Các bạn đang nói về cái gì? (wo + über → worüber)'}],tip:'⚠️ Khi hỏi: vật → wo(r) + giới từ (woran, wovon...). Người → giới từ + wen/wem.'},
+
+  {lv:'B1',tag:'Câu',title:'Câu điều kiện loại 1 và 2',desc:'Type 1: điều kiện thực tế (có thể xảy ra). Type 2: điều kiện không thực (giả định).',rule:'Type 1: wenn + Präsens, ... Präsens · Type 2: wenn + Konjunktiv II, ... K2 (würde)',table:{h:['Loại','Cấu trúc','Ví dụ'],r:[['Type 1 (thực)','wenn + Präsens','Wenn es regnet, bleibe ich zu Hause.'],['Type 2 (giả định)','wenn + K2','Wenn ich Zeit hätte, würde ich kommen.'],['Type 3 (quá khứ giả định)','wenn + hätte/wäre + PII','Wenn ich Zeit gehabt hätte, wäre ich gekommen.']]},ex:[{d:'Wenn ich Geld habe, kaufe ich ein Auto.',v:'Nếu có tiền tôi sẽ mua xe. (thực tế)'},{d:'Wenn ich reich wäre, würde ich nicht arbeiten.',v:'Nếu tôi giàu, tôi sẽ không làm việc. (giả định)'},{d:'Wenn ich das gewusst hätte, wäre ich gekommen.',v:'Nếu tôi biết trước thì tôi đã đến rồi. (quá khứ)'}],tip:'💡 Type 2 ngày càng dùng dạng "würde + Infinitiv" thay K2 thuần.'},
+
+  {lv:'B1',tag:'Câu',title:'Infinitiv mit zu — Nguyên mẫu với "zu"',desc:'Khi 2 mệnh đề cùng chủ ngữ và có liên kết logic — dùng "zu + Infinitiv" thay câu "dass".',rule:'Subj + Verb + ..., (Obj) + zu + Infinitiv',table:{h:['Cấu trúc','Cùng chủ ngữ?','Ví dụ'],r:[['dass-câu','Khác chủ ngữ','Ich hoffe, dass du kommst.'],['zu + Infinitiv','Cùng chủ ngữ','Ich hoffe, bald zu kommen.'],['ohne zu','phủ định cách','Er ging, ohne zu grüßen.'],['um zu','mục đích','Ich lerne, um Deutsch zu sprechen.'],['anstatt zu','thay vì','Anstatt zu arbeiten, schläft er.']]},ex:[{d:'Es ist wichtig, jeden Tag zu lernen.',v:'Quan trọng là phải học mỗi ngày.'},{d:'Ich versuche, Deutsch zu sprechen.',v:'Tôi cố gắng nói tiếng Đức.'},{d:'Ich gehe in den Park, um zu joggen.',v:'Tôi vào công viên để chạy.'}],tip:'⚠️ Với động từ tách: "zu" chen GIỮA — aufzustehen, mitzukommen, einzukaufen.'},
+
+  {lv:'B1',tag:'Câu',title:'Temporale Konnektoren — Liên từ thời gian',desc:'Nối các sự kiện theo thời gian. Mỗi liên từ có nghĩa và cách dùng khác nhau.',rule:'als (1 lần qkhứ) · wenn (lặp lại / hiện tại / tương lai) · während (trong khi) · bevor (trước khi) · nachdem (sau khi) · seit/seitdem (từ khi)',table:{h:['Liên từ','Khi nào dùng','Ví dụ'],r:[['als','MỘT LẦN trong quá khứ','Als ich klein war, lebte ich in Hue.'],['wenn','Lặp lại / hiện tại / tương lai','Wenn ich Zeit habe, lese ich.'],['während','Hai hành động đồng thời','Während ich kochte, sah er fern.'],['bevor','Trước khi','Bevor ich gehe, esse ich.'],['nachdem','Sau khi','Nachdem ich gegessen hatte, ging ich.'],['seit / seitdem','Từ khi (đến nay)','Seit ich hier wohne, bin ich glücklich.']]},ex:[{d:'Als ich Kind war, spielte ich viel.',v:'Khi tôi còn bé, tôi chơi rất nhiều.'},{d:'Wenn das Wetter schön ist, gehen wir spazieren.',v:'Khi thời tiết đẹp, chúng tôi đi dạo.'}],tip:'⚠️ Khác biệt CỰC quan trọng: "als" cho QUÁ KHỨ + 1 LẦN. "wenn" cho mọi tình huống khác. Sai phổ biến!'}
 ];
 
 /* ════════════════════════════════════════════════════════
@@ -3942,16 +4298,68 @@ function renderGGrid(){
   const g=$('grammarGrid');if(!g)return;
   let list=gLv==='Tất cả'?GRAMMAR:GRAMMAR.filter(x=>x.lv===gLv);
   g.innerHTML='';
+
+  // Count by level for the header summary
+  const counts = {A1:0, A2:0, B1:0};
+  GRAMMAR.forEach(gr => { if (counts[gr.lv] !== undefined) counts[gr.lv]++; });
+
   list.forEach((gr,i)=>{
-    const card=document.createElement('div');card.className='g-card';
-    let tbl='';
-    if(gr.table)tbl=`<table class="g-tbl"><thead><tr>${gr.table.h.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${gr.table.r.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-    const exs=gr.ex.map(e=>`<div class="g-ex">${e.d}<span>${e.v}</span></div>`).join('');
-    card.innerHTML=`<span class="g-tag">${gr.tag}</span><span class="g-lvl-tag">${gr.lv}</span><h3>${gr.title}</h3><p>${gr.desc}</p><div class="g-expand" id="gexp-${i}">▶ Xem bảng & ví dụ</div><div class="g-body" id="gbody-${i}">${tbl}<div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">${exs}</div></div>`;
-    card.onclick=()=>{
-      $('gbody-'+i).classList.toggle('open');
-      $('gexp-'+i).textContent=$('gbody-'+i).classList.contains('open')?'▼ Thu lại':'▶ Xem bảng & ví dụ';
+    const card = document.createElement('div');
+    card.className = 'g-card-v2 g-lv-'+gr.lv.toLowerCase();
+
+    // Rule section
+    const ruleHtml = gr.rule
+      ? `<div class="g-rule"><div class="g-rule-label">📐 QUY TẮC</div><div class="g-rule-text">${gr.rule}</div></div>`
+      : '';
+
+    // Table
+    const tbl = gr.table
+      ? `<div class="g-section"><div class="g-section-label">📊 BẢNG CHIA</div><div class="g-tbl-wrap"><table class="g-tbl"><thead><tr>${gr.table.h.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${gr.table.r.map(r=>`<tr>${r.map((c,ci)=>`<td${ci===0?' class="g-tbl-first"':''}>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`
+      : '';
+
+    // Examples
+    const exs = gr.ex
+      ? `<div class="g-section"><div class="g-section-label">💬 VÍ DỤ THỰC TẾ</div>${gr.ex.map(e=>`<div class="g-ex-v2"><div class="g-ex-de" onclick="speak('${e.d.replace(/'/g,"\\'")}')"><span class="g-ex-flag">🇩🇪</span> ${e.d} <span class="g-ex-listen">🔊</span></div><div class="g-ex-vi"><span class="g-ex-flag">🇻🇳</span> ${e.v}</div></div>`).join('')}</div>`
+      : '';
+
+    // Tip
+    const tip = gr.tip
+      ? `<div class="g-tip">${gr.tip}</div>`
+      : '';
+
+    card.innerHTML = `
+      <div class="g-card-head">
+        <div class="g-badges">
+          <span class="g-lvl-badge g-lvl-${gr.lv.toLowerCase()}">${gr.lv}</span>
+          <span class="g-tag-v2">${gr.tag}</span>
+        </div>
+        <h3 class="g-title">${gr.title}</h3>
+        <p class="g-desc">${gr.desc}</p>
+      </div>
+      ${ruleHtml}
+      <div class="g-expand-btn" id="gexp-${i}">
+        <span class="g-expand-icon">▶</span>
+        <span class="g-expand-txt">Xem bảng chi tiết & ví dụ</span>
+      </div>
+      <div class="g-body" id="gbody-${i}">
+        ${tbl}
+        ${exs}
+        ${tip}
+      </div>
+    `;
+
+    // Click on the expand button (or whole header) to toggle body
+    const expand = card.querySelector('#gexp-'+i);
+    const body = card.querySelector('#gbody-'+i);
+    expand.onclick = (e) => {
+      e.stopPropagation();
+      body.classList.toggle('open');
+      const isOpen = body.classList.contains('open');
+      expand.querySelector('.g-expand-icon').textContent = isOpen ? '▼' : '▶';
+      expand.querySelector('.g-expand-txt').textContent = isOpen ? 'Thu lại' : 'Xem bảng chi tiết & ví dụ';
+      expand.classList.toggle('open', isOpen);
     };
+
     g.appendChild(card);
   });
 }
