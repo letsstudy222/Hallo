@@ -2225,6 +2225,274 @@ button:focus-visible { outline: 2px solid var(--rose-light); outline-offset: 2px
   box-shadow: 0 4px 14px rgba(160,32,80,.35) !important;
 }
 
+
+/* ════════════════════════════════════════════════════════════
+   THEME VARIANTS — Switchable color themes
+═══════════════════════════════════════════════════════════════ */
+
+/* ── Theme 1: ROSE PASTEL (default - already in :root) ── */
+
+/* ── Theme 2: SAKURA — Light Pink & Cream ── */
+[data-theme="sakura"] {
+  --bg:          #fffafc;
+  --bg2:         #fff0f5;
+  --surface:     #ffffff;
+  --surface2:    #fff5f8;
+  --surface3:    #ffe8ee;
+  --rose:        #e85a8a;
+  --rose-deep:   #c93a6e;
+  --rose-mid:    #f070a0;
+  --rose-light:  #ffb0c8;
+  --rose-pale:   #ffe0eb;
+  --rose-faint:  #fff0f5;
+  --gray-900:    #2a1620;
+  --gray-800:    #3a2030;
+  --gray-700:    #5a3848;
+  --gray-200:    #ffd0dc;
+  --gray-100:    #ffe4ee;
+}
+
+/* ── Theme 3: LAVENDER — Tím nhạt thanh lịch ── */
+[data-theme="lavender"] {
+  --bg:          #faf7fd;
+  --bg2:         #f0e8fa;
+  --surface:     #ffffff;
+  --surface2:    #f8f3fc;
+  --surface3:    #ede4f8;
+  --rose:        #8a5cc8;
+  --rose-deep:   #6a3ca8;
+  --rose-mid:    #a070d4;
+  --rose-light:  #d4b8f0;
+  --rose-pale:   #ede0fa;
+  --rose-faint:  #f8f3fc;
+  --gray-900:    #1a0e2a;
+  --gray-800:    #2a1840;
+  --gray-700:    #4a3060;
+  --gray-200:    #e0d0f0;
+  --gray-100:    #ede4f8;
+  --rose-glow:   rgba(106,60,168,.18);
+  --s-rose:      0 4px 20px rgba(106,60,168,.25);
+}
+
+/* ── Theme 4: MINT — Xanh bạc hà tươi mát ── */
+[data-theme="mint"] {
+  --bg:          #f5fcf8;
+  --bg2:         #e8f8ee;
+  --surface:     #ffffff;
+  --surface2:    #f0faf3;
+  --surface3:    #e0f4e8;
+  --rose:        #2a9560;
+  --rose-deep:   #186040;
+  --rose-mid:    #3eb070;
+  --rose-light:  #98d8b0;
+  --rose-pale:   #d0f0dc;
+  --rose-faint:  #ecf8f0;
+  --gray-900:    #0a1f15;
+  --gray-800:    #142a20;
+  --gray-700:    #284838;
+  --gray-200:    #c8e4d4;
+  --gray-100:    #ddedde;
+  --rose-glow:   rgba(24,96,64,.18);
+  --s-rose:      0 4px 20px rgba(24,96,64,.25);
+}
+
+/* ── Theme 5: OCEAN — Xanh biển dịu ── */
+[data-theme="ocean"] {
+  --bg:          #f5faff;
+  --bg2:         #e0eef9;
+  --surface:     #ffffff;
+  --surface2:    #eef7fd;
+  --surface3:    #d8eaf6;
+  --rose:        #3478c0;
+  --rose-deep:   #1e5a98;
+  --rose-mid:    #4a90d0;
+  --rose-light:  #a8c8e8;
+  --rose-pale:   #d0e4f4;
+  --rose-faint:  #eaf3fb;
+  --gray-900:    #0a1828;
+  --gray-800:    #142838;
+  --gray-700:    #284058;
+  --gray-200:    #c8d8e8;
+  --gray-100:    #dde6f0;
+  --rose-glow:   rgba(30,90,152,.18);
+  --s-rose:      0 4px 20px rgba(30,90,152,.25);
+}
+
+/* ── Theme 6: SUNSET — Cam đào ấm áp ── */
+[data-theme="sunset"] {
+  --bg:          #fffaf5;
+  --bg2:         #fff0e0;
+  --surface:     #ffffff;
+  --surface2:    #fff5ec;
+  --surface3:    #ffe8d4;
+  --rose:        #d86028;
+  --rose-deep:   #b04818;
+  --rose-mid:    #e87840;
+  --rose-light:  #f0b890;
+  --rose-pale:   #ffe0c8;
+  --rose-faint:  #fff0e0;
+  --gray-900:    #281408;
+  --gray-800:    #3a1f10;
+  --gray-700:    #5a3818;
+  --gray-200:    #f0d0a8;
+  --gray-100:    #f8e4c8;
+  --rose-glow:   rgba(176,72,24,.18);
+  --s-rose:      0 4px 20px rgba(176,72,24,.25);
+}
+
+/* ── Theme 7: DARK ROSE — Tối với điểm nhấn hồng ── */
+[data-theme="dark"] {
+  --bg:          #1a1118;
+  --bg2:         #241820;
+  --surface:     #2a1c25;
+  --surface2:    #322230;
+  --surface3:    #3a2838;
+  --rose:        #ff7a9a;
+  --rose-deep:   #ff5080;
+  --rose-mid:    #ff90b0;
+  --rose-light:  #ffb0c8;
+  --rose-pale:   #4a2030;
+  --rose-faint:  #3a1828;
+  --gray-900:    #fff5f8;
+  --gray-800:    #f0d8e0;
+  --gray-700:    #d0a8b8;
+  --gray-600:    #a08090;
+  --gray-500:    #806878;
+  --gray-400:    #605060;
+  --gray-300:    #483844;
+  --gray-200:    #3a2832;
+  --gray-100:    #2a1c25;
+  --gray-50:     #241820;
+  --text:        #fff5f8;
+  --text2:       #f0d8e0;
+  --text3:       #d0a8b8;
+  --border:      #3a2832;
+  --border2:     #322230;
+  --rose-glow:   rgba(255,80,128,.25);
+  --s-rose:      0 4px 24px rgba(255,80,128,.30);
+  --s1: 0 2px 8px rgba(0,0,0,.4);
+  --s2: 0 4px 16px rgba(0,0,0,.5);
+  --s3: 0 8px 32px rgba(0,0,0,.6);
+}
+[data-theme="dark"] .vmod {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  box-shadow: 0 24px 80px rgba(0,0,0,.6) !important;
+}
+[data-theme="dark"] body::before { opacity: 0.4; }
+
+/* ════════════════════════════════════════════════════════════
+   THEME SWITCHER UI
+═══════════════════════════════════════════════════════════════ */
+.theme-switcher {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.theme-toggle-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--t2);
+  color: var(--rose-deep);
+  position: relative;
+}
+.theme-toggle-btn:hover {
+  border-color: var(--rose-mid);
+  transform: scale(1.05) rotate(15deg);
+  box-shadow: 0 3px 12px rgba(160,32,80,.2);
+}
+.theme-toggle-btn:active { transform: scale(0.96) rotate(0); }
+
+.theme-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r4);
+  padding: 8px;
+  box-shadow: 0 8px 32px rgba(140,40,80,.18);
+  display: none;
+  min-width: 200px;
+  z-index: 8000;
+}
+.theme-menu.show {
+  display: block;
+  animation: themeMenuIn .2s var(--ease);
+}
+@keyframes themeMenuIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.theme-menu-title {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 6px 12px 10px;
+  border-bottom: 1px solid var(--border2);
+  margin-bottom: 6px;
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  background: transparent;
+  border-radius: var(--r2);
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text2);
+  text-align: left;
+  transition: all .15s;
+}
+.theme-option:hover {
+  background: var(--rose-faint);
+  color: var(--rose-deep);
+}
+.theme-option.active {
+  background: var(--rose-pale);
+  color: var(--rose-deep);
+  font-weight: 700;
+}
+.theme-option.active::after {
+  content: '✓';
+  margin-left: auto;
+  color: var(--rose-deep);
+  font-weight: 800;
+}
+
+.theme-color-dot {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--border);
+}
+.theme-color-dot.rose    { background: linear-gradient(135deg, #ffb8d0, #c43868); }
+.theme-color-dot.sakura  { background: linear-gradient(135deg, #ffe0eb, #e85a8a); }
+.theme-color-dot.lavender{ background: linear-gradient(135deg, #d4b8f0, #6a3ca8); }
+.theme-color-dot.mint    { background: linear-gradient(135deg, #98d8b0, #186040); }
+.theme-color-dot.ocean   { background: linear-gradient(135deg, #a8c8e8, #1e5a98); }
+.theme-color-dot.sunset  { background: linear-gradient(135deg, #f0b890, #b04818); }
+.theme-color-dot.dark    { background: linear-gradient(135deg, #2a1c25, #ff5080); }
+
+@media (max-width: 600px) {
+  .theme-menu { right: -8px; min-width: 180px; }
+}
+
 </style>
 </head>
 <body>
@@ -2273,6 +2541,20 @@ button:focus-visible { outline: 2px solid var(--rose-light); outline-offset: 2px
   </nav>
 
   <div class="header-right">
+    <!-- Theme switcher -->
+    <div class="theme-switcher">
+      <button class="theme-toggle-btn" onclick="toggleThemeMenu(event)" title="Đổi giao diện" id="themeToggleBtn">🎨</button>
+      <div class="theme-menu" id="themeMenu">
+        <div class="theme-menu-title">🎨 Chọn giao diện</div>
+        <button class="theme-option" data-theme="rose"     onclick="setTheme('rose')">     <span class="theme-color-dot rose"></span>     Hồng pastel</button>
+        <button class="theme-option" data-theme="sakura"   onclick="setTheme('sakura')">   <span class="theme-color-dot sakura"></span>   Sakura</button>
+        <button class="theme-option" data-theme="lavender" onclick="setTheme('lavender')"> <span class="theme-color-dot lavender"></span> Tím Lavender</button>
+        <button class="theme-option" data-theme="mint"     onclick="setTheme('mint')">     <span class="theme-color-dot mint"></span>     Xanh bạc hà</button>
+        <button class="theme-option" data-theme="ocean"    onclick="setTheme('ocean')">    <span class="theme-color-dot ocean"></span>    Xanh đại dương</button>
+        <button class="theme-option" data-theme="sunset"   onclick="setTheme('sunset')">   <span class="theme-color-dot sunset"></span>   Hoàng hôn cam</button>
+        <button class="theme-option" data-theme="dark"     onclick="setTheme('dark')">     <span class="theme-color-dot dark"></span>     🌙 Chế độ tối</button>
+      </div>
+    </div>
     <!-- Font size adjuster -->
     <div class="fs-controls" title="Cỡ chữ">
       <button class="fs-btn" onclick="setFontSize('sm')" id="fsBtn-sm">A<sub>-</sub></button>
@@ -4937,11 +5219,76 @@ document.addEventListener('keydown', e => {
 });
 
 
+
+/* ════════════════════════════════════════════════════════
+   THEME SWITCHER
+════════════════════════════════════════════════════════ */
+function setTheme(name) {
+  if (name === 'rose') {
+    document.documentElement.removeAttribute('data-theme');
+  } else {
+    document.documentElement.setAttribute('data-theme', name);
+  }
+  localStorage.setItem('de_theme', name);
+
+  // Update active state in menu
+  document.querySelectorAll('.theme-option').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.theme === name);
+  });
+
+  // Update toggle button icon based on theme
+  const btn = document.getElementById('themeToggleBtn');
+  if (btn) {
+    const icons = {
+      rose: '🎨', sakura: '🌸', lavender: '💜',
+      mint: '🌿', ocean: '🌊', sunset: '🌅', dark: '🌙'
+    };
+    btn.textContent = icons[name] || '🎨';
+  }
+
+  // Close menu
+  const menu = document.getElementById('themeMenu');
+  if (menu) menu.classList.remove('show');
+
+  // Show toast confirmation
+  const names = {
+    rose: 'Hồng pastel', sakura: 'Sakura', lavender: 'Tím Lavender',
+    mint: 'Xanh bạc hà', ocean: 'Xanh đại dương', sunset: 'Hoàng hôn cam',
+    dark: 'Chế độ tối 🌙'
+  };
+  if (typeof toast === 'function') toast(`🎨 Đã đổi sang: ${names[name] || name}`);
+}
+
+function toggleThemeMenu(e) {
+  if (e) e.stopPropagation();
+  const menu = document.getElementById('themeMenu');
+  if (!menu) return;
+  menu.classList.toggle('show');
+}
+
+// Close theme menu on outside click
+document.addEventListener('click', (e) => {
+  const menu = document.getElementById('themeMenu');
+  const btn = document.getElementById('themeToggleBtn');
+  if (!menu || !btn) return;
+  if (!menu.contains(e.target) && !btn.contains(e.target)) {
+    menu.classList.remove('show');
+  }
+});
+
+// Load saved theme on startup
+function loadSavedTheme() {
+  const saved = localStorage.getItem('de_theme') || 'rose';
+  setTheme(saved);
+}
+
+
 /* ════════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════════ */
 loadS();
 vsLoad();
+loadSavedTheme();
 rdLoadState();
 setFontSize(currentFS);
 renderDash();
